@@ -11,12 +11,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@WebServlet("/movie")
 
-// this annotation maps this Java Servlet Class to a URL
-@WebServlet("/")
-
-public class MovieListServlet extends HttpServlet {
-    private List<Movie> movieList;
+public class SingleMovieServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -41,69 +38,60 @@ public class MovieListServlet extends HttpServlet {
             // declare statement
             Statement statement = connection.createStatement();
             // prepare query
-            String query = "select m.id, m.title, m.year, m.director, \n" +
-                    "substring_index((group_concat(distinct g.name separator ',') ), ',', 3) as genres,\n" +
-                    "substring_index((group_concat(distinct s.name  separator ',') ), ',', 3) as stars, \t\n" +
-                    "r.rating \n" +
-                    "from movies m, genres g,  genres_in_movies gim, stars s, stars_in_movies sim, ratings r\n" +
-                    "where m.id=gim.movieId and \n" +
-                    "gim.genreId = g.Id and\n" +
-                    "m.id=sim.movieId and\n" +
-                    "sim.starId=s.id and \n" +
-                    "m.id = r.movieId\n" +
-                    "group by m.title, m.year, m.director, r.rating\n" +
-                    "order by r.rating DESC\n" +
-                    "limit 20";
+            String movieId = request.getParameter("action");
+            String query = "select m.id, m.title as title, m.year as year, m.director, group_concat(distinct g.name separator ', ') as genres, group_concat(distinct s.name separator ', ') as stars, r.rating as rating\n" +
+                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim, ratings r\n" +
+                    "where s.id = sim.starId and m.id = sim.movieId\n" +
+                    "and g.id = gim.genreId and m.id = gim.movieId\n" +
+                    "and m.id = r.movieId\n" +
+                    "and m.id = '" + movieId +"';";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
 
             out.println("<body>");
-            out.println("<h1>MovieDB Stars</h1>");
+            out.println("<h1>Single Movie Page</h1>");
 
-            out.println("<table border>");
-
-            // add table header row
-            out.println("<tr>");
-            out.println("<td>title</td>");
-            out.println("<td>year</td>");
-            out.println("<td>director</td>");
-            out.println("<td>genres</td>");
-            out.println("<td>stars</td>");
-            out.println("<td>rating</td>");
-            out.println("</tr>");
 
             // add a row for every star result
-            movieList = new ArrayList<Movie>();
             while (resultSet.next()) {
-                String movieId = resultSet.getString("id");
+                // get a star from result set
                 String title = resultSet.getString("title");
                 String year = resultSet.getString("year");
                 String director = resultSet.getString("director");
-                String genresConcat = resultSet.getString("genres");
-                String starsConcat = resultSet.getString("stars");
+                String genres = resultSet.getString("genres");
+                String stars = resultSet.getString("stars");
                 String rating = resultSet.getString("rating");
 
-                //movieList.add(new Movie(title, Integer.parseInt(year), director, genresConcat, starsConcat, Float.parseFloat(rating)));
-
-                out.println("<tr>");
-                out.println("<td><a href='movie?action=" + movieId + "'>" + title + "</a></td>");
-                out.println("<td>" + year + "</td>");
-                out.println("<td>" + director + "</td>");
-                out.println("<td>" + genresConcat + "</td>");
-                String[] starsSplit = starsConcat.split(",");
-                out.print("<td>");
-                for (String s : starsSplit) {
-                    //out.print(s + ", ");
-                    out.print("<a href='starlist?action=" + s + "'>" + s + "</a>" + ", ");
+                out.println("<p>Title: " + title + "</p>");
+                if(year == null)
+                    out.println("<p>Year: N/A</p>");
+                else
+                    out.println("<p>Year: " + year + "</p>");
+                out.println("<p>Director: " + director + "</p>");
+                out.print("<p>Genre(s):</p>");
+                String[] genresSplit = genres.split(",");
+                out.print("<ul>");
+                for(String m : genresSplit){
+                    out.print("<li>" + m + "</li>");
                 }
-                out.println("</td>");
-                //out.println("<td>" + starsConcat + "</td>");
-                out.println("<td>" + rating + "</td>");
-                out.println("</tr>");
+                out.println("</ul>");
 
+                out.print("<p>Genre(s):</p>");
+                String[] starsSplit = stars.split(",");
+                out.print("<ul>");
+                for(String s : starsSplit){
+                    if (s.startsWith(" ")) {
+                        s = s.substring(1, s.length());
+                    }
+                    out.print("<li><a href='starlist?action=" + s + "'>" + s + "</a></li>");
+                }
+                out.println("</ul>");
+
+                out.println("<p>Rating: " + rating + "</p>");
+
+                out.println("<p><a href='/cs122b_spring20_team_13/'>Return to Movie List</a></p>");
             }
 
-            out.println("</table>");
             out.println("</body>");
 
             resultSet.close();
