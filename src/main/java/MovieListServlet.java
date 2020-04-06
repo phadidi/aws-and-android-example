@@ -41,7 +41,7 @@ public class MovieListServlet extends HttpServlet {
             // declare statement
             Statement statement = connection.createStatement();
             // prepare query
-            String query = "select m.title, m.year, m.director, \n" +
+            String query = "select m.id, m.title, m.year, m.director, \n" +
                     "substring_index((group_concat(distinct g.name separator ',') ), ',', 3) as genres,\n" +
                     "substring_index((group_concat(distinct s.name  separator ',') ), ',', 3) as stars, \t\n" +
                     "r.rating \n" +
@@ -75,7 +75,7 @@ public class MovieListServlet extends HttpServlet {
             // add a row for every star result
             movieList = new ArrayList<Movie>();
             while (resultSet.next()) {
-                // get a star from result set
+                String movieId = resultSet.getString("id");
                 String title = resultSet.getString("title");
                 String year = resultSet.getString("year");
                 String director = resultSet.getString("director");
@@ -86,7 +86,7 @@ public class MovieListServlet extends HttpServlet {
                 //movieList.add(new Movie(title, Integer.parseInt(year), director, genresConcat, starsConcat, Float.parseFloat(rating)));
 
                 out.println("<tr>");
-                out.println("<td>" + title + "</td>");
+                out.println("<td><a href='" + movieId + "?action=\" + title + \"'>" + title + "</a></td>");
                 out.println("<td>" + year + "</td>");
                 out.println("<td>" + director + "</td>");
                 out.println("<td>" + genresConcat + "</td>");
