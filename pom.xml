@@ -7,11 +7,7 @@
     <groupId>groupId</groupId>
     <artifactId>cs122b-spring20-team-13</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>
@@ -24,34 +20,9 @@
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
     <build>
         <finalName>cs122b-spring20-team-13</finalName>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <warSourceDirectory>web</warSourceDirectory>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
-
 
 </project>

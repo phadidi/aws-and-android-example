@@ -1,5 +1,3 @@
-package main.java;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -60,13 +58,13 @@ public class MovieListServlet extends HttpServlet {
             ResultSet resultSet = statement.executeQuery(query);
 
             out.println("<body>");
-            out.println("<h1>Top 20 Movies List</h1>");
+            out.println("<h1>MovieDB Stars</h1>");
 
             out.println("<table border>");
 
             // add table header row
             out.println("<tr>");
-            out.println("<td><a href='movietest'>title</a></td>");
+            out.println("<td>title</td>");
             out.println("<td>year</td>");
             out.println("<td>director</td>");
             out.println("<td>genres</td>");
@@ -77,7 +75,7 @@ public class MovieListServlet extends HttpServlet {
             // add a row for every star result
             movieList = new ArrayList<Movie>();
             while (resultSet.next()) {
-                //String movieID = resultSet.getString("id");
+                // get a star from result set
                 String title = resultSet.getString("title");
                 String year = resultSet.getString("year");
                 String director = resultSet.getString("director");
@@ -85,14 +83,21 @@ public class MovieListServlet extends HttpServlet {
                 String starsConcat = resultSet.getString("stars");
                 String rating = resultSet.getString("rating");
 
-                //movieList.add(new Movie(movieID, title, Integer.parseInt(year), director, genresConcat, starsConcat, Float.parseFloat(rating)));
+                //movieList.add(new Movie(title, Integer.parseInt(year), director, genresConcat, starsConcat, Float.parseFloat(rating)));
 
                 out.println("<tr>");
                 out.println("<td>" + title + "</td>");
                 out.println("<td>" + year + "</td>");
                 out.println("<td>" + director + "</td>");
                 out.println("<td>" + genresConcat + "</td>");
-                out.println("<td>" + starsConcat + "</td>");
+                String[] starsSplit = starsConcat.split(",");
+                out.print("<td>");
+                for (String s : starsSplit) {
+                    //out.print(s + ", ");
+                    out.print("<a href='starlist?action=" + s + "'>" + s + "</a>" + ", ");
+                }
+                out.println("</td>");
+                //out.println("<td>" + starsConcat + "</td>");
                 out.println("<td>" + rating + "</td>");
                 out.println("</tr>");
 

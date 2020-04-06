@@ -1,10 +1,7 @@
-package main.java;
-
 import java.util.Set;
 import java.util.HashSet;
 
 public class Movie {
-    private String id;
     private String title;
     private int year;
     private String director;
@@ -21,8 +18,7 @@ public class Movie {
         rating = 0;
     }
 
-    public Movie(String movieId, String rowTitle, int rowYear, String rowDirector, String rowGenres, String rowStars, float rowRating) {
-        id = movieId;
+    public Movie(String rowTitle, int rowYear, String rowDirector, String rowGenres, String rowStars, float rowRating) {
         title = rowTitle;
         year = rowYear;
         director = rowDirector;
