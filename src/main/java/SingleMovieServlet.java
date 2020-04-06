@@ -76,7 +76,7 @@ public class SingleMovieServlet extends HttpServlet {
                 }
                 out.println("</ul>");
 
-                out.print("<p>Genre(s):</p>");
+                out.print("<p>Star(s):</p>");
                 String[] starsSplit = stars.split(",");
                 out.print("<ul>");
                 for(String s : starsSplit){
