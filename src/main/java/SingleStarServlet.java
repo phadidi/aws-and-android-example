@@ -43,7 +43,7 @@ public class SingleStarServlet extends HttpServlet {
             // prepare query
             String starName = request.getParameter("action");
             String query = "select s.name, s.birthYear,\n" +
-                    "group_concat(distinct m.title separator ', ') as titles, group_concat(distinct sim.movieId separator ', ') as movieIds\n" +
+                    "group_concat(distinct m.title separator ', ') as titles\n" +
                     "from stars s, movies m, stars_in_movies sim\n" +
                     "where s.id = sim.starId and m.id = sim.movieId\n" +
                     "and name = " + "'" + starName + "';";
@@ -61,7 +61,7 @@ public class SingleStarServlet extends HttpServlet {
                 String name = resultSet.getString("name");
                 String birthYear = resultSet.getString("birthYear");
                 String titles = resultSet.getString("titles");
-                String movieIDs = resultSet.getString("movieIds");
+                //String movieIDs = resultSet.getString("movieIds");
 
                 out.println("<p>Name: " + name + "</p>");
                 if (birthYear == null)
@@ -70,18 +70,34 @@ public class SingleStarServlet extends HttpServlet {
                     out.println("<p>Birth Year: " + birthYear + "</p>");
                 out.print("<p>Movies appeared in:</p>");
                 String[] movieSplit = titles.split(",");
-                String[] movieIDSplit =  movieIDs.split(",");
+                //String[] movieIDSplit =  movieIDs.split(",");
                 out.print("<ul>");
-                int midIndex = 0;
+                //int midIndex = 0;
+
                 for (String m : movieSplit) {
                     if (m.startsWith(" ")) {
                         m = m.substring(1, m.length());
                     }
-                    if (movieIDSplit[midIndex].startsWith(" ")) {
-                        movieIDSplit[midIndex] = movieIDSplit[midIndex].substring(1, movieIDSplit[midIndex].length());
+                    // TODO: get the id for the corresponding movie, add distinct so there is only one result
+                    String matchQuery = "select distinct m.id\n" +
+                            "from stars s, movies m, stars_in_movies sim\n" +
+                            "where s.id = sim.starId and m.id = sim.movieId\n" +
+                            "and s.name = " + "'" + starName + "'" + " and m.title = " + "'" + m + "'" + ";";
+                    // execute query
+                    ResultSet resultMovie = statement.executeQuery(matchQuery);
+                    String thisId = "";
+                    while (resultMovie.next() && thisId.compareTo("") == 0) { // check to stop after first row
+                        thisId = resultMovie.getString("id");
                     }
-                    out.println("<li><a href='movie?action=" + movieIDSplit[midIndex] + "'>" + m + "</a></li>");
-                    midIndex++;
+                    if (thisId.startsWith(" ")) {
+                        thisId = thisId.substring(1, m.length());
+                    }
+                    //if (movieIDSplit[midIndex].startsWith(" ")) {
+                    // movieIDSplit[midIndex] = movieIDSplit[midIndex].substring(1, movieIDSplit[midIndex].length());
+                    //}
+                    out.println("<li><a href='movie?action=" + "'" + thisId + "'" + "'>" + m + "</a></li>");
+                    //midIndex++;
+                    resultMovie.close();
                 }
                 out.println("</ul>");
 
