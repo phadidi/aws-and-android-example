@@ -44,7 +44,7 @@ public class SingleMovieServlet extends HttpServlet {
                     "where s.id = sim.starId and m.id = sim.movieId\n" +
                     "and g.id = gim.genreId and m.id = gim.movieId\n" +
                     "and m.id = r.movieId\n" +
-                    "and m.id = '" + movieId +"';";
+                    "and m.id = '" + movieId + "';";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
 
@@ -63,7 +63,7 @@ public class SingleMovieServlet extends HttpServlet {
                 String rating = resultSet.getString("rating");
 
                 out.println("<p>Title: " + title + "</p>");
-                if(year == null)
+                if (year == null)
                     out.println("<p>Year: N/A</p>");
                 else
                     out.println("<p>Year: " + year + "</p>");
@@ -71,7 +71,7 @@ public class SingleMovieServlet extends HttpServlet {
                 out.print("<p>Genre(s):</p>");
                 String[] genresSplit = genres.split(",");
                 out.print("<ul>");
-                for(String m : genresSplit){
+                for (String m : genresSplit) {
                     out.print("<li>" + m + "</li>");
                 }
                 out.println("</ul>");
@@ -79,7 +79,7 @@ public class SingleMovieServlet extends HttpServlet {
                 out.print("<p>Star(s):</p>");
                 String[] starsSplit = stars.split(",");
                 out.print("<ul>");
-                for(String s : starsSplit){
+                for (String s : starsSplit) {
                     if (s.startsWith(" ")) {
                         s = s.substring(1, s.length());
                     }

@@ -15,7 +15,7 @@ import java.util.List;
 // this annotation maps this Java Servlet Class to a URL
 @WebServlet("/starlist")
 
-public class StarListServlet extends HttpServlet {
+public class SingleStarServlet extends HttpServlet {
     private List<Movie> movieList;
     private static final long serialVersionUID = 1L;
 
@@ -43,16 +43,15 @@ public class StarListServlet extends HttpServlet {
             // prepare query
             String starName = request.getParameter("action");
             String query = "select s.name, s.birthYear,\n" +
-                    "group_concat(distinct m.title separator ', ') as title\n" +
+                    "group_concat(distinct m.title separator ', ') as titles, group_concat(distinct sim.movieId separator ', ') as movieIds\n" +
                     "from stars s, movies m, stars_in_movies sim\n" +
                     "where s.id = sim.starId and m.id = sim.movieId\n" +
-                    "and name = " + "'" + starName + "'\n" +
-                    "group by s.name;";
+                    "and name = " + "'" + starName + "';";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
 
             out.println("<body>");
-            out.println("<h1>Single Stars Page</h1>");
+            out.println("<h1>Single Star Page</h1>");
 
 
             // add a row for every star result
@@ -61,18 +60,28 @@ public class StarListServlet extends HttpServlet {
                 // get a star from result set
                 String name = resultSet.getString("name");
                 String birthYear = resultSet.getString("birthYear");
-                String titles = resultSet.getString("title");
+                String titles = resultSet.getString("titles");
+                String movieIDs = resultSet.getString("movieIds");
 
                 out.println("<p>Name: " + name + "</p>");
-                if(birthYear == null)
+                if (birthYear == null)
                     out.println("<p>Birth Year: N/A</p>");
                 else
                     out.println("<p>Birth Year: " + birthYear + "</p>");
                 out.print("<p>Movies appeared in:</p>");
                 String[] movieSplit = titles.split(",");
+                String[] movieIDSplit =  movieIDs.split(",");
                 out.print("<ul>");
-                for(String m : movieSplit){
-                    out.print("<li>" + m + "</li>");
+                int midIndex = 0;
+                for (String m : movieSplit) {
+                    if (m.startsWith(" ")) {
+                        m = m.substring(1, m.length());
+                    }
+                    if (movieIDSplit[midIndex].startsWith(" ")) {
+                        movieIDSplit[midIndex] = movieIDSplit[midIndex].substring(1, movieIDSplit[midIndex].length());
+                    }
+                    out.println("<li><a href='movie?action=" + movieIDSplit[midIndex] + "'>" + m + "</a></li>");
+                    midIndex++;
                 }
                 out.println("</ul>");
 

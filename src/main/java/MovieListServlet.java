@@ -92,9 +92,15 @@ public class MovieListServlet extends HttpServlet {
                 out.println("<td>" + genresConcat + "</td>");
                 String[] starsSplit = starsConcat.split(",");
                 out.print("<td>");
+                int count = 1; // added to remove trailing comma at the end
+                int lim = starsSplit.length;
                 for (String s : starsSplit) {
                     //out.print(s + ", ");
-                    out.print("<a href='starlist?action=" + s + "'>" + s + "</a>" + ", ");
+                    if (count < lim)
+                        out.print("<a href='starlist?action=" + s + "'>" + s + "</a>" + ", ");
+                    else // reached the end, remove trailing comma
+                        out.print("<a href='starlist?action=" + s + "'>" + s + "</a>");
+                    count++;
                 }
                 out.println("</td>");
                 //out.println("<td>" + starsConcat + "</td>");

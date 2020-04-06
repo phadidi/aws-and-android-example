@@ -53,33 +53,43 @@ public class Movie {
         return 0;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return this.title;
     }
 
-    public int getYear(){
+    public int getYear() {
         return this.year;
     }
 
-    public String getDirector(){
+    public String getDirector() {
         return this.director;
     }
 
-    public Set<String> getStars(){
+    public Set<String> getStars() {
         return this.stars;
     }
 
-    public Set<String> getGenres(){
+    public Set<String> getGenres() {
         return this.genres;
     }
 
-    public float getRating() { return this.rating; }
+    public float getRating() {
+        return this.rating;
+    }
 
-    public void setTitle(String title) { this.title = title; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public void setYear(int year) { this.year = year; }
+    public void setYear(int year) {
+        this.year = year;
+    }
 
-    public void setDirector(String director) { this.director = director; }
+    public void setDirector(String director) {
+        this.director = director;
+    }
 
-    public void setRating(float rating) { this.rating = rating; }
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
 }
