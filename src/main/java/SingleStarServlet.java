@@ -43,7 +43,6 @@ public class SingleStarServlet extends HttpServlet {
             // prepare query
             request.setCharacterEncoding("UTF-8");
             String starName = request.getParameter("action");
-            out.println("<p>" + starName + "</p>");
             String query = "select s.id, s.name, s.birthYear,\n" +
                     "group_concat(distinct m.title separator ', ') as titles\n" +
                     "from stars s, movies m, stars_in_movies sim\n" +
@@ -63,7 +62,7 @@ public class SingleStarServlet extends HttpServlet {
                 String name = resultSet.getString("name");
                 String birthYear = resultSet.getString("birthYear");
                 String titles = resultSet.getString("titles");
-
+                out.println("<p>" + name + "</p>"); // moved here to be placed beneath header
                 if (birthYear == null)
                     out.println("<p>Birth Year: N/A</p>");
                 else
