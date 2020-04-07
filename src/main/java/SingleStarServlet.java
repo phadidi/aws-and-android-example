@@ -25,8 +25,9 @@ public class SingleStarServlet extends HttpServlet {
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/fabflix_db";
 
-        // set response mime type
-        response.setContentType("text/html");
+        // set response mime type - handle special characters
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
         // get the printwriter for writing response
         PrintWriter out = response.getWriter();
