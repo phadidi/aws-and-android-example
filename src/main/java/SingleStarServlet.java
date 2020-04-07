@@ -8,15 +8,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 
 // this annotation maps this Java Servlet Class to a URL
 @WebServlet("/starlist")
 
 public class SingleStarServlet extends HttpServlet {
-    private List<Movie> movieList;
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -58,7 +55,6 @@ public class SingleStarServlet extends HttpServlet {
 
 
             // add a row for every star result
-            movieList = new ArrayList<Movie>();
             while (resultSet.next()) {
                 // get a star from result set
                 String starId = resultSet.getString("id");

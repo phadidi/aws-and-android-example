@@ -8,15 +8,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 
 // this annotation maps this Java Servlet Class to a URL
 @WebServlet("/")
 
 public class MovieListServlet extends HttpServlet {
-    private List<Movie> movieList;
     private static final long serialVersionUID = 1L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,7 +74,6 @@ public class MovieListServlet extends HttpServlet {
             out.println("</tr>");
 
             // add a row for every star result
-            movieList = new ArrayList<Movie>();
             while (resultSet.next()) {
                 String movieId = resultSet.getString("id");
                 String title = resultSet.getString("title");
@@ -86,9 +82,6 @@ public class MovieListServlet extends HttpServlet {
                 String genresConcat = resultSet.getString("genres");
                 String starsConcat = resultSet.getString("stars");
                 String rating = resultSet.getString("rating");
-
-                //movieList.add(new Movie(title, Integer.parseInt(year), director, genresConcat, starsConcat, Float.parseFloat(rating)));
-
                 out.println("<tr>");
                 out.println("<td><a href='movie?action=" + movieId + "'>" + title + "</a></td>");
                 out.println("<td>" + year + "</td>");
@@ -107,7 +100,6 @@ public class MovieListServlet extends HttpServlet {
                     count++;
                 }
                 out.println("</td>");
-                //out.println("<td>" + starsConcat + "</td>");
                 out.println("<td>" + rating + "</td>");
                 out.println("</tr>");
 
