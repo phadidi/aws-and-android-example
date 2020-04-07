@@ -1,3 +1,5 @@
+package main.java;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +61,7 @@ public class MovieListServlet extends HttpServlet {
             ResultSet resultSet = statement.executeQuery(query);
 
             out.println("<body>");
-            out.println("<h1>MovieDB Stars</h1>");
+            out.println("<h1>Top 20 Movies List</h1>");
 
             out.println("<table border>");
 

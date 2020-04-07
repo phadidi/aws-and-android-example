@@ -1,3 +1,5 @@
+package main.java;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -88,7 +90,7 @@ public class SingleMovieServlet extends HttpServlet {
 
                 out.println("<p>Rating: " + rating + "</p>");
 
-                out.println("<p><a href='/cs122b_spring20_team_13_war_exploded/'>Return to Movie List</a></p>");
+                out.println("<p><a href='/cs122b_spring20_team_13/'>Return to Movie List</a></p>");
             }
 
             out.println("</body>");
