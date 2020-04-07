@@ -42,7 +42,7 @@ public class SingleStarServlet extends HttpServlet {
             Statement statement = connection.createStatement();
             // prepare query
             String starName = request.getParameter("action");
-            String query = "select s.name, s.birthYear,\n" +
+            String query = "select s.id, s.name, s.birthYear,\n" +
                     "group_concat(distinct m.title separator ', ') as titles\n" +
                     "from stars s, movies m, stars_in_movies sim\n" +
                     "where s.id = sim.starId and m.id = sim.movieId\n" +
@@ -58,6 +58,7 @@ public class SingleStarServlet extends HttpServlet {
             movieList = new ArrayList<Movie>();
             while (resultSet.next()) {
                 // get a star from result set
+                String starId = resultSet.getString("id");
                 String name = resultSet.getString("name");
                 String birthYear = resultSet.getString("birthYear");
                 String titles = resultSet.getString("titles");
@@ -78,18 +79,17 @@ public class SingleStarServlet extends HttpServlet {
                     if (m.startsWith(" ")) {
                         m = m.substring(1, m.length());
                     }
-                    // TODO: get the id for the corresponding movie, add distinct so there is only one result
+                    // TODO: get the id for the corresponding movie, add distinct so there is only one result?
                     String matchQuery = "select distinct m.id\n" +
                             "from stars s, movies m, stars_in_movies sim\n" +
-                            "where s.id = sim.starId and m.id = sim.movieId\n" +
-                            "and s.name = " + "'" + starName + "'" + " and m.title = " + "'" + m + "'" + ";";
+                            "where s.id = '" + starId + "' and m.id = sim.movieId and m.title = '" + m + "';";
                     String thisId = "";
                     // create database connection
                     Connection connectionM = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
                     // declare statement
                     Statement statementM = connectionM.createStatement();
                     ResultSet resultMovie = statementM.executeQuery(matchQuery);
-                    while (resultMovie.next() && thisId.compareTo("") == 0) { // check to stop after first row
+                    while (resultMovie.next()) { // check to stop after first row
                         thisId = resultMovie.getString("id");
                     }
                     if (thisId.startsWith(" ")) {
