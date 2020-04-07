@@ -98,7 +98,7 @@ public class SingleStarServlet extends HttpServlet {
                     //if (movieIDSplit[midIndex].startsWith(" ")) {
                     // movieIDSplit[midIndex] = movieIDSplit[midIndex].substring(1, movieIDSplit[midIndex].length());
                     //}
-                    out.println("<li><a href='movie?action=" + "'" + thisId + "'" + "'>" + m + "</a></li>");
+                    out.println("<li><a href='movie?action=" + thisId + "'" + ">" + m + "</a></li>");
                     //midIndex++;
                     resultMovie.close();
                     statementM.close();
