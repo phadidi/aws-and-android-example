@@ -83,9 +83,12 @@ public class SingleStarServlet extends HttpServlet {
                             "from stars s, movies m, stars_in_movies sim\n" +
                             "where s.id = sim.starId and m.id = sim.movieId\n" +
                             "and s.name = " + "'" + starName + "'" + " and m.title = " + "'" + m + "'" + ";";
-                    // execute query
-                    ResultSet resultMovie = statement.executeQuery(matchQuery);
                     String thisId = "";
+                    // create database connection
+                    Connection connectionM = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+                    // declare statement
+                    Statement statementM = connectionM.createStatement();
+                    ResultSet resultMovie = statementM.executeQuery(matchQuery);
                     while (resultMovie.next() && thisId.compareTo("") == 0) { // check to stop after first row
                         thisId = resultMovie.getString("id");
                     }
@@ -98,6 +101,8 @@ public class SingleStarServlet extends HttpServlet {
                     out.println("<li><a href='movie?action=" + "'" + thisId + "'" + "'>" + m + "</a></li>");
                     //midIndex++;
                     resultMovie.close();
+                    statementM.close();
+                    connectionM.close();
                 }
                 out.println("</ul>");
 
