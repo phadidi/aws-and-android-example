@@ -22,10 +22,7 @@ public class MovieListServlet extends HttpServlet {
         // change this to your own mysql username and password
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/fabflix_db";
-
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
+        String loginUrl = "jdbc:mysql://ec2-35-175-246-50.compute-1.amazonaws.com:8080/fabflix_db";
 
         // set response mime type
         request.setCharacterEncoding("UTF-8");
