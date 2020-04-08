@@ -103,7 +103,7 @@ public class SingleStarServlet extends HttpServlet {
                 }
                 out.println("</ul>");
 
-                out.println("<p><a href='/cs122b_spring20_team_13/'>Return to Movie List</a></p>");
+                out.println("<p><a href='/cs122b-spring20-team-13/'>Return to Movie List</a></p>");
             }
 
             out.println("</body>");
