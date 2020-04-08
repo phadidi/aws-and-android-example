@@ -20,7 +20,7 @@ public class SingleMovieServlet extends HttpServlet {
         // change this to your own mysql username and password
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://ec2-35-175-246-50.compute-1.amazonaws.com:8080/fabflix_db";
+        String loginUrl = "jdbc:mysql://localhost:3306/fabflix_db";
 
         // set response mime type
         request.setCharacterEncoding("UTF-8");
@@ -40,11 +40,11 @@ public class SingleMovieServlet extends HttpServlet {
             Statement statement = connection.createStatement();
             // prepare query
             String movieId = request.getParameter("action");
-            String query = "select m.id, m.title as title, m.year as year, m.director, group_concat(distinct g.name separator ', ') as genres, group_concat(distinct s.name separator ', ') as stars, r.rating as rating\n" +
-                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim, ratings r\n" +
+            String query = "select m.id, m.title as title, m.year as year, m.director, group_concat(distinct g.name separator ', ')\n" +
+                    "as genres, group_concat(distinct s.name separator ', ') as stars, (SELECT rating from ratings r where m.id = r.movieId) as rating\n" +
+                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim\n" +
                     "where s.id = sim.starId and m.id = sim.movieId\n" +
                     "and g.id = gim.genreId and m.id = gim.movieId\n" +
-                    "and m.id = r.movieId\n" +
                     "and m.id = '" + movieId + "';";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
@@ -88,7 +88,10 @@ public class SingleMovieServlet extends HttpServlet {
                 }
                 out.println("</ul>");
 
-                out.println("<p>Rating: " + rating + "</p>");
+                if(rating == null)
+                    out.println("<p>rating: N/A</p>");
+                else
+                    out.println("<p>Rating: " + rating + "</p>");
 
                 out.println("<p><a href='/cs122b-spring20-team-13/'>Return to Movie List</a></p>");
             }

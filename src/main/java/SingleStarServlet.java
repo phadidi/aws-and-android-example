@@ -22,7 +22,7 @@ public class SingleStarServlet extends HttpServlet {
         // change this to your own mysql username and password
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://ec2-35-175-246-50.compute-1.amazonaws.com:8080/fabflix_db";
+        String loginUrl = "jdbc:mysql://localhost:3306/fabflix_db";
 
         // set response mime type
         request.setCharacterEncoding("UTF-8");
@@ -73,6 +73,7 @@ public class SingleStarServlet extends HttpServlet {
                 out.print("<ul>");
 
                 for (String m : movieSplit) {
+                    //out.println(m);
                     if (m.startsWith(" ")) {
                         m = m.substring(1, m.length());
                     }
@@ -92,12 +93,8 @@ public class SingleStarServlet extends HttpServlet {
                     if (thisId.startsWith(" ")) {
                         thisId = thisId.substring(1, m.length());
                     }
-                    //if (movieIDSplit[midIndex].startsWith(" ")) {
-                    // movieIDSplit[midIndex] = movieIDSplit[midIndex].substring(1, movieIDSplit[midIndex].length());
-                    //}
                     out.println("<li><a href='movie?action=" + thisId + "'>" + m + "</a></li>");
 
-                    //midIndex++;
                     resultMovie.close();
                     statementM.close();
                     connectionM.close();
