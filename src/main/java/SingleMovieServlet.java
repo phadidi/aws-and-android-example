@@ -20,7 +20,7 @@ public class SingleMovieServlet extends HttpServlet {
         // change this to your own mysql username and password
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://ec2-35-175-246-50.compute-1.amazonaws.com:8080/fabflix_db";
+        String loginUrl = "jdbc:mysql://localhost:3306/fabflix_db";
 
         // set response mime type
         request.setCharacterEncoding("UTF-8");
@@ -41,7 +41,7 @@ public class SingleMovieServlet extends HttpServlet {
             // prepare query
             String movieId = request.getParameter("action");
             String query = "select m.id, m.title as title, m.year as year, m.director, group_concat(distinct g.name separator ', ')\n" +
-                    "as genres, group_concat(distinct s.name separator ', ') as stars, (SELECT rating from ratings r where m.id = r.movieId) as rating\n" +
+                    "as genres, group_concat(distinct s.name separator ', ') as stars\n" +
                     "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim\n" +
                     "where s.id = sim.starId and m.id = sim.movieId\n" +
                     "and g.id = gim.genreId and m.id = gim.movieId\n" +
@@ -61,7 +61,6 @@ public class SingleMovieServlet extends HttpServlet {
                 String director = resultSet.getString("director");
                 String genres = resultSet.getString("genres");
                 String stars = resultSet.getString("stars");
-                String rating = resultSet.getString("rating");
 
                 out.println("<p>Title: " + title + "</p>");
                 if (year == null)
@@ -87,14 +86,21 @@ public class SingleMovieServlet extends HttpServlet {
                     out.print("<li><a href='starlist?action=" + s + "'>" + s + "</a></li>");
                 }
                 out.println("</ul>");
-
-                if(rating == null)
-                    out.println("<p>rating: N/A</p>");
-                else
-                    out.println("<p>Rating: " + rating + "</p>");
-
-                out.println("<p><a href='/cs122b-spring20-team-13/'>Return to Movie List</a></p>");
             }
+
+            // get the rating - done separately to catch case where a movie has no rating
+            query = "select rating from ratings where movieId = '" + movieId + "'";
+            resultSet = statement.executeQuery(query);
+
+            String rating = " ";
+            while (resultSet.next()) {
+                rating = resultSet.getString("rating");
+                out.println("<p>Rating: " + rating + "</p>");
+            }
+            if(rating.equals(" ")){
+                out.println("<p>Rating: N/A</p>");
+            }
+            out.println("<p><a href='/cs122b-spring20-team-13/'>Return to Movie List</a></p>");
 
             out.println("</body>");
 
