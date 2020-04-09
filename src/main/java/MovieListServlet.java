@@ -42,8 +42,8 @@ public class MovieListServlet extends HttpServlet {
             Statement statement = connection.createStatement();
             // prepare query
             String query = "select m.id, m.title, m.year, m.director, \n" +
-                    "substring_index((group_concat(distinct g.name separator ',') ), ',', 3) as genres,\n" +
-                    "substring_index((group_concat(distinct s.name  separator ',') ), ',', 3) as stars, \t\n" +
+                    "(group_concat(distinct g.name separator ',')) as genres,\n" +
+                    "(group_concat(distinct s.name  separator ','))  as stars, \t\n" +
                     "r.rating \n" +
                     "from movies m, genres g,  genres_in_movies gim, stars s, stars_in_movies sim, ratings r\n" +
                     "where m.id=gim.movieId and \n" +
@@ -92,10 +92,12 @@ public class MovieListServlet extends HttpServlet {
                 int lim = starsSplit.length;
                 for (String s : starsSplit) {
                     //out.print(s + ", ");
-                    if (count < lim)
+                    if (count < lim && count < 3)
                         out.print("<a href='starlist?action=" + s + "'>" + s + "</a>" + ", ");
-                    else // reached the end, remove trailing comma
+                    else { // reached the end, remove trailing comma
                         out.print("<a href='starlist?action=" + s + "'>" + s + "</a>");
+                        break; // stop after 3 stars without the delay of calling substring_index in SQL
+                    }
                     count++;
                 }
                 out.println("</td>");
