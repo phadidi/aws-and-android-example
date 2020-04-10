@@ -39,7 +39,7 @@ Based on a given star name, the class file SingleStarServlet.java loads the the 
 ### pom.xml
 The pom.xml file contains a list of artifacts to use, including mysql-connector-java and javax.servlet, along with directions to handle the Maven war packaging and the necessary maven-compiler-plugin and maven-war-plugin.
 
-##Contributions
+## Contributions
 Parsa Hadidi:
 - Set up the Class structures and provided AWS guidance. Worked on queries for the Top 20 Movie List.
 
