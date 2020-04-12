@@ -1,5 +1,10 @@
 package main.java;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -7,10 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 
 // this annotation maps this Java Servlet Class to a URL
@@ -43,9 +45,9 @@ public class MovieListServlet extends HttpServlet {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             // create database connection
             Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-            // declare statement
+            Connection dbcon = dataSource.getConnection();
+            // declare statement + prepare query
             Statement statement = connection.createStatement();
-            // prepare query
             String query = "select m.id, m.title, m.year, m.director, \n" +
                     "(group_concat(distinct g.name separator ',')) as genres,\n" +
                     "(group_concat(distinct s.name  separator ','))  as stars, \t\n" +
@@ -59,8 +61,32 @@ public class MovieListServlet extends HttpServlet {
                     "group by m.title, m.year, m.director, r.rating\n" +
                     "order by r.rating DESC\n" +
                     "limit 20;";
+            PreparedStatement dbstatement = dbcon.prepareStatement(query);
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
+            ResultSet movieResults = dbstatement.executeQuery();
+
+            JsonArray jsonArray = new JsonArray();
+
+            while (movieResults.next()) {
+                String movieId = movieResults.getString("id");
+                String title = movieResults.getString("title");
+                String year = movieResults.getString("year");
+                String director = movieResults.getString("director");
+                String genresConcat = movieResults.getString("genres");
+                String starsConcat = movieResults.getString("stars");
+                String rating = movieResults.getString("rating");
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id", movieId);
+                jsonObject.addProperty("title", title);
+                jsonObject.addProperty("year", year);
+                jsonObject.addProperty("director", director);
+                //TODO: split the genres and stars up to three entries again
+                jsonObject.addProperty("genres", genresConcat);
+                jsonObject.addProperty("stars", starsConcat);
+                jsonObject.addProperty("rating", rating);
+                jsonArray.add(jsonObject);
+            }
 
             out.println("<body>");
             out.println("<h1>Top 20 Movies List</h1>");
@@ -114,6 +140,15 @@ public class MovieListServlet extends HttpServlet {
             out.println("</table>");
             out.println("</body>");
 
+            // write JSON string to output
+            out.write(jsonArray.toString());
+            // set response status to 200 (OK)
+            response.setStatus(200);
+
+            movieResults.close();
+            dbstatement.close();
+            dbcon.close();
+
             resultSet.close();
             statement.close();
             connection.close();
@@ -135,6 +170,12 @@ public class MovieListServlet extends HttpServlet {
             out.println("Exception in doGet: " + e.getMessage());
             out.println("</p>");
             out.print("</body>");
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
+
+            // set reponse status to 500 (Internal Server Error)
+            response.setStatus(500);
         }
 
         out.println("</html>");
