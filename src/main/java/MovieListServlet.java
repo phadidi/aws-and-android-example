@@ -4,6 +4,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -18,6 +19,10 @@ import java.sql.Statement;
 public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    // Create a dataSource which registered in web.xml
+    @Resource(name = "jdbc/moviedb")
+    private DataSource dataSource;
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // change this to your own mysql username and password
         String loginUser = "mytestuser";
@@ -26,7 +31,7 @@ public class MovieListServlet extends HttpServlet {
 
         // set response mime type
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
 
         // get the printwriter for writing response
         PrintWriter out = response.getWriter();

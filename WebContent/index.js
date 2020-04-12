@@ -18,19 +18,7 @@ function handleMovieListResult(resultData) {
 
     // Populate the star table
     // Find the empty table body by id "star_table_body"
-    let movieListTableBodyElement = jQuery("select m.id, m.title, m.year, m.director, \n" +
-        "(group_concat(distinct g.name separator ',')) as genres,\n" +
-        "(group_concat(distinct s.name  separator ','))  as stars, \t\n" +
-        "r.rating \n" +
-        "from movies m, genres g,  genres_in_movies gim, stars s, stars_in_movies sim, ratings r\n" +
-        "where m.id=gim.movieId and \n" +
-        "gim.genreId = g.Id and\n" +
-        "m.id=sim.movieId and\n" +
-        "sim.starId=s.id and \n" +
-        "m.id = r.movieId\n" +
-        "group by m.title, m.year, m.director, r.rating\n" +
-        "order by r.rating DESC\n" +
-        "limit 20;");
+    let movieListTableBodyElement = jQuery("movielist_table_body");
 
     // Iterate through resultData, no more than 20 entries
     for (let i = 0; i < Math.min(20, resultData.length); i++) {
@@ -46,6 +34,7 @@ function handleMovieListResult(resultData) {
             '</a>' +
             "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["director"] + "</th>";
         rowHTML += "<th>" + resultData[i]["genres"] + "</th>";
         rowHTML += "<th>" + resultData[i]["stars"] + "</th>";
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
