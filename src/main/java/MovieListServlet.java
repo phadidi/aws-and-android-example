@@ -53,7 +53,7 @@ public class MovieListServlet extends HttpServlet {
                     "m.id = r.movieId\n" +
                     "group by m.title, m.year, m.director, r.rating\n" +
                     "order by r.rating DESC\n" +
-                    "limit 20";
+                    "limit 20;";
             // execute query
             ResultSet resultSet = statement.executeQuery(query);
 
