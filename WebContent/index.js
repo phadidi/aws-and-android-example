@@ -18,7 +18,7 @@ function handleMovieListResult(resultData) {
 
     // Populate the movielist table
     // Find the empty table body by id "movielist_table_body"
-    let movieListTableBodyElement = jQuery("movielist_table_body");
+    let movieListTableBodyElement = jQuery("#movielist_table_body");
 
     // Iterate through resultData, no more than 20 entries
     for (let i = 0; i < Math.min(20, resultData.length); i++) {
@@ -35,6 +35,7 @@ function handleMovieListResult(resultData) {
             "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
+        // TODO: split genres and stars here with proper limit of up to 3 and hyperlinks
         rowHTML += "<th>" + resultData[i]["genres"] + "</th>";
         rowHTML += "<th>" + resultData[i]["stars"] + "</th>";
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";

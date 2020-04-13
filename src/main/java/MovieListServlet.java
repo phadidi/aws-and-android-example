@@ -26,9 +26,9 @@ public class MovieListServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+        //String loginUser = "mytestuser";
+        //String loginPasswd = "mypassword";
+        //String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
         // set response mime type
         request.setCharacterEncoding("UTF-8");
@@ -43,13 +43,13 @@ public class MovieListServlet extends HttpServlet {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             // create database connection
-            Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            //Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
             Connection dbcon = dataSource.getConnection();
             // declare statement + prepare query
-            Statement statement = connection.createStatement();
+            //Statement statement = connection.createStatement();
             String query = "select m.id, m.title, m.year, m.director, \n" +
                     "(group_concat(distinct g.name separator ',')) as genres,\n" +
-                    "(group_concat(distinct s.name  separator ','))  as stars, \t\n" +
+                    "(group_concat(distinct s.name  separator ','))  as stars, \n" +
                     "r.rating \n" +
                     "from movies m, genres g,  genres_in_movies gim, stars s, stars_in_movies sim, ratings r\n" +
                     "where m.id=gim.movieId and \n" +
@@ -62,7 +62,7 @@ public class MovieListServlet extends HttpServlet {
                     "limit 20;";
             PreparedStatement dbstatement = dbcon.prepareStatement(query);
             // execute query
-            ResultSet resultSet = statement.executeQuery(query);
+            //ResultSet resultSet = statement.executeQuery(query);
             ResultSet movieResults = dbstatement.executeQuery();
 
             JsonArray jsonArray = new JsonArray();
@@ -103,7 +103,7 @@ public class MovieListServlet extends HttpServlet {
             out.println("</tr>");*/
 
             // add a row for every star result
-            while (resultSet.next()) {
+            /*while (resultSet.next()) {
                 String movieId = resultSet.getString("id");
                 String title = resultSet.getString("title");
                 String year = resultSet.getString("year");
@@ -111,14 +111,14 @@ public class MovieListServlet extends HttpServlet {
                 String genresConcat = resultSet.getString("genres");
                 String starsConcat = resultSet.getString("stars");
                 String rating = resultSet.getString("rating");
-                //out.println("<tr>");
-                //out.println("<td><a href='movie?action=" + movieId + "'>" + title + "</a></td>");
-                //out.println("<td>" + year + "</td>");
-                //out.println("<td>" + director + "</td>");
-                //out.println("<td>" + genresConcat + "</td>");
-                //String[] starsSplit = starsConcat.split(",");
-                //out.print("<td>");
-                /*int count = 1; // added to remove trailing comma at the end
+                out.println("<tr>");
+                out.println("<td><a href='movie?action=" + movieId + "'>" + title + "</a></td>");
+                out.println("<td>" + year + "</td>");
+                out.println("<td>" + director + "</td>");
+                out.println("<td>" + genresConcat + "</td>");
+                String[] starsSplit = starsConcat.split(",");
+                out.print("<td>");
+                int count = 1; // added to remove trailing comma at the end
                 int lim = starsSplit.length;
                 for (String s : starsSplit) {
                     //out.print(s + ", ");
@@ -132,9 +132,9 @@ public class MovieListServlet extends HttpServlet {
                 }
                 out.println("</td>");
                 out.println("<td>" + rating + "</td>");
-                out.println("</tr>");*/
+                out.println("</tr>");
 
-            }
+            }*/
 
             //out.println("</table>");
             //out.println("</body>");
@@ -148,9 +148,9 @@ public class MovieListServlet extends HttpServlet {
             dbstatement.close();
             dbcon.close();
 
-            resultSet.close();
-            statement.close();
-            connection.close();
+            //resultSet.close();
+            //statement.close();
+            //connection.close();
 
         } catch (Exception e) {
             /*
