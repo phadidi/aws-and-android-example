@@ -29,7 +29,7 @@ function handleMovieListResult(resultData) {
         rowHTML +=
             "<th>" +
             // Add a link to single-star.html with id passed with GET url parameter
-            '<a href="movie?action=' + resultData[i]["id"] + '">'
+            '<a href="/movie?action=' + resultData[i]["id"] + '">'
             + resultData[i]["title"] +     // display title for the link text
             '</a>' +
             "</th>";
@@ -54,6 +54,6 @@ function handleMovieListResult(resultData) {
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "/", // Setting request url, which serves as the homepage for now
+    url: "/api/movielist", // Setting request url, which serves as the homepage for now
     success: (resultData) => handleMovieListResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });

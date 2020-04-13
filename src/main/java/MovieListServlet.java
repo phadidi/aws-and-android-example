@@ -15,7 +15,7 @@ import java.sql.*;
 
 
 // this annotation maps this Java Servlet Class to a URL
-@WebServlet(name = "MovieListServlet", urlPatterns = "/")
+@WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
 
 public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -162,7 +162,7 @@ public class MovieListServlet extends HttpServlet {
              *   tail -100 catalina.out
              * This can help you debug your program after deploying it on AWS.
              */
-            e.printStackTrace();
+            //e.printStackTrace();
 
             //out.println("<body>");
             //out.println("<p>");
