@@ -16,8 +16,8 @@
 function handleMovieListResult(resultData) {
     console.log("handleMovieListResult: populating star table from resultData");
 
-    // Populate the star table
-    // Find the empty table body by id "star_table_body"
+    // Populate the movielist table
+    // Find the empty table body by id "movielist_table_body"
     let movieListTableBodyElement = jQuery("movielist_table_body");
 
     // Iterate through resultData, no more than 20 entries
@@ -29,7 +29,7 @@ function handleMovieListResult(resultData) {
         rowHTML +=
             "<th>" +
             // Add a link to single-star.html with id passed with GET url parameter
-            '<a href="movie-list.html?id=' + resultData[i]['id'] + '">'
+            '<a href="movie?action=' + resultData[i]["id"] + '">'
             + resultData[i]["title"] +     // display title for the link text
             '</a>' +
             "</th>";
@@ -54,6 +54,6 @@ function handleMovieListResult(resultData) {
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/stars", // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: "/", // Setting request url, which serves as the homepage for now
     success: (resultData) => handleMovieListResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });

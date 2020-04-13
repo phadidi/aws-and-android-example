@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ import java.sql.*;
 
 
 // this annotation maps this Java Servlet Class to a URL
-@WebServlet("/")
+@WebServlet(name = "MovieListServlet", urlPatterns = "/")
 
 public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -38,8 +37,8 @@ public class MovieListServlet extends HttpServlet {
         // get the printwriter for writing response
         PrintWriter out = response.getWriter();
 
-        out.println("<html>");
-        out.println("<head><title>Fabflix</title></head>");
+        //out.println("<html>");
+        //out.println("<head><title>Fabflix</title></head>");
 
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -88,7 +87,7 @@ public class MovieListServlet extends HttpServlet {
                 jsonArray.add(jsonObject);
             }
 
-            out.println("<body>");
+            /*out.println("<body>");
             out.println("<h1>Top 20 Movies List</h1>");
 
             out.println("<table border>");
@@ -101,7 +100,7 @@ public class MovieListServlet extends HttpServlet {
             out.println("<td>genres</td>");
             out.println("<td>stars</td>");
             out.println("<td>rating</td>");
-            out.println("</tr>");
+            out.println("</tr>");*/
 
             // add a row for every star result
             while (resultSet.next()) {
@@ -112,14 +111,14 @@ public class MovieListServlet extends HttpServlet {
                 String genresConcat = resultSet.getString("genres");
                 String starsConcat = resultSet.getString("stars");
                 String rating = resultSet.getString("rating");
-                out.println("<tr>");
-                out.println("<td><a href='movie?action=" + movieId + "'>" + title + "</a></td>");
-                out.println("<td>" + year + "</td>");
-                out.println("<td>" + director + "</td>");
-                out.println("<td>" + genresConcat + "</td>");
-                String[] starsSplit = starsConcat.split(",");
-                out.print("<td>");
-                int count = 1; // added to remove trailing comma at the end
+                //out.println("<tr>");
+                //out.println("<td><a href='movie?action=" + movieId + "'>" + title + "</a></td>");
+                //out.println("<td>" + year + "</td>");
+                //out.println("<td>" + director + "</td>");
+                //out.println("<td>" + genresConcat + "</td>");
+                //String[] starsSplit = starsConcat.split(",");
+                //out.print("<td>");
+                /*int count = 1; // added to remove trailing comma at the end
                 int lim = starsSplit.length;
                 for (String s : starsSplit) {
                     //out.print(s + ", ");
@@ -133,12 +132,12 @@ public class MovieListServlet extends HttpServlet {
                 }
                 out.println("</td>");
                 out.println("<td>" + rating + "</td>");
-                out.println("</tr>");
+                out.println("</tr>");*/
 
             }
 
-            out.println("</table>");
-            out.println("</body>");
+            //out.println("</table>");
+            //out.println("</body>");
 
             // write JSON string to output
             out.write(jsonArray.toString());
@@ -165,11 +164,11 @@ public class MovieListServlet extends HttpServlet {
              */
             e.printStackTrace();
 
-            out.println("<body>");
-            out.println("<p>");
-            out.println("Exception in doGet: " + e.getMessage());
-            out.println("</p>");
-            out.print("</body>");
+            //out.println("<body>");
+            //out.println("<p>");
+            //out.println("Exception in doGet: " + e.getMessage());
+            //out.println("</p>");
+            //out.print("</body>");
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
@@ -178,7 +177,7 @@ public class MovieListServlet extends HttpServlet {
             response.setStatus(500);
         }
 
-        out.println("</html>");
+        //out.println("</html>");
         out.close();
     }
 
