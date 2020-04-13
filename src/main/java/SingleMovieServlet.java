@@ -97,7 +97,7 @@ public class SingleMovieServlet extends HttpServlet {
                 rating = resultSet.getString("rating");
                 out.println("<p>Rating: " + rating + "</p>");
             }
-            if(rating.equals(" ")){
+            if (rating.equals(" ")) {
                 out.println("<p>Rating: N/A</p>");
             }
             out.println("<p><a href='/cs122b-spring20-team-13/'>Return to Movie List</a></p>");
