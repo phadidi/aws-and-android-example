@@ -13,14 +13,14 @@
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
  */
-function handleMovieListResult(resultData) {
-    console.log("handleMovieListResult: populating star table from resultData");
+function handleStarResult(resultData) {
+    console.log("handleStarResult: populating star table from resultData");
 
-    // Populate the movielist table
-    // Find the empty table body by id "movielist_table_body"
-    let movieListTableBodyElement = jQuery("#movielist_table_body");
+    // Populate the star table
+    // Find the empty table body by id "star_table_body"
+    let starTableBodyElement = jQuery("#star_table_body");
 
-    // Iterate through resultData, no more than 20 entries
+    // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < Math.min(20, resultData.length); i++) {
 
         // Concatenate the html tags with resultData jsonObject
@@ -28,21 +28,42 @@ function handleMovieListResult(resultData) {
         rowHTML += "<tr>";
         rowHTML +=
             "<th>" +
-            // Add a link to single-star.html with id passed with GET url parameter
-            '<a href="/movie?action=' + resultData[i]["id"] + '">'
+            // Add a link to single-movie.html with id passed with GET url parameter
+            '<a href=' + "single-movie.html?id=" + resultData[i]['id'] + ">"
             + resultData[i]["title"] +     // display title for the link text
             '</a>' +
             "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
-        // TODO: split genres and stars here with proper limit of up to 3 and hyperlinks
-        rowHTML += "<th>" + resultData[i]["genres"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["stars"] + "</th>";
+        //rowHTML += "<th>" + resultData[i]["genres"] + "</th>";
+        rowHTML += "<th>";
+        let genresSplit = resultData[i]["genres"].split(',');
+        let genreCount = Math.min(3, genresSplit.length);
+        for (let j = 0; j <  genreCount; j++) {
+            rowHTML += genresSplit[j];
+            if (j < genreCount - 1) // add commas before the last entry
+                rowHTML += ", ";
+        }
+        rowHTML += "</th>";
+
+        rowHTML += "<th>";
+        let starsSplit = resultData[i]["starNamesAndIds"].split(',');
+        let starCount = Math.min(3, starsSplit.length);
+        for (let j = 0; j <  starCount; j++) {
+            // TODO: tie star ID to star Names using SQL query for future html queries
+            let starEntrySplit = starsSplit[j].split('_');
+            rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] + ">"
+                + starEntrySplit[0] +
+                '</a>'; // hyperlink star name [1] to star id [0]
+            if (j < starCount - 1) // add commas before the last entry
+                rowHTML += ", ";
+        }
+        rowHTML += "</th>";
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
-        movieListTableBodyElement.append(rowHTML);
+        starTableBodyElement.append(rowHTML);
     }
 }
 
@@ -51,10 +72,10 @@ function handleMovieListResult(resultData) {
  * Once this .js is loaded, following scripts will be executed by the browser
  */
 
-// Makes the HTTP GET request and registers on success callback function handleMovieListResult
+// Makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "/api/movielist", // Setting request url, which serves as the homepage for now
-    success: (resultData) => handleMovieListResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
+    url: "api/movielist", // Setting request url, which is mapped by StarsServlet in Stars.java
+    success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });
