@@ -5,7 +5,7 @@
          version="4.0">
     <display-name>cs122b-spring20-team-13</display-name>
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>movielist.html</welcome-file>
     </welcome-file-list>
 
     <!-- Register the DataSource which defined in META-INF/context.xml-->

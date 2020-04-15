@@ -50,8 +50,8 @@ public class LoginServlet extends HttpServlet {
             // Declare a new statement
             Statement statement = dbCon.createStatement();
 
-            // TODO: convert login.html to index.html and the current index.html to movielist.html
-            // Retrieve parameter "name" from the http request, which refers to the value of <input name="name"> in index.html
+            // TODO: convert login.html to movielist.html and the current movielist.html to movielist.html
+            // Retrieve parameter "name" from the http request, which refers to the value of <input name="name"> in movielist.html
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 			JsonObject responseJsonObject = new JsonObject();
@@ -70,14 +70,14 @@ public class LoginServlet extends HttpServlet {
             }
             // If an ID is found, redirect to the main page
             if (c_ID.compareTo("") != 0) {
-                response.sendRedirect("index.html");
+                response.sendRedirect("movielist.html");
 				// TODO: flesh out Customer object as attributes are added
                 session = request.getSession(true);
                 session.setAttribute("customer", new Customer(c_ID));
                 session.setMaxInactiveInterval(30); // 30 seconds
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
-                response.sendRedirect("index.html");
+                response.sendRedirect("movielist.html");
             } else { // TODO: split into username and password checks
 			responseJsonObject.addProperty("status", "fail");
 			responseJsonObject.addProperty("message", "incorrect email and/or password");
