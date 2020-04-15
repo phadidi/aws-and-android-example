@@ -21,7 +21,7 @@ import java.sql.Statement;
  */
 
 // Declaring a WebServlet called LoginServlet, which maps to url "/login"
-@WebServlet(name = "LoginServlet", urlPatterns = "/login")
+@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
 
     // Create a dataSource which registered in web.xml
@@ -71,9 +71,9 @@ public class LoginServlet extends HttpServlet {
             // If an ID is found, redirect to the main page
             if (c_ID.compareTo("") != 0) {
                 response.sendRedirect("index.html");
-				// TODO: set username and password to session attributes
+				// TODO: flesh out Customer object as attributes are added
                 session = request.getSession(true);
-                session.setAttribute("name", c_Name);
+                session.setAttribute("customer", new Customer(c_ID));
                 session.setMaxInactiveInterval(30); // 30 seconds
 				responseJsonObject.addProperty("status", "success");
 				responseJsonObject.addProperty("message", "success");
