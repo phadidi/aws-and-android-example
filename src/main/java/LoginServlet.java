@@ -1,5 +1,7 @@
 package main.java;
 
+import com.google.gson.JsonObject;
+
 import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,6 +54,7 @@ public class LoginServlet extends HttpServlet {
             // Retrieve parameter "name" from the http request, which refers to the value of <input name="name"> in index.html
             String email = request.getParameter("email");
             String password = request.getParameter("password");
+			JsonObject responseJsonObject = new JsonObject();
 
             // Generate a SQL query
             String query = String.format("SELECT * from customers where email = '%s' and password = '%s';", email, password);
@@ -68,11 +71,18 @@ public class LoginServlet extends HttpServlet {
             // If an ID is found, redirect to the main page
             if (c_ID.compareTo("") != 0) {
                 response.sendRedirect("index.html");
+				// TODO: set username and password to session attributes
                 session = request.getSession(true);
                 session.setAttribute("name", c_Name);
                 session.setMaxInactiveInterval(30); // 30 seconds
-                response.sendRedirect("login.jsp");
-            }
+				responseJsonObject.addProperty("status", "success");
+				responseJsonObject.addProperty("message", "success");
+                response.sendRedirect("index.html");
+            } else { // TODO: split into username and password checks
+			responseJsonObject.addProperty("status", "fail");
+			responseJsonObject.addProperty("message", "incorrect email and/or password");
+			}
+			response.getWriter().write(responseJsonObject.toString());
 
             // Close all structures
             rs.close();
