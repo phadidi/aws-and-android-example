@@ -17,9 +17,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 
-// Declaring a WebServlet called StarsServlet, which maps to url "/api/movielist"
-@WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
-public class MovieListServlet extends HttpServlet {
+// Declaring a WebServlet called StarsServlet, which maps to url "/api/main"
+@WebServlet(name = "MainPage", urlPatterns = "/api/main")
+public class MainPage extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // Create a dataSource which registered in web.xml
@@ -33,8 +33,6 @@ public class MovieListServlet extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
-        String genreName = request.getParameter("genre");
-
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
@@ -45,45 +43,21 @@ public class MovieListServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "select m.id, m.title, m.year, m.director,\n" +
-                    "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-                    "group_concat(distinct concat(s.name, '_', s.id) order by s.name SEPARATOR ',') AS starNamesAndIds,\n" +
-                    "r.rating\n" +
-                    "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim, ratings r\n" +
-                    "WHERE m.id=gim.movieId AND\n" +
-                    "gim.genreId = g.Id AND\n" +
-                    "m.id=sim.movieId AND\n" +
-                    "sim.starId=s.id AND\n" +
-                    "m.id = r.movieId\n" +
-                    "GROUP BY m.title, m.year, m.director, r.rating\n" +
-                    "ORDER BY r.rating DESC\n" +
-                    "LIMIT 20;";
+            String query = "select * from genres order by name;";
 
-            //String query = "select id, title, year from movies;";
-            // Perform the query
             ResultSet rs = statement.executeQuery(query);
 
             JsonArray jsonArray = new JsonArray();
 
             // Iterate through each row of rs
             while (rs.next()) {
-                String movie_id = rs.getString("id");
-                String movie_title = rs.getString("title");
-                String movie_year = rs.getString("year");
-                String movie_director = rs.getString("director");
-                String movie_genres = rs.getString("genresname");
-                String movie_starNamesAndIds = rs.getString("starNamesAndIds");
-                String movie_rating = rs.getString("rating");
+                String genre_id = rs.getString("id");
+                String genre = rs.getString("name");
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("id", movie_id);
-                jsonObject.addProperty("title", movie_title);
-                jsonObject.addProperty("year", movie_year);
-                jsonObject.addProperty("director", movie_director);
-                jsonObject.addProperty("genres", movie_genres);
-                jsonObject.addProperty("starNamesAndIds", movie_starNamesAndIds);
-                jsonObject.addProperty("rating", movie_rating);
+                jsonObject.addProperty("id", genre_id);
+                jsonObject.addProperty("genre", genre);
 
                 jsonArray.add(jsonObject);
             }
