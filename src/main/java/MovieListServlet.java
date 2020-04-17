@@ -35,6 +35,8 @@ public class MovieListServlet extends HttpServlet {
 
         String genreName = request.getParameter("genre");
 
+        String pageNumber = request.getParameter("page");
+        Integer page = (Integer.parseInt(pageNumber) - 1) * 10;
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
@@ -47,17 +49,17 @@ public class MovieListServlet extends HttpServlet {
 
             String query = "select m.id, m.title, m.year, m.director,\n" +
                     "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-                    "group_concat(distinct concat(s.name, '_', s.id) order by s.name SEPARATOR ',') AS starNamesAndIds,\n" +
-                    "r.rating\n" +
-                    "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim, ratings r\n" +
+                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
+                    "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim\n" +
                     "WHERE m.id=gim.movieId AND\n" +
                     "gim.genreId = g.Id AND\n" +
                     "m.id=sim.movieId AND\n" +
                     "sim.starId=s.id AND\n" +
-                    "m.id = r.movieId\n" +
-                    "GROUP BY m.title, m.year, m.director, r.rating\n" +
-                    "ORDER BY r.rating DESC\n" +
-                    "LIMIT 20;";
+                    "g.name='" + genreName + "'\n" +
+                    "GROUP BY m.title, m.year, m.director\n" +
+                    "ORDER BY m.title\n" +
+                    "LIMIT 10 OFFSET " + Integer.toString(page);
+
 
             //String query = "select id, title, year from movies;";
             // Perform the query
@@ -65,6 +67,9 @@ public class MovieListServlet extends HttpServlet {
 
             JsonArray jsonArray = new JsonArray();
 
+            Statement rating_statement = dbcon.createStatement();
+            String rating_query = "";
+            ResultSet rs_rating;
             // Iterate through each row of rs
             while (rs.next()) {
                 String movie_id = rs.getString("id");
@@ -73,7 +78,16 @@ public class MovieListServlet extends HttpServlet {
                 String movie_director = rs.getString("director");
                 String movie_genres = rs.getString("genresname");
                 String movie_starNamesAndIds = rs.getString("starNamesAndIds");
-                String movie_rating = rs.getString("rating");
+                String movieRating = "N/A";
+
+                rating_query = "select rating from ratings where movieId = '" + movie_id + "'";
+                rs_rating = rating_statement.executeQuery(rating_query);
+                while (rs_rating.next()) {
+                    String tempRating = rs_rating.getString("rating");
+                    if (tempRating != null)
+                        if (!tempRating.isEmpty())
+                            movieRating = tempRating;
+                }
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
@@ -83,7 +97,7 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.addProperty("director", movie_director);
                 jsonObject.addProperty("genres", movie_genres);
                 jsonObject.addProperty("starNamesAndIds", movie_starNamesAndIds);
-                jsonObject.addProperty("rating", movie_rating);
+                jsonObject.addProperty("rating", movieRating);
 
                 jsonArray.add(jsonObject);
             }

@@ -13,7 +13,24 @@
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
  */
-function handleStarResult(resultData) {
+
+function getParameterByName(target) {
+    // Get request URL
+    let url = window.location.href;
+    // Encode target parameter name to url encoding
+    target = target.replace(/[\[\]]/g, "\\$&");
+
+    // Ues regular expression to find matched parameter value
+    let regex = new RegExp("[?&]" + target + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+
+    // Return the decoded parameter value
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function handleStarResult(resultData, condition, page) {
     console.log("handleStarResult: populating star table from resultData");
 
     // Populate the star table
@@ -21,7 +38,7 @@ function handleStarResult(resultData) {
     let starTableBodyElement = jQuery("#star_table_body");
 
     // Iterate through resultData, no more than 10 entries
-    for (let i = 0; i < Math.min(20, resultData.length); i++) {
+    for (let i = 0; i < Math.min(10, resultData.length); i++) {
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
@@ -65,17 +82,35 @@ function handleStarResult(resultData) {
         // Append the row created to the table body, which will refresh the page
         starTableBodyElement.append(rowHTML);
     }
-}
 
+    // makes the page list
+    let pageBody = jQuery("#page_list_body");
+    let pageText = "";
+
+    if(parseInt(pageNumber, 10) > 1){
+        pageText += "<span>" +
+            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, 10) - 1).toString() + ">" +
+            "<<< Previous       </a>" +
+            "</span>";
+    }
+    if(resultData.length == 10){
+        pageText += "<span>" +
+            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, 10) + 1).toString() + ">" +
+            "Next >>></a>" +
+            "</span>";
+        pageBody.append(pageText);
+    }
+}
 
 /**
  * Once this .js is loaded, following scripts will be executed by the browser
  */
-
+let genreName = getParameterByName('genre');
+let pageNumber = getParameterByName('page');
 // Makes the HTTP GET request and registers on success callback function handleStarResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movielist", // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
+    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber, // Setting request url, which is mapped by StarsServlet in Stars.java
+    success: (resultData) => handleStarResult(resultData, genreName, pageNumber), // Setting callback function to handle data returned successfully by the StarsServlet
 });

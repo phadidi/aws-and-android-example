@@ -11,10 +11,11 @@ function handleStarResult(resultData) {
     for (let i = 0; i < resultData.length; i++) {
 
         rowHTML += "<span>| " +
-            '<a href=' + "movielist.html?genre=" + resultData[i]['genre'] + ">"
+            '<a href=' + "movielist.html?genre=" + resultData[i]['genre'] + "&page=1>"
             + resultData[i]['genre'] + " </a>" +
             "</span>";
     }
+    rowHTML += "<span>|</span>";
     genreBody.append(rowHTML);
 }
 
