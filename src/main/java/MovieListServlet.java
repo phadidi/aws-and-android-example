@@ -46,19 +46,34 @@ public class MovieListServlet extends HttpServlet {
 
             // Declare our statement
             Statement statement = dbcon.createStatement();
-
-            String query = "select m.id, m.title, m.year, m.director,\n" +
-                    "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
-                    "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim\n" +
-                    "WHERE m.id=gim.movieId AND\n" +
-                    "gim.genreId = g.Id AND\n" +
-                    "m.id=sim.movieId AND\n" +
-                    "sim.starId=s.id AND\n" +
-                    "g.name='" + genreName + "'\n" +
-                    "GROUP BY m.title, m.year, m.director\n" +
-                    "ORDER BY m.title\n" +
-                    "LIMIT 10 OFFSET " + Integer.toString(page);
+            String query;
+            // TODO: devise different queries for each context based on the given search parameters
+            if (genreName.compareTo("") != 0) { // get all movies by genre
+                query = "select m.id, m.title, m.year, m.director,\n" +
+                        "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
+                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
+                        "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim\n" +
+                        "WHERE m.id=gim.movieId AND\n" +
+                        "gim.genreId = g.Id AND\n" +
+                        "m.id=sim.movieId AND\n" +
+                        "sim.starId=s.id AND\n" +
+                        "g.name='" + genreName + "'\n" +
+                        "GROUP BY m.title, m.year, m.director\n" +
+                        "ORDER BY m.title\n" +
+                        "LIMIT 10 OFFSET " + page;
+            } else { // get all movies without additional parameters
+                query = "select m.id, m.title, m.year, m.director,\n" +
+                        "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
+                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
+                        "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim\n" +
+                        "WHERE m.id=gim.movieId AND\n" +
+                        "gim.genreId = g.Id AND\n" +
+                        "m.id=sim.movieId AND\n" +
+                        "sim.starId=s.id" +
+                        "GROUP BY m.title, m.year, m.director\n" +
+                        "ORDER BY m.title\n" +
+                        "LIMIT 10 OFFSET " + page;
+            }
 
 
             //String query = "select id, title, year from movies;";
