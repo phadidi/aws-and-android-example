@@ -35,6 +35,8 @@ public class MovieListServlet extends HttpServlet {
 
         String genreName = request.getParameter("genre");
 
+        String offset = request.getParameter("offset");
+
         String pageNumber = request.getParameter("page");
         Integer page = (Integer.parseInt(pageNumber) - 1) * 10;
         // Output stream to STDOUT
@@ -59,8 +61,7 @@ public class MovieListServlet extends HttpServlet {
                         "sim.starId=s.id AND\n" +
                         "g.name='" + genreName + "'\n" +
                         "GROUP BY m.title, m.year, m.director\n" +
-                        "ORDER BY m.title\n" +
-                        "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
+                        "ORDER BY m.title\n";
             } else {
                 query = "select m.id, m.title, m.year, m.director,\n" +
                         "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
@@ -74,8 +75,11 @@ public class MovieListServlet extends HttpServlet {
                         "m.id=sim.movieId AND\n" +
                         "sim.starId=s.id\n" +
                         "GROUP BY m.title, m.year, m.director\n" +
-                        "ORDER BY m.title\n" +
-                        "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
+                        "ORDER BY m.title\n";
+            } if (offset.compareTo("") == 0) {
+                query += "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
+            } else {
+                query += "LIMIT " + offset + " OFFSET " + Integer.toString(page) + ";";
             }
 
 
