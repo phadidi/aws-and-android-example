@@ -89,13 +89,13 @@ function handleListResult(resultData, condition, page, offsetNo) {
 
     if(parseInt(pageNumber, offsetNo) > 1){
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) - 1).toString() + ">" +
+            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) - 1).toString() + "&offset=" + offsetNo + ">" +
             "<<< Previous       </a>" +
             "</span>";
     }
     if(resultData.length == offsetNo){
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) + 1).toString() + ">" +
+            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) + 1).toString() + "&offset=" + offsetNo + ">" +
             "Next >>></a>" +
             "</span>";
         pageBody.append(pageText);
@@ -112,6 +112,6 @@ let offsetNumber = getParameterByName('offset');
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&offset=" + offsetNumber.toString(), // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => handleListResult(resultData, genreName, pageNumber, offsetNumber), // Setting callback function to handle data returned successfully by the StarsServlet
+    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&offset=" + offsetNumber.toString(), // Setting request url, which is mapped by MovieListServlet in Stars.java
+    success: (resultData) => handleListResult(resultData, genreName, pageNumber, offsetNumber), // Setting callback function to handle data returned successfully by the MovieListServlet
 });
