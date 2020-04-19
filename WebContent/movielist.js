@@ -33,7 +33,7 @@ function getParameterByName(target) {
 function handleListResult(resultData, condition, page, offsetNo) {
     console.log("handleListResult: populating movielist table from resultData");
 
-    // Populate the star table
+    // Populate the movielist table
     // Find the empty table body by id "movielist_table_body"
     let movielistTableBodyElement = jQuery("#movielist_table_body");
 
