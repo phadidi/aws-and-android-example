@@ -1,9 +1,9 @@
 
-function handleStarResult(resultData) {
-    console.log("handleStarResult: populating genre table from resultData");
+function handleGenreResult(resultData) {
+    console.log("handleGenreResult: populating genre table from resultData");
 
-    // Populate the star table
-    // Find the empty table body by id "star_table_body"
+    // Populate the genre table
+    // Find the empty table body by id "genre_body"
     let genreBody = jQuery("#genre_body");
 
     let rowHTML = "";
@@ -29,5 +29,5 @@ jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
     url: "api/main", // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => handleStarResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
+    success: (resultData) => handleGenreResult(resultData) // Setting callback function to handle data returned successfully by the StarsServlet
 });

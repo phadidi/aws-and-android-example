@@ -31,11 +31,11 @@ function getParameterByName(target) {
 }
 
 function handleListResult(resultData, condition, page, offsetNo) {
-    console.log("handleListResult: populating star table from resultData");
+    console.log("handleListResult: populating movielist table from resultData");
 
     // Populate the star table
-    // Find the empty table body by id "star_table_body"
-    let starTableBodyElement = jQuery("#star_table_body");
+    // Find the empty table body by id "movielist_table_body"
+    let movielistTableBodyElement = jQuery("#movielist_table_body");
 
     // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < Math.min(10, resultData.length); i++) {
@@ -80,7 +80,7 @@ function handleListResult(resultData, condition, page, offsetNo) {
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
-        starTableBodyElement.append(rowHTML);
+        movielistTableBodyElement.append(rowHTML);
     }
 
     // makes the page list
@@ -107,7 +107,7 @@ function handleListResult(resultData, condition, page, offsetNo) {
  */
 let genreName = getParameterByName('genre');
 let pageNumber = getParameterByName('page');
-// Makes the HTTP GET request and registers on success callback function handleStarResult
+// Makes the HTTP GET request and registers on success callback function handleListResult
 let offsetNumber = getParameterByName('offset');
 jQuery.ajax({
     dataType: "json", // Setting return data type
