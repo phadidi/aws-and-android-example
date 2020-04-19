@@ -5,6 +5,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.ArrayList;
+
 
 public class Customer {
 
@@ -18,6 +21,7 @@ public class Customer {
     private String lastName;
     private String creditCardId;
     private String address;
+    private List<String> cart;
 
     public Customer (String address) {
         this.email = address;
@@ -31,6 +35,7 @@ public class Customer {
         this.lastName = last;
         this.creditCardId = ccId;
         this.address = billingAddress;
+        this.cart = new ArrayList<String>();
     }
 
     public void addCustomerToTable(Customer c) throws SQLException {
@@ -41,6 +46,19 @@ public class Customer {
         statement.executeUpdate(query);
         statement.close();
         dbcon.close();
+    }
+
+    public void addToCart(String movieId) {
+        cart.add(movieId);
+    }
+
+    public void removeFromCart(String movieId) {
+        if (cart.contains(movieId))
+            cart.remove(movieId);
+    }
+
+    public void checkoutCart() {
+        cart.clear();
     }
 
 }
