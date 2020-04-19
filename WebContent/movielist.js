@@ -30,8 +30,8 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function handleStarResult(resultData, condition, page) {
-    console.log("handleStarResult: populating star table from resultData");
+function handleListResult(resultData, condition, page, offsetNo) {
+    console.log("handleListResult: populating star table from resultData");
 
     // Populate the star table
     // Find the empty table body by id "star_table_body"
@@ -87,15 +87,15 @@ function handleStarResult(resultData, condition, page) {
     let pageBody = jQuery("#page_list_body");
     let pageText = "";
 
-    if(parseInt(pageNumber, 10) > 1){
+    if(parseInt(pageNumber, offsetNo) > 1){
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, 10) - 1).toString() + ">" +
+            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) - 1).toString() + ">" +
             "<<< Previous       </a>" +
             "</span>";
     }
-    if(resultData.length == 10){
+    if(resultData.length == offsetNo){
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, 10) + 1).toString() + ">" +
+            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) + 1).toString() + ">" +
             "Next >>></a>" +
             "</span>";
         pageBody.append(pageText);
@@ -108,9 +108,10 @@ function handleStarResult(resultData, condition, page) {
 let genreName = getParameterByName('genre');
 let pageNumber = getParameterByName('page');
 // Makes the HTTP GET request and registers on success callback function handleStarResult
+let offsetNumber = getParameterByName('offset');
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber, // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => handleStarResult(resultData, genreName, pageNumber), // Setting callback function to handle data returned successfully by the StarsServlet
+    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&offset=" + offsetNumber.toString(), // Setting request url, which is mapped by StarsServlet in Stars.java
+    success: (resultData) => handleListResult(resultData, genreName, pageNumber, offsetNumber), // Setting callback function to handle data returned successfully by the StarsServlet
 });

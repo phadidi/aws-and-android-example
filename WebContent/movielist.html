@@ -25,7 +25,12 @@
 <h1>Top 20 Movies List!!!</h1>
 
 <!-- TODO: create offset parameter here for servlet that can take in options 10 (default), 25, 50, 100-->
-<p align="center"><strong>Results per page:</strong></p>
+<p align="center"><strong>Results per page: </strong><select id="offset">
+    <option value="10" selected>10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+</select></p>
 
 <!-- Id "star_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
 <table id=star_table class="table table-striped">
