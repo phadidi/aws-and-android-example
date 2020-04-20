@@ -19,98 +19,98 @@ import java.sql.ResultSet;
 // Declaring a WebServlet called SingleStarServlet, which maps to url "/api/single-star"
 @WebServlet(name = "SingleStarServlet", urlPatterns = "/api/single-star")
 public class SingleStarServlet extends HttpServlet {
-	private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 2L;
 
-	// Create a dataSource which registered in web.xml
-	@Resource(name = "jdbc/moviedb")
-	private DataSource dataSource;
+    // Create a dataSource which registered in web.xml
+    @Resource(name = "jdbc/moviedb")
+    private DataSource dataSource;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-		response.setContentType("application/json"); // Response mime type
+        response.setContentType("application/json"); // Response mime type
 
-		// Retrieve parameter id from url request.
-		String id = request.getParameter("id");
+        // Retrieve parameter id from url request.
+        String id = request.getParameter("id");
 
-		// Output stream to STDOUT
-		PrintWriter out = response.getWriter();
+        // Output stream to STDOUT
+        PrintWriter out = response.getWriter();
 
-		try {
-			// Get a connection from dataSource
-			Connection dbcon = dataSource.getConnection();
+        try {
+            // Get a connection from dataSource
+            Connection dbcon = dataSource.getConnection();
 
-			// Construct a query with parameter represented by "?"
-			String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m where m.id = sim.movieId and sim.starId = s.id and s.id = '" + id + "'";
+            // Construct a query with parameter represented by "?"
+            String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m where m.id = sim.movieId and sim.starId = s.id and s.id = '" + id + "'";
 
-			// Declare our statement
-			PreparedStatement statement = dbcon.prepareStatement(query);
+            // Declare our statement
+            PreparedStatement statement = dbcon.prepareStatement(query);
 
-			// Set the parameter represented by "?" in the query to the id we get from url,
-			// num 1 indicates the first "?" in the query
-			//statement.setString(1, id);
+            // Set the parameter represented by "?" in the query to the id we get from url,
+            // num 1 indicates the first "?" in the query
+            //statement.setString(1, id);
 
-			// Perform the query
-			ResultSet rs = statement.executeQuery();
+            // Perform the query
+            ResultSet rs = statement.executeQuery();
 
-			JsonArray jsonArray = new JsonArray();
+            JsonArray jsonArray = new JsonArray();
 
-			// Iterate through each row of rs
-			while (rs.next()) {
+            // Iterate through each row of rs
+            while (rs.next()) {
 
-				String starId = rs.getString("starId");
-				String starName = rs.getString("name");
-				String starDob = "N/A";
+                String starId = rs.getString("starId");
+                String starName = rs.getString("name");
+                String starDob = "N/A";
 
-				String tempDob = rs.getString("birthYear");
-				if(tempDob != null){
-					if(!tempDob.isEmpty()){
-						starDob = tempDob;
-					}
-				}
+                String tempDob = rs.getString("birthYear");
+                if (tempDob != null) {
+                    if (!tempDob.isEmpty()) {
+                        starDob = tempDob;
+                    }
+                }
 
-				String movieId = rs.getString("movieId");
-				String movieTitle = rs.getString("title");
-				String movieYear = rs.getString("year");
-				String movieDirector = rs.getString("director");
+                String movieId = rs.getString("movieId");
+                String movieTitle = rs.getString("title");
+                String movieYear = rs.getString("year");
+                String movieDirector = rs.getString("director");
 
-				// Create a JsonObject based on the data we retrieve from rs
+                // Create a JsonObject based on the data we retrieve from rs
 
-				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("star_id", starId);
-				jsonObject.addProperty("star_name", starName);
-				jsonObject.addProperty("star_dob", starDob);
-				jsonObject.addProperty("movie_id", movieId);
-				jsonObject.addProperty("movie_title", movieTitle);
-				jsonObject.addProperty("movie_year", movieYear);
-				jsonObject.addProperty("movie_director", movieDirector);
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("star_id", starId);
+                jsonObject.addProperty("star_name", starName);
+                jsonObject.addProperty("star_dob", starDob);
+                jsonObject.addProperty("movie_id", movieId);
+                jsonObject.addProperty("movie_title", movieTitle);
+                jsonObject.addProperty("movie_year", movieYear);
+                jsonObject.addProperty("movie_director", movieDirector);
 
-				jsonArray.add(jsonObject);
-			}
-			
+                jsonArray.add(jsonObject);
+            }
+
             // write JSON string to output
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
             response.setStatus(200);
 
-			rs.close();
-			statement.close();
-			dbcon.close();
-		} catch (Exception e) {
-			// write error message JSON object to output
-			JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("errorMessage", e.getMessage());
-			out.write(jsonObject.toString());
+            rs.close();
+            statement.close();
+            dbcon.close();
+        } catch (Exception e) {
+            // write error message JSON object to output
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
 
-			// set reponse status to 500 (Internal Server Error)
-			response.setStatus(500);
-		}
-		out.close();
+            // set reponse status to 500 (Internal Server Error)
+            response.setStatus(500);
+        }
+        out.close();
 
-	}
+    }
 
 }

@@ -76,7 +76,8 @@ public class MovieListServlet extends HttpServlet {
                         "sim.starId=s.id\n" +
                         "GROUP BY m.title, m.year, m.director\n" +
                         "ORDER BY m.title\n";
-            } if (offset.compareTo("") == 0) {
+            }
+            if (offset.compareTo("") == 0) {
                 query += "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
             } else {
                 query += "LIMIT " + offset + " OFFSET " + Integer.toString(page) + ";";

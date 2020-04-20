@@ -10,12 +10,12 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          name="viewport">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet">
 
     <title>Top 20 Movies</title>
 </head>
@@ -26,14 +26,14 @@
 
 <!-- TODO: create offset parameter here for servlet that can take in options 10 (default), 25, 50, 100-->
 <p align="center"><strong>Results per page: </strong><select id="offset">
-    <option value="10" selected>10</option>
+    <option selected value="10">10</option>
     <option value="25">25</option>
     <option value="50">50</option>
     <option value="100">100</option>
 </select></p>
 
 <!-- Id "movielist_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
-<table id=movielist_table class="table table-striped">
+<table class="table table-striped" id=movielist_table>
     <!-- Create a table header -->
     <thead>
     <tr>
@@ -51,7 +51,8 @@
     <tbody id=movielist_table_body></tbody>
 </table>
 
-<div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;" id="page_list_body"></div>
+<div id="page_list_body"
+     style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

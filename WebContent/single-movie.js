@@ -55,7 +55,7 @@ function handleResult(resultData) {
 
     let starsSplit = resultData[0]["stars"].split(',');
     movieInfo.append("<p>Stars: ");
-    for (let i = 0; i <  starsSplit.length; i++) {
+    for (let i = 0; i < starsSplit.length; i++) {
         // TODO: tie star ID to star Names using SQL query for future html queries
         let starEntrySplit = starsSplit[i].split('_');
         movieInfo.append('<a href=' + "single-star.html?id=" + starEntrySplit[1] + ">"

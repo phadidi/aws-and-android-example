@@ -5,29 +5,28 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Customer {
 
+    private final String email;
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
-
     private int id;
-    private final String email;
     private String password;
     private String firstName;
     private String lastName;
     private String creditCardId;
     private String address;
-    private List<String> cart;
+    private ArrayList<String> cart;
 
-    public Customer (String address) {
+    public Customer(String address) {
         this.email = address;
     }
 
-    public Customer (int customerId, String emailAddress, String pw, String first, String last, String ccId, String billingAddress) {
+    public Customer(int customerId, String emailAddress, String pw, String first, String last, String ccId, String billingAddress) {
         this.id = customerId;
         this.email = emailAddress;
         this.password = pw;
@@ -47,6 +46,8 @@ public class Customer {
         statement.close();
         dbcon.close();
     }
+
+    public ArrayList<String> getCart() { return cart; }
 
     public void addToCart(String movieId) {
         cart.add(movieId);

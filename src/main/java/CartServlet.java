@@ -41,17 +41,21 @@ public class CartServlet extends HttpServlet {
         System.out.println(item);
         HttpSession session = request.getSession();
 
+        // TODO: get the cart of the currently logged on user and load/update it accordingly
         // get the previous items in a ArrayList
         ArrayList<String> previousItems = (ArrayList<String>) session.getAttribute("previousItems");
+        Customer currentUser = (Customer) request.getSession().getAttribute("user");
         if (previousItems == null) {
-            previousItems = new ArrayList<>();
-            previousItems.add(item);
+            currentUser.addToCart(item);
+            previousItems = currentUser.getCart();
+            // TODO: bypass this casting issue
             session.setAttribute("previousItems", previousItems);
         } else {
             // prevent corrupted states through sharing under multi-threads
             // will only be executed by one thread at a time
             synchronized (previousItems) {
-                previousItems.add(item);
+                currentUser.addToCart(item);
+                previousItems = currentUser.getCart();
             }
         }
         response.getWriter().write(String.join(",", previousItems));

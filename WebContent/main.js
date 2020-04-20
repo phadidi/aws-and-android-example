@@ -1,4 +1,3 @@
-
 function handleGenreResult(resultData) {
     console.log("handleGenreResult: populating genre table from resultData");
 

@@ -56,7 +56,7 @@ function handleListResult(resultData, condition, page, offsetNo) {
         rowHTML += "<th>";
         let genresSplit = resultData[i]["genres"].split(',');
         let genreCount = Math.min(3, genresSplit.length);
-        for (let j = 0; j <  genreCount; j++) {
+        for (let j = 0; j < genreCount; j++) {
             rowHTML += genresSplit[j];
             if (j < genreCount - 1) // add commas before the last entry
                 rowHTML += ", ";
@@ -66,7 +66,7 @@ function handleListResult(resultData, condition, page, offsetNo) {
         rowHTML += "<th>";
         let starsSplit = resultData[i]["starNamesAndIds"].split(',');
         let starCount = Math.min(3, starsSplit.length);
-        for (let j = 0; j <  starCount; j++) {
+        for (let j = 0; j < starCount; j++) {
             // TODO: tie star ID to star Names using SQL query for future html queries
             let starEntrySplit = starsSplit[j].split('_');
             rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] + ">"
@@ -87,13 +87,13 @@ function handleListResult(resultData, condition, page, offsetNo) {
     let pageBody = jQuery("#page_list_body");
     let pageText = "";
 
-    if(parseInt(pageNumber, offsetNo) > 1){
+    if (parseInt(pageNumber, offsetNo) > 1) {
         pageText += "<span>" +
             '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) - 1).toString() + "&offset=" + offsetNo + ">" +
             "<<< Previous       </a>" +
             "</span>";
     }
-    if(resultData.length == offsetNo){
+    if (resultData.length == offsetNo) {
         pageText += "<span>" +
             '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) + 1).toString() + "&offset=" + offsetNo + ">" +
             "Next >>></a>" +
