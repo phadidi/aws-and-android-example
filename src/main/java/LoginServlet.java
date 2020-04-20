@@ -40,12 +40,23 @@ public class LoginServlet extends HttpServlet {
         */
             String resultEmail = "";
             String resultPassword = "";
+            int resultId = (int) (Math.random() * 1000000);
+            String resultFirstname = "";
+            String resultLastname = "";
+            String resultCreditCard = "";
+            String resultAddress = "";
+
 
             String query = "select * from customers where email = '" + email + "' and password = '" + password + "';";
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
                 resultEmail = rs.getString("email");
                 resultPassword = rs.getString("password");
+                resultId = rs.getInt("id");
+                resultFirstname = rs.getString("firstName");
+                resultLastname = rs.getString("lastName");
+                resultCreditCard = rs.getString("ccId");
+                resultAddress = rs.getString("address");
             }
 
             JsonObject responseJsonObject = new JsonObject();
@@ -53,7 +64,9 @@ public class LoginServlet extends HttpServlet {
                 // Login success:
 
                 // set this user into the session
-                request.getSession().setAttribute("user", new Customer(email));
+                Customer currentUser = new Customer(resultId, resultEmail, resultPassword, resultFirstname,
+                        resultLastname, resultCreditCard, resultAddress);
+                request.getSession().setAttribute("user", currentUser);
 
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");

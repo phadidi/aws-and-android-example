@@ -22,10 +22,6 @@ public class Customer {
     private String address;
     private ArrayList<String> cart;
 
-    public Customer(String address) {
-        this.email = address;
-    }
-
     public Customer(int customerId, String emailAddress, String pw, String first, String last, String ccId, String billingAddress) {
         this.id = customerId;
         this.email = emailAddress;
@@ -37,11 +33,11 @@ public class Customer {
         this.cart = new ArrayList<String>();
     }
 
-    public void addCustomerToTable(Customer c) throws SQLException {
+    public void addCustomerToTable() throws SQLException {
         Connection dbcon = dataSource.getConnection();
         Statement statement = dbcon.createStatement();
-        String query = "Insert into customers VALUES(" + Integer.toString(c.id) + ", '" + c.firstName + "', '" + c.lastName
-                + "', '" + c.creditCardId + "', '" + c.address + "', '" + c.email + "', '" + c.password + "');";
+        String query = "Insert into customers VALUES(" + Integer.toString(this.id) + ", '" + this.firstName + "', '" + this.lastName
+                + "', '" + this.creditCardId + "', '" + this.address + "', '" + this.email + "', '" + this.password + "');";
         statement.executeUpdate(query);
         statement.close();
         dbcon.close();

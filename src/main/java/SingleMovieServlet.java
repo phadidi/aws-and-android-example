@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +19,7 @@ import java.sql.Statement;
 
 // Declaring a WebServlet called SingleMovieServlet, which maps to url "/api/single-movie"
 @WebServlet(name = "SingleMovieServlet", urlPatterns = "/api/single-movie")
+
 public class SingleMovieServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
 
@@ -127,5 +129,20 @@ public class SingleMovieServlet extends HttpServlet {
         out.close();
 
     }
+
+    //doPost will be used to add movie to cart
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String movieId = request.getParameter("id");
+        log("adding '" + movieId + "' to cart\n");
+        response.setContentType("application/json");
+        HttpSession session = request.getSession();
+        Customer currentUser = (Customer) session.getAttribute("user");
+        currentUser.addToCart(movieId);
+        session.setAttribute("user", currentUser);
+        response.sendRedirect("cart.html");
+    }
+
+
 
 }

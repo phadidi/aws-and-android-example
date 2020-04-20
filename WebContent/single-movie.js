@@ -73,6 +73,11 @@ function handleResult(resultData) {
 
 // Get id from URL
 let movieId = getParameterByName('id');
+
+function addMovieToCart() {
+
+}
+
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
     dataType: "json",  // Setting return data type
