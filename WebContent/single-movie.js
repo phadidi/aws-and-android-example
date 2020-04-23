@@ -98,6 +98,7 @@ function redirectToCart(resultDataString) {
 
 function submitAddToCart(formSubmitEvent) {
     console.log("add '" + movieId + "' to cart");
+    alert("you have added this to cart");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this

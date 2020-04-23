@@ -22,6 +22,7 @@ import java.sql.Statement;
 
 public class SingleMovieServlet extends HttpServlet {
     private static final long serialVersionUID = 2L;
+    private String thisId;
 
     // Create a dataSource which registered in web.xml
     @Resource(name = "jdbc/moviedb")
@@ -37,7 +38,7 @@ public class SingleMovieServlet extends HttpServlet {
         response.setContentType("application/json"); // Response mime type
 
         // Retrieve parameter id from url request.
-        String id = request.getParameter("id");
+        thisId = request.getParameter("id");
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -53,7 +54,7 @@ public class SingleMovieServlet extends HttpServlet {
                     "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim \n" +
                     "where s.id = sim.starId and m.id = sim.movieId \n" +
                     "and g.id = gim.genreId and m.id = gim.movieId \n" +
-                    "and m.id = '" + id + "';";
+                    "and m.id = '" + thisId + "';";
 
             // Declare our statement
             Statement statement = dbcon.createStatement();
@@ -95,7 +96,7 @@ public class SingleMovieServlet extends HttpServlet {
             jsonObject.addProperty("genres", movieGenres);
             jsonObject.addProperty("stars", movieStars);
 
-            query = "select rating from ratings where movieId = '" + id + "'";
+            query = "select rating from ratings where movieId = '" + thisId + "'";
             rs = statement.executeQuery(query);
             String movieRating = "N/A";
             while (rs.next()) {
@@ -133,16 +134,15 @@ public class SingleMovieServlet extends HttpServlet {
     //doPost will be used to add movie to cart
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String movieId = request.getParameter("id");
-        log("adding '" + movieId + "' to cart\n");
+        //String movieId = request.getParameter("id");
+        log("adding '" + thisId + "' to cart\n");
         response.setContentType("application/json");
         HttpSession session = request.getSession();
         Customer currentUser = (Customer) session.getAttribute("user");
-        currentUser.addToCart(movieId);
+        currentUser.addToCart(thisId);
         session.setAttribute("user", currentUser);
         response.sendRedirect("cart.html");
     }
-
 
 
 }

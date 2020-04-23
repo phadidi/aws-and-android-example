@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Customer {
@@ -43,7 +42,9 @@ public class Customer {
         dbcon.close();
     }
 
-    public ArrayList<String> getCart() { return cart; }
+    public ArrayList<String> getCart() {
+        return cart;
+    }
 
     public void addToCart(String movieId) {
         cart.add(movieId);

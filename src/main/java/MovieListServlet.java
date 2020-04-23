@@ -87,23 +87,20 @@ public class MovieListServlet extends HttpServlet {
                         "GROUP BY m.title, m.year, m.director\n";
             }
 
-            if(sort.compareTo("title_then_rating_ASC") == 0) {
+            if (sort.compareTo("title_then_rating_ASC") == 0) {
                 query += "ORDER BY m.title, r.rating\n";
-            }
-            else if(sort.compareTo("title_then_rating_DESC") == 0){
+            } else if (sort.compareTo("title_then_rating_DESC") == 0) {
                 query += "ORDER BY m.title DESC, r.rating DESC\n";
-            }
-            else if(sort.compareTo("rating_then_title_ASC") == 0){
+            } else if (sort.compareTo("rating_then_title_ASC") == 0) {
                 query += "ORDER BY r.rating, m.title\n";
-            }
-            else if(sort.compareTo("rating_then_title_DESC") == 0){
+            } else if (sort.compareTo("rating_then_title_DESC") == 0) {
                 query += "ORDER BY r.rating DESC, m.title DESC\n";
             }
 
             if (limit.compareTo("10") == 0) {
                 query += "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
             } else {
-               query += "LIMIT " + limit + " OFFSET " + Integer.toString(page) + ";";
+                query += "LIMIT " + limit + " OFFSET " + Integer.toString(page) + ";";
             }
 
 
@@ -123,7 +120,7 @@ public class MovieListServlet extends HttpServlet {
                 String movie_starNamesAndIds = rs.getString("starNamesAndIds");
                 String movieRating = "N/A";
                 String tempRating = rs.getString("rating");
-                if(tempRating != null){
+                if (tempRating != null) {
                     movieRating = tempRating;
                 }
 
