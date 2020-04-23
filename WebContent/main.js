@@ -10,7 +10,7 @@ function handleGenreResult(resultData) {
     for (let i = 0; i < resultData.length; i++) {
 
         rowHTML += "<span>| " +
-            '<a href=' + "movielist.html?genre=" + resultData[i]['genre'] + "&page=1&offset=10>"
+            '<a href=' + "movielist.html?genre=" + resultData[i]['genre'] + "&page=1&limit=10>"
             + resultData[i]['genre'] + " </a>" +
             "</span>";
     }

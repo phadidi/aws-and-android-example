@@ -35,10 +35,12 @@ public class MovieListServlet extends HttpServlet {
 
         String genreName = request.getParameter("genre");
 
-        String offset = request.getParameter("offset");
+        String limit = request.getParameter("limit");
+        Integer limit_num = Integer.parseInt(limit);
 
         String pageNumber = request.getParameter("page");
-        Integer page = (Integer.parseInt(pageNumber) - 1) * 10;
+        Integer page = (Integer.parseInt(pageNumber) - 1) * limit_num;
+
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
@@ -77,10 +79,10 @@ public class MovieListServlet extends HttpServlet {
                         "GROUP BY m.title, m.year, m.director\n" +
                         "ORDER BY m.title\n";
             }
-            if (offset.compareTo("") == 0) {
+            if (limit.compareTo("10") == 0) {
                 query += "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
             } else {
-                query += "LIMIT " + offset + " OFFSET " + Integer.toString(page) + ";";
+               query += "LIMIT " + limit + " OFFSET " + Integer.toString(page) + ";";
             }
 
 

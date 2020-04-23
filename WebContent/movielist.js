@@ -30,15 +30,30 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function handleListResult(resultData, condition, page, offsetNo) {
+function handleListResult(resultData, condition, page, limit) {
     console.log("handleListResult: populating movielist table from resultData");
+
+    let limit_list_body = jQuery("#limit_list");
+
+    limit_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
+        "    <p align=\"center\"><strong>Results per page: </strong>\n" +
+        "        <input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n" +
+        "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
+        "        <select name=\"limit\">\n" +
+        "            <option value=\"10\">10</option>\n" +
+        "            <option value=\"25\">25</option>\n" +
+        "            <option value=\"50\">50</option>\n" +
+        "            <option value=\"100\">100</option>\n" +
+        "        </select>\n" +
+        "        <input type=\"submit\"/></p>\n" +
+        "</form>");
 
     // Populate the movielist table
     // Find the empty table body by id "movielist_table_body"
     let movielistTableBodyElement = jQuery("#movielist_table_body");
 
     // Iterate through resultData, no more than 10 entries
-    for (let i = 0; i < Math.min(10, resultData.length); i++) {
+    for (let i = 0; i < Math.min(limit, resultData.length); i++) {
 
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
@@ -87,15 +102,19 @@ function handleListResult(resultData, condition, page, offsetNo) {
     let pageBody = jQuery("#page_list_body");
     let pageText = "";
 
-    if (parseInt(pageNumber, offsetNo) > 1) {
+    // 10 in 'parseInt(pageNumber, 10)' is not limit number. It's for parseInt to convert to Integer properly
+    if (parseInt(page) > 1) {
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) - 1).toString() + "&offset=" + offsetNo + ">" +
+            '<a href=' + "movielist.html?genre=" + condition + "&page=" + (parseInt(page, 10) - 1).toString() +
+            "&limit=" + limit + ">" +
             "<<< Previous       </a>" +
             "</span>";
     }
-    if (resultData.length == offsetNo) {
+    // 10 in 'parseInt(pageNumber, 10)' is not limit number. It's for parseInt to convert to Integer properly
+    if (resultData.length == limit) {
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + genreName + "&page=" + (parseInt(pageNumber, offsetNo) + 1).toString() + "&offset=" + offsetNo + ">" +
+            '<a href=' + "movielist.html?genre=" + condition + "&page=" + (parseInt(page, 10) + 1).toString() +
+            "&limit=" + limit + ">" +
             "Next >>></a>" +
             "</span>";
         pageBody.append(pageText);
@@ -107,11 +126,11 @@ function handleListResult(resultData, condition, page, offsetNo) {
  */
 let genreName = getParameterByName('genre');
 let pageNumber = getParameterByName('page');
+let limit = getParameterByName('limit');
 // Makes the HTTP GET request and registers on success callback function handleListResult
-let offsetNumber = getParameterByName('offset');
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&offset=" + offsetNumber.toString(), // Setting request url, which is mapped by MovieListServlet in Stars.java
-    success: (resultData) => handleListResult(resultData, genreName, pageNumber, offsetNumber), // Setting callback function to handle data returned successfully by the MovieListServlet
+    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&limit=" + limit, // Setting request url, which is mapped by MovieListServlet in Stars.java
+    success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit), // Setting callback function to handle data returned successfully by the MovieListServlet
 });
