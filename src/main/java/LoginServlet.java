@@ -75,8 +75,14 @@ public class LoginServlet extends HttpServlet {
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
 
-                // sample error messages. in practice, it is not a good idea to tell user which one is incorrect/not exist.
-                if (!email.equals("mytestuser")) {
+                // Error messages to check if an account exists or not if the username and/or password is incorrect
+                query = "select * from customers where email = '" + email + "';";
+                rs = statement.executeQuery(query);
+                String existingEmail = "";
+                while (rs.next()) {
+                    existingEmail = rs.getString("email");
+                }
+                if (!existingEmail.equals("")) {
                     responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
                 } else {
                     responseJsonObject.addProperty("message", "incorrect password");

@@ -15,6 +15,8 @@
  * @param target String
  * @returns {*}
  */
+let add_to_cart = $("#add_to_cart");
+
 function getParameterByName(target) {
     // Get request URL
     let url = window.location.href;
@@ -74,8 +76,43 @@ function handleResult(resultData) {
 // Get id from URL
 let movieId = getParameterByName('id');
 
-function addMovieToCart() {
+function redirectToCart(resultDataString) {
+    let resultDataJson = JSON.parse(resultDataString);
 
+    console.log("handle cart redirect");
+    console.log(resultDataJson);
+    console.log(resultDataJson["status"]);
+
+    // If login succeeds, it will redirect the user to index.html
+    if (resultDataJson["status"] === "success") {
+        window.location.replace("cart.html");
+    } else {
+        // If login fails, the web page will display
+        // error messages on <div> with id "login_error_message"
+        console.log("show error message");
+        console.log(resultDataJson["message"]);
+        $("#login_error_message").text(resultDataJson["message"]);
+    }
+
+}
+
+function submitAddToCart(formSubmitEvent) {
+    console.log("add '" + movieId + "' to cart");
+    /**
+     * When users click the submit button, the browser will not direct
+     * users to the url defined in HTML form. Instead, it will call this
+     * event handler when the event is triggered.
+     */
+    formSubmitEvent.preventDefault();
+
+    $.ajax(
+        "api/single-movie", {
+            method: "POST",
+            // Serialize the login form to the data sent by POST request
+            data: add_to_cart.serialize(),
+            success: redirectToCart
+        }
+    );
 }
 
 // Makes the HTTP GET request and registers on success callback function handleResult
@@ -85,3 +122,6 @@ jQuery.ajax({
     url: "api/single-movie?id=" + movieId, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
+
+// TODO: determine if jQuery for POST is necessary, and how it would work
+add_to_cart.submit(submitAddToCart)
