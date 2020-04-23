@@ -77,28 +77,13 @@ function handleResult(resultData) {
 let movieId = getParameterByName('id');
 
 function redirectToCart(resultDataString) {
-    let resultDataJson = JSON.parse(resultDataString);
-
     console.log("handle cart redirect");
-    console.log(resultDataJson);
-    console.log(resultDataJson["status"]);
-
-    // If login succeeds, it will redirect the user to index.html
-    if (resultDataJson["status"] === "success") {
-        window.location.replace("cart.html");
-    } else {
-        // If login fails, the web page will display
-        // error messages on <div> with id "login_error_message"
-        console.log("show error message");
-        console.log(resultDataJson["message"]);
-        $("#login_error_message").text(resultDataJson["message"]);
-    }
-
+    window.location.replace("cart.html");
 }
 
 function submitAddToCart(formSubmitEvent) {
     console.log("add '" + movieId + "' to cart");
-    alert("you have added this to cart");
+    //alert("you have added this to cart");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
@@ -114,6 +99,8 @@ function submitAddToCart(formSubmitEvent) {
             success: redirectToCart
         }
     );
+    // test if redirect works here
+    // window.location.replace("cart.html");
 }
 
 // Makes the HTTP GET request and registers on success callback function handleResult

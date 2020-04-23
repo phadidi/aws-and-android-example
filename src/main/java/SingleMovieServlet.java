@@ -135,13 +135,17 @@ public class SingleMovieServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //String movieId = request.getParameter("id");
+
         log("adding '" + thisId + "' to cart\n");
         response.setContentType("application/json");
         HttpSession session = request.getSession();
         Customer currentUser = (Customer) session.getAttribute("user");
         currentUser.addToCart(thisId);
         session.setAttribute("user", currentUser);
-        response.sendRedirect("cart.html");
+        JsonObject responseJsonObject = new JsonObject();
+        responseJsonObject.addProperty("status", "success");
+        responseJsonObject.addProperty("message", "success");
+        response.getWriter().write(responseJsonObject.toString());
     }
 
 
