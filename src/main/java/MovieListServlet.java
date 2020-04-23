@@ -33,6 +33,8 @@ public class MovieListServlet extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
+        String sort = request.getParameter("sort");
+
         String genreName = request.getParameter("genre");
 
         String limit = request.getParameter("limit");
@@ -55,20 +57,26 @@ public class MovieListServlet extends HttpServlet {
             if (genreName.compareTo("") != 0) {
                 query = "select m.id, m.title, m.year, m.director,\n" +
                         "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
-                        "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim\n" +
+                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
+                        "r.rating\n" +
+                        "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
+                        "LEFT JOIN ratings r\n" +
+                        "ON m.id = r.movieId\n" +
                         "WHERE m.id=gim.movieId AND\n" +
                         "gim.genreId = g.Id AND\n" +
                         "m.id=sim.movieId AND\n" +
                         "sim.starId=s.id AND\n" +
                         "g.name='" + genreName + "'\n" +
-                        "GROUP BY m.title, m.year, m.director\n" +
-                        "ORDER BY m.title\n";
+                        "GROUP BY m.title, m.year, m.director\n";
+
             } else {
                 query = "select m.id, m.title, m.year, m.director,\n" +
                         "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
-                        "FROM movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim\n" +
+                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
+                        "r.rating" +
+                        "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
+                        "LEFT JOIN ratings r\n" +
+                        "ON m.id = r.movieId" +
                         "WHERE m.id in \n" +
                         "(select distinct movies.Id from movies, genres, genres_in_movies where movies.Id = genres_in_movies.movieId \n" +
                         "and genres.id = (select id from genres where name like '" + genreName + "') and genres_in_movies.genreId = genres.id) AND\n" +
@@ -76,9 +84,22 @@ public class MovieListServlet extends HttpServlet {
                         "gim.genreId = g.Id AND\n" +
                         "m.id=sim.movieId AND\n" +
                         "sim.starId=s.id\n" +
-                        "GROUP BY m.title, m.year, m.director\n" +
-                        "ORDER BY m.title\n";
+                        "GROUP BY m.title, m.year, m.director\n";
             }
+
+            if(sort.compareTo("title_then_rating_ASC") == 0) {
+                query += "ORDER BY m.title, r.rating\n";
+            }
+            else if(sort.compareTo("title_then_rating_DESC") == 0){
+                query += "ORDER BY m.title DESC, r.rating DESC\n";
+            }
+            else if(sort.compareTo("rating_then_title_ASC") == 0){
+                query += "ORDER BY r.rating, m.title\n";
+            }
+            else if(sort.compareTo("rating_then_title_DESC") == 0){
+                query += "ORDER BY r.rating DESC, m.title DESC\n";
+            }
+
             if (limit.compareTo("10") == 0) {
                 query += "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
             } else {
@@ -92,9 +113,6 @@ public class MovieListServlet extends HttpServlet {
 
             JsonArray jsonArray = new JsonArray();
 
-            Statement rating_statement = dbcon.createStatement();
-            String rating_query = "";
-            ResultSet rs_rating;
             // Iterate through each row of rs
             while (rs.next()) {
                 String movie_id = rs.getString("id");
@@ -104,14 +122,9 @@ public class MovieListServlet extends HttpServlet {
                 String movie_genres = rs.getString("genresname");
                 String movie_starNamesAndIds = rs.getString("starNamesAndIds");
                 String movieRating = "N/A";
-
-                rating_query = "select rating from ratings where movieId = '" + movie_id + "'";
-                rs_rating = rating_statement.executeQuery(rating_query);
-                while (rs_rating.next()) {
-                    String tempRating = rs_rating.getString("rating");
-                    if (tempRating != null)
-                        if (!tempRating.isEmpty())
-                            movieRating = tempRating;
+                String tempRating = rs.getString("rating");
+                if(tempRating != null){
+                    movieRating = tempRating;
                 }
 
                 // Create a JsonObject based on the data we retrieve from rs

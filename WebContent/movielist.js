@@ -30,23 +30,44 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function handleListResult(resultData, condition, page, limit) {
+function handleListResult(resultData, condition, page, limit, sort) {
     console.log("handleListResult: populating movielist table from resultData");
 
     let limit_list_body = jQuery("#limit_list");
-
     limit_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
         "    <p align=\"center\"><strong>Results per page: </strong>\n" +
         "        <input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n" +
         "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
+        "        <input type=\"hidden\" name=\"sort\" value=\"" + sort + "\"/>\n" +
         "        <select name=\"limit\">\n" +
-        "            <option value=\"10\">10</option>\n" +
+        "            <option value=\"10\" selected>10</option>\n" +
         "            <option value=\"25\">25</option>\n" +
         "            <option value=\"50\">50</option>\n" +
         "            <option value=\"100\">100</option>\n" +
         "        </select>\n" +
         "        <input type=\"submit\"/></p>\n" +
-        "</form>");
+        "</form>" +
+        "<script type=\"text/javascript\">" +
+        "document.getElementById('limit').value = \"<?php echo $_GET['name'];?>\";" +
+        "</script>");
+
+    let sort_list_body = jQuery("#sort_list");
+    sort_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
+        "    <p align=\"center\"><strong>Sort by: </strong>\n" +
+        "        <input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n" +
+        "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
+        "        <input type=\"hidden\" name=\"limit\" value=\"" + limit + "\"/>\n" +
+        "        <select name=\"sort\">\n" +
+        "            <option value=\"title_then_rating_ASC\" selected>title (then rating) ascending</option>\n" +
+        "            <option value=\"title_then_rating_DESC\">rating (then title) descending</option>\n" +
+        "            <option value=\"rating_then_title_ASC\">rating (then title) ascending </option>\n" +
+        "            <option value=\"rating_then_title_DESC\">rating (then title) descending</option>\n" +
+        "        </select>\n" +
+        "        <input type=\"submit\"/></p>\n" +
+        "</form>" +
+        "<script type=\"text/javascript\">" +
+        "document.getElementById('sort').value = \"<?php echo $_GET['name'];?>\";" +
+        "</script>");
 
     // Populate the movielist table
     // Find the empty table body by id "movielist_table_body"
@@ -106,7 +127,7 @@ function handleListResult(resultData, condition, page, limit) {
     if (parseInt(page) > 1) {
         pageText += "<span>" +
             '<a href=' + "movielist.html?genre=" + condition + "&page=" + (parseInt(page, 10) - 1).toString() +
-            "&limit=" + limit + ">" +
+            "&limit=" + limit + "&sort=" + sort + ">" +
             "<<< Previous       </a>" +
             "</span>";
     }
@@ -114,7 +135,7 @@ function handleListResult(resultData, condition, page, limit) {
     if (resultData.length == limit) {
         pageText += "<span>" +
             '<a href=' + "movielist.html?genre=" + condition + "&page=" + (parseInt(page, 10) + 1).toString() +
-            "&limit=" + limit + ">" +
+            "&limit=" + limit + "&sort=" + sort + ">" +
             "Next >>></a>" +
             "</span>";
         pageBody.append(pageText);
@@ -127,10 +148,11 @@ function handleListResult(resultData, condition, page, limit) {
 let genreName = getParameterByName('genre');
 let pageNumber = getParameterByName('page');
 let limit = getParameterByName('limit');
+let sort = getParameterByName('sort');
 // Makes the HTTP GET request and registers on success callback function handleListResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&limit=" + limit, // Setting request url, which is mapped by MovieListServlet in Stars.java
-    success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit), // Setting callback function to handle data returned successfully by the MovieListServlet
+    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&limit=" + limit + '&sort=' + sort, // Setting request url, which is mapped by MovieListServlet in Stars.java
+    success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit, sort), // Setting callback function to handle data returned successfully by the MovieListServlet
 });
