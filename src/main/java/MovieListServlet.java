@@ -33,6 +33,11 @@ public class MovieListServlet extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
+        String searchTitle = request.getParameter("search_title");
+        String searchYear = request.getParameter("search_year");
+        String searchDirector = request.getParameter("search_director");
+        String searchStar = request.getParameter("search_star");
+
         String sort = request.getParameter("sort");
 
         String genreName = request.getParameter("genre");
@@ -52,40 +57,61 @@ public class MovieListServlet extends HttpServlet {
 
             // Declare our statement
             Statement statement = dbcon.createStatement();
-            String query;
-            // TODO: devise different queries for each context based on the given search parameters
-            if (genreName.compareTo("") != 0) {
-                query = "select m.id, m.title, m.year, m.director,\n" +
-                        "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
-                        "r.rating\n" +
-                        "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
-                        "LEFT JOIN ratings r\n" +
-                        "ON m.id = r.movieId\n" +
-                        "WHERE m.id=gim.movieId AND\n" +
-                        "gim.genreId = g.Id AND\n" +
-                        "m.id=sim.movieId AND\n" +
-                        "sim.starId=s.id AND\n" +
-                        "g.name='" + genreName + "'\n" +
-                        "GROUP BY m.title, m.year, m.director\n";
+            String query = "select m.id, m.title, m.year, m.director,\n" +
+                    "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
+                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
+                    "r.rating\n" +
+                    "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
+                    "LEFT JOIN ratings r\n" +
+                    "ON m.id = r.movieId\n" +
+                    "WHERE m.id=gim.movieId AND\n" +
+                    "gim.genreId = g.Id AND\n" +
+                    "m.id=sim.movieId AND\n" +
+                    "sim.starId=s.id\n";
 
-            } else {
-                query = "select m.id, m.title, m.year, m.director,\n" +
-                        "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-                        "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
-                        "r.rating" +
-                        "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
-                        "LEFT JOIN ratings r\n" +
-                        "ON m.id = r.movieId" +
-                        "WHERE m.id in \n" +
-                        "(select distinct movies.Id from movies, genres, genres_in_movies where movies.Id = genres_in_movies.movieId \n" +
-                        "and genres.id = (select id from genres where name like '" + genreName + "') and genres_in_movies.genreId = genres.id) AND\n" +
-                        "m.id=gim.movieId AND\n" +
-                        "gim.genreId = g.Id AND\n" +
-                        "m.id=sim.movieId AND\n" +
-                        "sim.starId=s.id\n" +
-                        "GROUP BY m.title, m.year, m.director\n";
+            if (searchTitle != null){
+                query += "AND m.title like'%" + searchTitle + "%'\n";
             }
+            else if (genreName != null) {
+                query += "AND g.name='" + genreName + "'\n";
+            }
+
+            if (searchYear != null){
+                query += "AND m.year='%" + searchYear + "%'\n";
+            }
+            if (searchDirector != null){
+                query += "AND m.director like'%" + searchDirector + "%'\n";
+            }
+
+            // doesn't show all stars in the movie
+            if (searchStar != null){
+                query += "AND s.name like'%" + searchStar + "%'\n";
+            }
+
+            //else {
+            //    query = "select m.id, m.title, m.year, m.director,\n" +
+            //            "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
+            //            "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
+            //            "r.rating" +
+            //            "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
+            //            "LEFT JOIN ratings r\n" +
+            //            "ON m.id = r.movieId" +
+            //            "WHERE m.id in \n" +
+            //            "(select distinct movies.Id from movies, genres, genres_in_movies where movies.Id = genres_in_movies.movieId \n" +
+            //            "and genres.id = (select id from genres where name like '" + genreName + "') and genres_in_movies.genreId = genres.id) AND\n" +
+            //            "m.id=gim.movieId AND\n" +
+            //            "gim.genreId = g.Id AND\n" +
+            //            "m.id=sim.movieId AND\n" +
+            //            "sim.starId=s.id\n" +
+            //            "GROUP BY m.title, m.year, m.director\n";
+            //}
+
+            query += "GROUP BY m.title, m.year, m.director\n";
+
+            // used having to fix the printing issue, but it is too slow
+            //if (searchStar != null){
+            //    query += "HAVING  starNamesAndIds like \"%" + searchStar + "%\"";
+            //}
 
             if (sort.compareTo("title_then_rating_ASC") == 0) {
                 query += "ORDER BY m.title, r.rating\n";
@@ -103,6 +129,7 @@ public class MovieListServlet extends HttpServlet {
                 query += "LIMIT " + limit + " OFFSET " + Integer.toString(page) + ";";
             }
 
+            System.out.println(query);
 
             //String query = "select id, title, year from movies;";
             // Perform the query
