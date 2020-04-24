@@ -72,20 +72,12 @@ public class MovieListServlet extends HttpServlet {
             if (searchTitle != null){
                 query += "AND m.title like'%" + searchTitle + "%'\n";
             }
-            else if (genreName != null) {
-                query += "AND g.name='" + genreName + "'\n";
-            }
 
             if (searchYear != null){
                 query += "AND m.year='%" + searchYear + "%'\n";
             }
             if (searchDirector != null){
                 query += "AND m.director like'%" + searchDirector + "%'\n";
-            }
-
-            // doesn't show all stars in the movie
-            if (searchStar != null){
-                query += "AND s.name like'%" + searchStar + "%'\n";
             }
 
             //else {
@@ -106,12 +98,16 @@ public class MovieListServlet extends HttpServlet {
             //            "GROUP BY m.title, m.year, m.director\n";
             //}
 
-            query += "GROUP BY m.title, m.year, m.director\n";
+            query += "GROUP BY m.id\n";
 
-            // used having to fix the printing issue, but it is too slow
-            //if (searchStar != null){
-            //    query += "HAVING  starNamesAndIds like \"%" + searchStar + "%\"";
-            //}
+            // use having clause to properly print out all genres and star names when selecting for one
+            if (genreName != null) {
+                query += "HAVING  genresname like \"%" + genreName + "%\"";
+            }
+
+            if (searchStar != null){
+                query += "HAVING  starNamesAndIds like \"%" + searchStar + "%\"";
+            }
 
             if (sort.compareTo("title_then_rating_ASC") == 0) {
                 query += "ORDER BY m.title, r.rating\n";
