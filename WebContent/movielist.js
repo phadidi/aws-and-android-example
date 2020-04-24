@@ -30,13 +30,30 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function handleListResult(resultData, condition, page, limit, sort) {
+function handleListResult(resultData, condition, page, limit, sort, searchTitle, searchYear, searchDirector, searchStar) {
     console.log("handleListResult: populating movielist table from resultData");
+
+    let conditionString = "";
+    if(searchTitle){
+        conditionString += "<input type=\"hidden\" name=\"search_title\" value=\"" + searchTitle + "\"/>\n";
+    }
+    if(searchYear){
+        conditionString += "<input type=\"hidden\" name=\"search_year\" value=\"" + searchYear + "\"/>\n";
+    }
+    if(searchDirector){
+        conditionString += "<input type=\"hidden\" name=\"search_director\" value=\"" + searchDirector + "\"/>\n";
+    }
+    if(searchStar){
+        conditionString += "<input type=\"hidden\" name=\"search_star\" value=\"" + searchStar + "\"/>\n";
+    }
+
+    if(condition){
+        conditionString += "<input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n";
+    }
 
     let limit_list_body = jQuery("#limit_list");
     limit_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
         "    <p align=\"center\"><strong>Results per page: </strong>\n" +
-        "        <input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n" +
         "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
         "        <input type=\"hidden\" name=\"sort\" value=\"" + sort + "\"/>\n" +
         "        <select name=\"limit\">\n" +
@@ -45,6 +62,7 @@ function handleListResult(resultData, condition, page, limit, sort) {
         "            <option value=\"50\">50</option>\n" +
         "            <option value=\"100\">100</option>\n" +
         "        </select>\n" +
+        conditionString +
         "        <input type=\"submit\"/></p>\n" +
         "</form>" +
         "<script type=\"text/javascript\">" +
@@ -54,7 +72,6 @@ function handleListResult(resultData, condition, page, limit, sort) {
     let sort_list_body = jQuery("#sort_list");
     sort_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
         "    <p align=\"center\"><strong>Sort by: </strong>\n" +
-        "        <input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n" +
         "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
         "        <input type=\"hidden\" name=\"limit\" value=\"" + limit + "\"/>\n" +
         "        <select name=\"sort\">\n" +
@@ -63,6 +80,7 @@ function handleListResult(resultData, condition, page, limit, sort) {
         "            <option value=\"rating_then_title_ASC\">rating (then title) ascending </option>\n" +
         "            <option value=\"rating_then_title_DESC\">rating (then title) descending</option>\n" +
         "        </select>\n" +
+        conditionString +
         "        <input type=\"submit\"/></p>\n" +
         "</form>" +
         "<script type=\"text/javascript\">" +
@@ -149,10 +167,30 @@ let genreName = getParameterByName('genre');
 let pageNumber = getParameterByName('page');
 let limit = getParameterByName('limit');
 let sort = getParameterByName('sort');
+let searchTitle = getParameterByName('search_title');
+let searchYear = getParameterByName('search_year');
+let searchDirector = getParameterByName('search_director');
+let searchStar = getParameterByName('search_star');
+let url_string = "api/movielist?page=" + pageNumber + "&limit=" + limit + '&sort=' + sort; // Setting request url;
+if(genreName) {
+    url_string += "&genre=" + genreName; //appending genre query if genre is defined
+}
+if(searchTitle){
+    url_string += "&search_title=" + searchTitle; //appending search title query if genre is defined
+}
+if(searchYear){
+    url_string += "&search_year=" + searchYear; //appending search title query if genre is defined
+}
+if(searchDirector){
+    url_string += "&search_director=" + searchDirector; //appending search title query if genre is defined
+}
+if(searchStar){
+    url_string += "&search_star=" + searchStar; //appending search title query if genre is defined
+}
 // Makes the HTTP GET request and registers on success callback function handleListResult
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/movielist?genre=" + genreName + "&page=" + pageNumber + "&limit=" + limit + '&sort=' + sort, // Setting request url, which is mapped by MovieListServlet in Stars.java
-    success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit, sort), // Setting callback function to handle data returned successfully by the MovieListServlet
+    url: url_string,
+    success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar) // Setting callback function to handle data returned successfully by the MovieListServlet
 });
