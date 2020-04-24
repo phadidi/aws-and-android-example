@@ -96,7 +96,7 @@ public class SingleMovieServlet extends HttpServlet {
             jsonObject.addProperty("genres", movieGenres);
             jsonObject.addProperty("stars", movieStars);
 
-            query = "select rating from ratings where movieId = '" + thisId + "'";
+            query = "select rating from ratings where movieId = '" + thisId + "';";
             rs = statement.executeQuery(query);
             String movieRating = "N/A";
             while (rs.next()) {
