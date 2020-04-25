@@ -138,7 +138,6 @@ public class MovieListServlet extends HttpServlet {
             // Iterate through each row of rs
             while (rs.next()) {
                 String movie_id = rs.getString("id");
-                thisId = movie_id;
                 String movie_title = rs.getString("title");
                 String movie_year = rs.getString("year");
                 String movie_director = rs.getString("director");
@@ -150,6 +149,7 @@ public class MovieListServlet extends HttpServlet {
                     movieRating = tempRating;
                 }
 
+                thisId = movie_id;
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("id", movie_id);
