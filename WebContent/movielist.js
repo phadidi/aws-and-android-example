@@ -116,8 +116,8 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
             // Add a link to single-movie.html with id passed with GET url parameter
             '<a href=' + "single-movie.html?id=" + resultData[i]['id'] + conditionURL + ">"
             + resultData[i]["title"] +     // display title for the link text
-            '</a>' + "<form action=\"cart.html\" id=\"add_to_cart\" method=\"post\"><input name=document.URL type=\"submit\" " +
-            "value=\"Add to Cart\"></form>" +
+            '</a>' + "<form action=\"cart.html\" id=\"add_to_cart\" method=\"post\"><button name='id' type=\"submit\" " +
+            "value="+ resultData[i]['id'] + ">Add to Cart</button></form>" +
             "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
@@ -211,6 +211,7 @@ function redirectToCart(resultDataString) {
 }
 
 function submitAddToCart(formSubmitEvent) {
+    let movieId = getParameterByName('id');
     console.log("add '" + movieId + "' to cart");
     //alert("you have added this to cart");
     /**
