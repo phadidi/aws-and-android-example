@@ -16,7 +16,6 @@
  * @returns {*}
  */
 let add_to_cart = $("#add_to_cart");
-let cart_url = "cart.html";
 
 function getParameterByName(target) {
     // Get request URL
@@ -94,8 +93,6 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     }
     movieInfo.append("</p>" + "<p>Rating: " + resultData[0]["rating"] + "</p>");
 
-    cart_url += "?" + conditionURL
-
     let returnLink = jQuery("#return_link");
     returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");
 }
@@ -109,7 +106,7 @@ let movieId = getParameterByName('id');
 
 function redirectToCart(resultDataString) {
     console.log("handle cart redirect");
-    window.location.replace(cart_url);
+    window.location.replace("cart.html");
 }
 
 function submitAddToCart(formSubmitEvent) {
