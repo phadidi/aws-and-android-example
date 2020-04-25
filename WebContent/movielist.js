@@ -34,22 +34,36 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
     console.log("handleListResult: populating movielist table from resultData");
 
     let conditionString = "";
+    let conditionURL = "";
     if(searchTitle){
         conditionString += "<input type=\"hidden\" name=\"search_title\" value=\"" + searchTitle + "\"/>\n";
+        let title_split = searchTitle.split(" ");
+        searchTitle = title_split.join('+');
+        conditionURL += "&search_title=" + searchTitle;
     }
     if(searchYear){
         conditionString += "<input type=\"hidden\" name=\"search_year\" value=\"" + searchYear + "\"/>\n";
+        conditionURL += "&search_year=" + searchYear;
     }
     if(searchDirector){
         conditionString += "<input type=\"hidden\" name=\"search_director\" value=\"" + searchDirector + "\"/>\n";
+        let director_split = searchDirector.split(" ");
+        searchDirector = director_split.join('+');
+        conditionURL += "&search_director=" + searchDirector;
     }
     if(searchStar){
         conditionString += "<input type=\"hidden\" name=\"search_star\" value=\"" + searchStar + "\"/>\n";
+        let star_split = searchStar.split(" ");
+        searchStar = star_split.join('+');
+        conditionURL += "&search_star=" + searchStar;
     }
 
     if(condition){
         conditionString += "<input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n";
+        conditionURL += "&genre=" + condition;
     }
+    let conditionPage = conditionURL;
+    conditionURL += "&limit=" + limit + "&page=" + page + "&sort=" + sort;
 
     let limit_list_body = jQuery("#limit_list");
     limit_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
@@ -100,7 +114,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
-            '<a href=' + "single-movie.html?id=" + resultData[i]['id'] + ">"
+            '<a href=' + "single-movie.html?id=" + resultData[i]['id'] + conditionURL + ">"
             + resultData[i]["title"] +     // display title for the link text
             '</a>' +
             "</th>";
@@ -123,7 +137,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         for (let j = 0; j < starCount; j++) {
             // TODO: tie star ID to star Names using SQL query for future html queries
             let starEntrySplit = starsSplit[j].split('_');
-            rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] + ">"
+            rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] +  conditionURL + ">"
                 + starEntrySplit[0] +
                 '</a>'; // hyperlink star name [1] to star id [0]
             if (j < starCount - 1) // add commas before the last entry
@@ -144,7 +158,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
     // 10 in 'parseInt(pageNumber, 10)' is not limit number. It's for parseInt to convert to Integer properly
     if (parseInt(page) > 1) {
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + condition + "&page=" + (parseInt(page, 10) - 1).toString() +
+            '<a href=' + "movielist.html?" + conditionPage + "&page=" + (parseInt(page, 10) - 1).toString() +
             "&limit=" + limit + "&sort=" + sort + ">" +
             "<<< Previous       </a>" +
             "</span>";
@@ -152,7 +166,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
     // 10 in 'parseInt(pageNumber, 10)' is not limit number. It's for parseInt to convert to Integer properly
     if (resultData.length == limit) {
         pageText += "<span>" +
-            '<a href=' + "movielist.html?genre=" + condition + "&page=" + (parseInt(page, 10) + 1).toString() +
+            '<a href=' + "movielist.html?" + conditionPage + "&page=" + (parseInt(page, 10) + 1).toString() +
             "&limit=" + limit + "&sort=" + sort + ">" +
             "Next >>></a>" +
             "</span>";

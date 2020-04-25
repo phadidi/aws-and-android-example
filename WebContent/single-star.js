@@ -36,9 +36,34 @@ function getParameterByName(target) {
  * @param resultData jsonObject
  */
 
-function handleResult(resultData) {
+function handleResult(resultData, condition, page, limit, sort, searchTitle, searchYear, searchDirector, searchStar) {
 
     console.log("handleResult: populating star info from resultData");
+
+    let conditionURL = "";
+    if(searchTitle){
+        let title_split = searchTitle.split(" ");
+        searchTitle = title_split.join('+');
+        conditionURL += "&search_title=" + searchTitle;
+    }
+    if(searchYear){
+        conditionURL += "&search_year=" + searchYear;
+    }
+    if(searchDirector){
+        let director_split = searchDirector.split(" ");
+        searchDirector = director_split.join('+');
+        conditionURL += "&search_director=" + searchDirector;
+    }
+    if(searchStar){
+        let star_split = searchStar.split(" ");
+        searchStar = star_split.join('+');
+        conditionURL += "&search_star=" + searchStar;
+    }
+
+    if(condition){
+        conditionURL += "&genre=" + condition;
+    }
+    conditionURL += "&limit=" + limit + "&page=" + page + "&sort=" + sort;
 
     // populate the star info h3
     // find the empty h3 body by id "star_info"
@@ -58,7 +83,7 @@ function handleResult(resultData) {
     for (let i = 0; i < resultData.length; i++) {
         let rowHTML = "";
         rowHTML += "<tr>";
-        rowHTML += "<th>" + '<a href=' + "single-movie.html?id=" + resultData[i]['movie_id'] + ">"
+        rowHTML += "<th>" + '<a href=' + "single-movie.html?id=" + resultData[i]['movie_id'] + conditionURL + ">"
             + resultData[i]["movie_title"] + '</a>' + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["movie_director"] + "</th>";
@@ -67,6 +92,9 @@ function handleResult(resultData) {
         // Append the row created to the table body, which will refresh the page
         movieTableBodyElement.append(rowHTML);
     }
+
+    let returnLink = jQuery("#return_link");
+    returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");
 }
 
 /**
@@ -75,11 +103,35 @@ function handleResult(resultData) {
 
 // Get id from URL
 let starId = getParameterByName('id');
+let genreName = getParameterByName('genre');
+let pageNumber = getParameterByName('page');
+let limit = getParameterByName('limit');
+let sort = getParameterByName('sort');
+let searchTitle = getParameterByName('search_title');
+let searchYear = getParameterByName('search_year');
+let searchDirector = getParameterByName('search_director');
+let searchStar = getParameterByName('search_star');
+let url_string = "api/single-star?id=" + starId + "&page=" + pageNumber + "&limit=" + limit + '&sort=' + sort; // Setting request url;
+if(genreName) {
+    url_string += "&genre=" + genreName; //appending genre query if genre is defined
+}
+if(searchTitle){
+    url_string += "&search_title=" + searchTitle; //appending search title query if genre is defined
+}
+if(searchYear){
+    url_string += "&search_year=" + searchYear; //appending search title query if genre is defined
+}
+if(searchDirector){
+    url_string += "&search_director=" + searchDirector; //appending search title query if genre is defined
+}
+if(searchStar){
+    url_string += "&search_star=" + searchStar; //appending search title query if genre is defined
+}
 
 // Makes the HTTP GET request and registers on success callback function handleResult
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
-    url: "api/single-star?id=" + starId, // Setting request url, which is mapped by StarsServlet in Stars.java
-    success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
+    url: url_string, // Setting request url, which is mapped by StarsServlet in Stars.java
+    success: (resultData) => handleResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
