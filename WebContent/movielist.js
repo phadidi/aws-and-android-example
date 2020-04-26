@@ -116,8 +116,9 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
             // Add a link to single-movie.html with id passed with GET url parameter
             '<a href=' + "single-movie.html?id=" + resultData[i]['id'] + conditionURL + ">"
             + resultData[i]["title"] +     // display title for the link text
-            '</a>' + "<form action=\"cart.html\" id=\"add_to_cart\" method=\"post\"><button name='id' type=\"submit\" " +
-            "value="+ resultData[i]['id'] + ">Add to Cart</button></form>" +
+            '</a>' + "<form action=\"cart.html\" id=\"add_to_cart\" method=\"post\">" +
+            "<button type=\"submit\" name=\"movieId\" value=\""+ resultData[i]['id'] + "\" onclick=\"submitAddToCart(this, '" + resultData[i]['id'] + "')\">Add to Cart</button>" +
+            "</form>" +
             "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
@@ -210,8 +211,7 @@ function redirectToCart(resultDataString) {
     window.location.replace("cart.html");
 }
 
-function submitAddToCart(formSubmitEvent) {
-    let movieId = getParameterByName('id');
+function submitAddToCart(formSubmitEvent, movieId) {
     console.log("add '" + movieId + "' to cart");
     //alert("you have added this to cart");
     /**
@@ -219,13 +219,13 @@ function submitAddToCart(formSubmitEvent) {
      * users to the url defined in HTML form. Instead, it will call this
      * event handler when the event is triggered.
      */
-    formSubmitEvent.preventDefault();
+    //formSubmitEvent.preventDefault();
 
     $.ajax(
-        "api/single-movie", {
+        "api/movielist", {
             method: "POST",
             // Serialize the login form to the data sent by POST request
-            data: add_to_cart.serialize(),
+            data: add_to_cart.serialize,
             success: redirectToCart
         }
     );
@@ -242,4 +242,4 @@ jQuery.ajax({
     success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar) // Setting callback function to handle data returned successfully by the MovieListServlet
 });
 
-add_to_cart.submit(submitAddToCart)
+//add_to_cart.submit(submitAddToCart)

@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Enumeration;
+import java.util.List;
 
 
 // Declaring a WebServlet called MovieListServlet, which maps to url "/api/movielist"
@@ -26,7 +28,6 @@ public class MovieListServlet extends HttpServlet {
     // Create a dataSource which registered in web.xml
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
-    private String thisId;
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -149,7 +150,6 @@ public class MovieListServlet extends HttpServlet {
                     movieRating = tempRating;
                 }
 
-                thisId = movie_id;
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("id", movie_id);
@@ -188,13 +188,15 @@ public class MovieListServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //String movieId = request.getParameter("id");
+        Enumeration<String> myParameters = request.getParameterNames();
+        System.out.println(myParameters.toString());
+        String movieId = request.getParameter("movieId");
 
-        log("adding '" + thisId + "' to cart\n");
+        log("adding '" + movieId + "' to cart\n");
         response.setContentType("application/json");
         HttpSession session = request.getSession();
         Customer currentUser = (Customer) session.getAttribute("user");
-        currentUser.addToCart(thisId);
+        currentUser.addToCart(movieId);
         session.setAttribute("user", currentUser);
         JsonObject responseJsonObject = new JsonObject();
         responseJsonObject.addProperty("status", "success");
