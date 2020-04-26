@@ -1,5 +1,5 @@
 let cart = $("#cart");
-
+let ids = [];
 /**
  * Handle the data returned by CartServlet
  * @param resultDataString jsonObject, consists of session info
@@ -28,6 +28,7 @@ function handleSessionData(resultData) {
 
     // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < resultData.length; i++) {
+        ids.push(resultData[i]['id']);
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
@@ -38,38 +39,18 @@ function handleSessionData(resultData) {
             + resultData[i]["title"] +     // display title for the link text
             '</a>' +
             "</th>";
-        rowHTML += "<th>" + resultData[i]["year"] + "</th>";
-        rowHTML += "<th>" + resultData[i]["director"] + "</th>";
         //rowHTML += "<th>" + resultData[i]["genres"] + "</th>";
-        rowHTML += "<th>";
-        let genresSplit = resultData[i]["genres"].split(',');
-        let genreCount = Math.min(3, genresSplit.length);
-        for (let j = 0; j < genreCount; j++) {
-            rowHTML += genresSplit[j];
-            if (j < genreCount - 1) // add commas before the last entry
-                rowHTML += ", ";
-        }
-        rowHTML += "</th>";
 
-        rowHTML += "<th>";
-        let starsSplit = resultData[i]["starNamesAndIds"].split(',');
-        let starCount = Math.min(3, starsSplit.length);
-        for (let j = 0; j < starCount; j++) {
-            // TODO: tie star ID to star Names using SQL query for future html queries
-            let starEntrySplit = starsSplit[j].split('_');
-            rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] + ">"
-                + starEntrySplit[0] +
-                '</a>'; // hyperlink star name [1] to star id [0]
-            if (j < starCount - 1) // add commas before the last entry
-                rowHTML += ", ";
-        }
-        rowHTML += "</th>";
-        rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
+        rowHTML += "<th>" + resultData[i]["Quantity"] + "</th>";
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page
         cartTableBodyElement.append(rowHTML);
     }
+    let paymentButton = jQuery("#payment_button");
+    paymentButton.append("<button onclick=\"window.location.href='payment.html?ids=" +
+                        ids.join("+") +
+                        "'\">Go to Payment</button>")
 }
 
 /**

@@ -146,6 +146,7 @@ public class MovieListServlet extends HttpServlet {
                 String movie_starNamesAndIds = rs.getString("starNamesAndIds");
                 String movieRating = "N/A";
                 String tempRating = rs.getString("rating");
+		String price = "10.99";
                 if (tempRating != null) {
                     movieRating = tempRating;
                 }
@@ -159,7 +160,7 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.addProperty("genres", movie_genres);
                 jsonObject.addProperty("starNamesAndIds", movie_starNamesAndIds);
                 jsonObject.addProperty("rating", movieRating);
-
+		jsonObject.addProperty("price", price);
                 jsonArray.add(jsonObject);
             }
 

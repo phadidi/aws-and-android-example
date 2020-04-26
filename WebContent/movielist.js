@@ -147,6 +147,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         }
         rowHTML += "</th>";
         rowHTML += "<th>" + resultData[i]["rating"] + "</th>";
+        rowHTML += "<th>$" + resultData[i]["price"] + "</th>";
         rowHTML += "</tr>";
 
         // Append the row created to the table body, which will refresh the page

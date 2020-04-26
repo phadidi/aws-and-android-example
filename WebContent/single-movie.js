@@ -92,6 +92,7 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
             movieInfo.append(", ");
     }
     movieInfo.append("</p>" + "<p>Rating: " + resultData[0]["rating"] + "</p>");
+    movieInfo.append("<p>Price: "+ resultData[0]["price"] + "</p>")
 
     let returnLink = jQuery("#return_link");
     returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");
