@@ -77,11 +77,8 @@ function handleSessionData(resultData) {
      * users to the url defined in HTML form. Instead, it will call this
      * event handler when the event is triggered.
      */
-        //cartEvent.preventDefault();
-        //TODO: load cart like movielist here
 
-        // Populate the movielist table
-        // Find the empty table body by id "movielist_table_body"
+    let total = 0;
     let cartTableBodyElement = jQuery("#order_body");
 
     for (let i = 0; i < resultData.length; i++) {
@@ -99,13 +96,19 @@ function handleSessionData(resultData) {
             "</th>";
 
         rowHTML += "<th>" + resultData[i]["Quantity"] + "</th>";
+        rowHTML += "<th>$" + (parseInt(resultData[i]["Quantity"], 10) * 10.99).toString() + "</th>";
         rowHTML += "</tr>";
+        total += parseInt(resultData[i]["Quantity"], 10);
 
         // quantityMap.set(resultData[i]['id'], resultData[i]['Quantity']);
 
         // Append the row created to the table body, which will refresh the page
         cartTableBodyElement.append(rowHTML);
     }
+    total = total * 10.99;
+
+    let totalBody = jQuery("#total_body");
+    totalBody.append("<strong>" + "Total = $" + total.toString() + "</strong>" );
 }
 
 jQuery.ajax({

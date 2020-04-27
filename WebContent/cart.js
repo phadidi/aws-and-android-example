@@ -43,7 +43,6 @@ function handleSessionData(resultData) {
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
-        //rowHTML += "<th>"+ (i+1).toString() + "</th>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
@@ -54,7 +53,7 @@ function handleSessionData(resultData) {
 
         rowHTML += "<th>" + "<form id='quantity_form' name='quantity_form' action='cart.html' method='GET'>" +
                     "<input type='text' id='" + resultData[i]['id'] + "' name='" + resultData[i]['id'] +  "'"
-                    + " value='" + resultData[i]["Quantity"] + "'" + "/>" + "<input type='submit' value='Update'/>" +
+                    + " value='" + resultData[i]["Quantity"] + "'" + "/>" + "<input type='submit' value='Update' onclick='clickAlert()'/>" +
                     "</form>" +
                     "</th>";
         rowHTML += "</tr>";
@@ -69,11 +68,9 @@ function handleSessionData(resultData) {
                         "'\">Go to Payment</button>");
 }
 
-
-/**
- * Handle the items in item list
- * @param resultDataString jsonObject, needs to be parsed to html
- */
+function clickAlert() {
+    alert("Quantity updated!");
+}
 
 let url_string = "api/cart";
 let key_id = "";

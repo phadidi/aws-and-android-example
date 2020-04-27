@@ -240,7 +240,7 @@ function submitAddToCart(id) {
             method: "POST",
             // Serialize the login form to the data sent by POST request
             data: id,
-            success: redirectToCart
+            success: alert("Successfully added to Cart")
         }
     );
     // test if redirect works here
