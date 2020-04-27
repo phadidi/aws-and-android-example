@@ -32,11 +32,16 @@ function getParameterByName(target) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function handleListResult(resultData, condition, page, limit, sort, searchTitle, searchYear, searchDirector, searchStar) {
+function handleListResult(resultData, condition, page, limit, sort, searchTitle, searchYear, searchDirector, searchStar, searchLetter) {
     console.log("handleListResult: populating movielist table from resultData");
 
     let conditionString = "";
     let conditionURL = "";
+
+    if(searchLetter){
+        conditionString += "<input type=\"hidden\" name=\"letter\" value=\"" + searchLetter + "\"/>\n";
+        conditionURL += "&search_title=" + searchLetter;
+    }
     if(searchTitle){
         conditionString += "<input type=\"hidden\" name=\"search_title\" value=\"" + searchTitle + "\"/>\n";
         let title_split = searchTitle.split(" ");
@@ -183,6 +188,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
 /**
  * Once this .js is loaded, following scripts will be executed by the browser
  */
+let searchLetter = getParameterByName('letter');
 let genreName = getParameterByName('genre');
 let pageNumber = getParameterByName('page');
 let limit = getParameterByName('limit');
@@ -192,6 +198,9 @@ let searchYear = getParameterByName('search_year');
 let searchDirector = getParameterByName('search_director');
 let searchStar = getParameterByName('search_star');
 let url_string = "api/movielist?page=" + pageNumber + "&limit=" + limit + '&sort=' + sort; // Setting request url;
+if(searchLetter) {
+    url_string += "&letter=" + searchLetter; //appending genre query if genre is defined
+}
 if(genreName) {
     url_string += "&genre=" + genreName; //appending genre query if genre is defined
 }
@@ -207,8 +216,6 @@ if(searchDirector){
 if(searchStar){
     url_string += "&search_star=" + searchStar; //appending search title query if genre is defined
 }
-
-
 
 function redirectToCart(resultDataString) {
     console.log("handle cart redirect");
@@ -244,7 +251,7 @@ jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
     url: url_string,
-    success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar) // Setting callback function to handle data returned successfully by the MovieListServlet
+    success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar, searchLetter) // Setting callback function to handle data returned successfully by the MovieListServlet
 });
 
 //add_to_cart.submit(submitAddToCart)

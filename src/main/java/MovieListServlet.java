@@ -36,6 +36,8 @@ public class MovieListServlet extends HttpServlet {
 
         response.setContentType("application/json"); // Response mime type
 
+        String searchLetter = request.getParameter("letter");
+
         String searchTitle = request.getParameter("search_title");
         String searchYear = request.getParameter("search_year");
         String searchDirector = request.getParameter("search_director");
@@ -81,6 +83,15 @@ public class MovieListServlet extends HttpServlet {
             }
             if (searchDirector != null){
                 query += "AND m.director like'%" + searchDirector + "%'\n";
+            }
+
+            if (searchLetter != null){
+                if(searchLetter.equals("non_alphanumeric")){
+                    query += "AND m.title REGEXP '^[^0-9A-Za-z]'";
+                }
+                else {
+                    query += "AND m.title like'" + searchLetter + "%'\n";
+                }
             }
 
             //else {
