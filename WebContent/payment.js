@@ -82,7 +82,7 @@ function handleSessionData(resultData) {
 
         // Populate the movielist table
         // Find the empty table body by id "movielist_table_body"
-    let cartTableBodyElement = jQuery("#order_table");
+    let cartTableBodyElement = jQuery("#order_body");
 
     for (let i = 0; i < resultData.length; i++) {
         //console.log(resultData.length);

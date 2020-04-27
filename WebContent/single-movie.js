@@ -125,7 +125,7 @@ function submitAddToCart(formSubmitEvent) {
             method: "POST",
             // Serialize the login form to the data sent by POST request
             data: add_to_cart.serialize(),
-            success: redirectToCart
+            success: alert("Successfully added to Cart")
         }
     );
     // test if redirect works here
