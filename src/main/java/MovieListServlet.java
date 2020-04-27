@@ -190,8 +190,9 @@ public class MovieListServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Enumeration<String> myParameters = request.getParameterNames();
-        System.out.println(myParameters.toString());
-        String movieId = request.getParameter("movieId");
+        //System.out.println(myParameters.toString());
+        String movieId = myParameters.nextElement();
+        System.out.println(movieId);
 
         log("adding '" + movieId + "' to cart\n");
         response.setContentType("application/json");

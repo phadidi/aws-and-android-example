@@ -218,7 +218,7 @@ function redirectToCart(resultDataString) {
 function submitAddToCart(id) {
     console.log("add '" + id + "' to cart");
     //alert("you have added this to cart");
-    add_to_cart.movieId = id;
+    //add_to_cart.movieId = id;
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
@@ -230,7 +230,7 @@ function submitAddToCart(id) {
         "api/movielist", {
             method: "POST",
             // Serialize the login form to the data sent by POST request
-            data: add_to_cart,
+            data: id,
             success: redirectToCart
         }
     );

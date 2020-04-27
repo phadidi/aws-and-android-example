@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Customer {
@@ -19,7 +21,7 @@ public class Customer {
     private String lastName;
     private String creditCardId;
     private String address;
-    private ArrayList<String> cart;
+    private Map<String, Integer> cart;
 
     public Customer(int customerId, String emailAddress, String pw, String first, String last, String ccId, String billingAddress) {
         this.id = customerId;
@@ -29,7 +31,7 @@ public class Customer {
         this.lastName = last;
         this.creditCardId = ccId;
         this.address = billingAddress;
-        this.cart = new ArrayList<String>();
+        this.cart = new HashMap<String, Integer>();
     }
 
     public void addCustomerToTable() throws SQLException {
@@ -42,16 +44,17 @@ public class Customer {
         dbcon.close();
     }
 
-    public ArrayList<String> getCart() {
+    public Map<String, Integer> getCart() {
         return cart;
     }
 
     public void addToCart(String movieId) {
-        cart.add(movieId);
+        Integer quantity = cart.get(movieId);
+        cart.put(movieId, (quantity == null) ? 1 : quantity + 1);
     }
 
     public void removeFromCart(String movieId) {
-        if (cart.contains(movieId))
+        if (cart.containsKey(movieId))
             cart.remove(movieId);
     }
 

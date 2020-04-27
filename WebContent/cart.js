@@ -4,6 +4,25 @@ let ids = [];
  * Handle the data returned by CartServlet
  * @param resultDataString jsonObject, consists of session info
  */
+
+let updateCount = "";
+let ids_param = [];
+function getParameterByName(target) {
+    // Get request URL
+    let url = window.location.href;
+    // Encode target parameter name to url encoding
+    target = target.replace(/[\[\]]/g, "\\$&");
+
+    // Ues regular expression to find matched parameter value
+    let regex = new RegExp("[?&]" + target + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+
+    // Return the decoded parameter value
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 function handleSessionData(resultData) {
     //console.log("handle session response");
     //console.log(resultDataJson);
@@ -28,6 +47,7 @@ function handleSessionData(resultData) {
 
     // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < resultData.length; i++) {
+        //console.log(resultData.length);
         ids.push(resultData[i]['id']);
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
@@ -39,18 +59,42 @@ function handleSessionData(resultData) {
             + resultData[i]["title"] +     // display title for the link text
             '</a>' +
             "</th>";
-        //rowHTML += "<th>" + resultData[i]["genres"] + "</th>";
 
-        rowHTML += "<th>" + resultData[i]["Quantity"] + "</th>";
+        rowHTML += "<th>" + "<form id='quantity_form' name='quantity_form' action='cart.html' method='GET'>" +
+                    "<input type='text' id='" + resultData[i]['id'] + "' name='" + resultData[i]['id'] +  "'"
+                    + " value='" + resultData[i]["Quantity"] + "'" + "/>" + "<input type='submit' value='Update'/>" +
+                    "</form>" +
+                    "</th>";
         rowHTML += "</tr>";
+
+        // quantityMap.set(resultData[i]['id'], resultData[i]['Quantity']);
 
         // Append the row created to the table body, which will refresh the page
         cartTableBodyElement.append(rowHTML);
     }
     let paymentButton = jQuery("#payment_button");
-    paymentButton.append("<button onclick=\"window.location.href='payment.html?ids=" +
-                        ids.join("+") +
-                        "'\">Go to Payment</button>")
+    paymentButton.append("<button onclick=\"window.location.href='payment.html" +
+                        "'\">Go to Payment</button>");
+}
+
+function updateQuantity(id) {
+    //updateLink += id;
+    //let inputboxId = "quantityInputBox" + id;
+    //let newQuantity = document.getElementById(inputboxId).value;
+
+    // alert(newQuantity);
+
+    //$.ajax(
+    //    "api/cart", {
+    //        method: "POST",
+    //        data: {"newQuantity":newQuantity},
+    //        success: function() {
+    //           alert(newQuantity),
+    //            window.location.reload();
+    //        }
+    //    }
+    //);
+    // window.location.replace("cart.html");
 }
 
 /**
@@ -58,9 +102,24 @@ function handleSessionData(resultData) {
  * @param resultDataString jsonObject, needs to be parsed to html
  */
 
+let url_string = "api/cart";
+let key_id = "";
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const keys = urlParams.keys();
+for(const key of keys) {key_id = key;}
+
+updateCount = getParameterByName(key_id);
+if(updateCount){
+    url_string += "?" + key_id + "=" + updateCount;
+}
+
+console.log(url_string);
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: "api/cart",
+    url: url_string,
     success: (resultData) => handleSessionData(resultData)
 });
+
+
