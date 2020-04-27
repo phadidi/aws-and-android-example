@@ -10,7 +10,7 @@ function handlePaymentResult(resultDataString) {
 
     // If login succeeds, it will redirect the user to index.html
     if (resultDataJson["status"] === "success") {
-        window.location.replace("main.html");
+        window.location.replace("confirmation.html");
     } else {
         // If login fails, the web page will display
         // error messages on <div> with id "login_error_message"
@@ -89,6 +89,7 @@ function handleSessionData(resultData) {
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
+        rowHTML += "<th>"+ (i+1).toString() + "</th>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter

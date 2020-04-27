@@ -19,22 +19,51 @@
 
     <title>Fabflix | Movie List</title>
 </head>
+<style>
+    .btn{
+        display: inline-block;
+        text-decoration: none;
+        background: #ff8181;
+        color: #FFF;
+        width: 120px;
+        height: 120px;
+        line-height: 120px;
+        border-radius: 50%;
+        text-align: center;
+        font-weight: bold;
+        vertical-align: middle;
+        overflow: hidden;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+        border-bottom: solid 3px #bd6565;
+        transition: .4s;
+    }
+
+    .btn:active{
+        -ms-transform: translateY(2px);
+        -webkit-transform: translateY(2px);
+        transform: translateY(2px);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+        border-bottom: none;
+    }
+</style>
 <body>
 
 <div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
     <a href="main.html"><h1>Fabflix</h1></a>
-    <h1>Movie List</h1>
+    <h2>Movie List</h2>
 </div>
 <!-- TODO: create limit parameter here for servlet that can take in options 10 (default), 25, 50, 100-->
 <p id="limit_list"></p>
 <p id="sort_list"></p>
 
 <!-- Id "movielist_table" is useful for jQuery to find the html element with id, class here is mapping to Bootstrap defined class CSS -->
+<div style="text-align: center; width: 1400px; overflow: auto; padding: 20px; margin: 0 auto;">
 <table class="table table-striped" id=movielist_table>
     <!-- Create a table header -->
-    <thead>
+    <thead class="thead-dark">
     <tr>
         <!-- Titles of each column-->
+        <th>#</th>
         <th>Title</th>
         <th>Year</th>
         <th>Director</th>
@@ -48,25 +77,11 @@
     <!-- Again, id "movielist_table_body" is useful for jQuery to find this html element -->
     <tbody id=movielist_table_body></tbody>
 </table>
-
+</div>
 <div id="page_list_body"
      style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>
 
-<button style="position: fixed; right: 2rem; bottom: 2rem; display: inline-block;
-    text-decoration: none;
-    background: #ff8181;
-    color: #FFF;
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
-    border-radius: 50%;
-    text-align: center;
-    font-weight: bold;
-    vertical-align: middle;
-    overflow: hidden;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
-    border-bottom: solid 3px #bd6565;
-    transition: .4s;" onclick="window.location.href='cart.html'">Check out</button>
+<button style="position: fixed; right: 2rem; bottom: 2rem;" class="btn" onclick="window.location.href='cart.html'">Check out</button>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

@@ -5,25 +5,50 @@
     <meta charset="UTF-8">
     <title>Login | Fabflix</title>
 </head>
+<style>
+    #outer-div {
+        width: 100%;
+        text-align: center;
+    }
+    #inner-div {
+        display: inline-block;
+        margin: 0 auto;
+        padding: 3px;
+    }
+
+    label, input {
+        display: block;
+    }
+
+    label {
+        margin-bottom: 20px;
+    }
+</style>
 <body>
-<h2>Login to Fablix</h2>
+<div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
+    <h1>Fabflix</h1>
+    <h2>Login to Fablix</h2>
+</div>
 <!-- Set the method to POST to avoid showing the username/password in the URL
      The default action is disabled to allow your own implementation. -->
+<div id="outer-div" width="100%">
+    <div id="inner-div">
 <form action="#" id="login_form" method="post">
-    <label><b>Username</b></label>
     <label>
+        Username
         <input name="email" placeholder="Enter Email" type="text">
     </label>
-    <br>
-    <label><b>Password</b></label>
     <label>
+        Password
         <input name="password" placeholder="Enter Password" type="password">
     </label>
-    <br>
+    <label>
     <input type="submit" value="Login">
+    </label>
 </form>
-
 <div id="login_error_message"></div>
+</div>
+</div>
 
 <!-- include jQuery-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

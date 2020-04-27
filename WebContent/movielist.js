@@ -118,12 +118,13 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
+        rowHTML += "<th>"+ (i+1).toString() + "</th>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
             '<a href=' + "single-movie.html?id=" + resultData[i]['id'] + conditionURL + ">"
             + resultData[i]["title"] +     // display title for the link text
-            '</a>' +
+            '</a>' + "<br>" +
             " <button id=\"add_to_cart\" action=\"cart.html\" method=\"post\" " +
             "onclick=\"submitAddToCart('" + resultData[i]['id'] + "')\">" +
             "Add to Cart</button>" +

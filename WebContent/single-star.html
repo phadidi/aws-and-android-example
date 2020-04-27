@@ -19,8 +19,38 @@
 
     <title>Single Star | Fabflix</title>
 </head>
+<style>
+    .btn{
+        display: inline-block;
+        text-decoration: none;
+        background: #ff8181;
+        color: #FFF;
+        width: 120px;
+        height: 120px;
+        line-height: 120px;
+        border-radius: 50%;
+        text-align: center;
+        font-weight: bold;
+        vertical-align: middle;
+        overflow: hidden;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+        border-bottom: solid 3px #bd6565;
+        transition: .4s;
+    }
+
+    .btn:active{
+        -ms-transform: translateY(2px);
+        -webkit-transform: translateY(2px);
+        transform: translateY(2px);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+        border-bottom: none;
+    }
+</style>
 <body>
-<h1>Single Star Page</h1>
+<div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
+    <a href="main.html"><h1>Fabflix</h1></a>
+    <h2>Single Star Page</h2>
+</div>
 
 <!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
 <!-- single-star.js will find this html element by it's id "star_info" -->
@@ -42,21 +72,7 @@
 
 <div id="return_link"></div>
 
-<button style="position: fixed; right: 2rem; bottom: 2rem; display: inline-block;
-    text-decoration: none;
-    background: #ff8181;
-    color: #FFF;
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
-    border-radius: 50%;
-    text-align: center;
-    font-weight: bold;
-    vertical-align: middle;
-    overflow: hidden;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
-    border-bottom: solid 3px #bd6565;
-    transition: .4s;" onclick="window.location.href='cart.html'">Check out</button>
+<button style="position: fixed; right: 2rem; bottom: 2rem;" class="btn" onclick="window.location.href='cart.html'">Check out</button>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
