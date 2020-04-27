@@ -135,7 +135,8 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         let genresSplit = resultData[i]["genres"].split(',');
         let genreCount = Math.min(3, genresSplit.length);
         for (let j = 0; j < genreCount; j++) {
-            rowHTML += genresSplit[j];
+            rowHTML += "<a href='movielist.html?page=1&limit=10&sort=title_then_rating_ASC&genre=" + genresSplit[j]
+                        + "'>" + genresSplit[j] + "</a>";
             if (j < genreCount - 1) // add commas before the last entry
                 rowHTML += ", ";
         }
