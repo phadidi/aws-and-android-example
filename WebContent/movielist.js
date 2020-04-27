@@ -14,6 +14,8 @@
  * @param resultData jsonObject
  */
 
+let add_to_cart = $("#add_to_cart");
+
 function getParameterByName(target) {
     // Get request URL
     let url = window.location.href;
@@ -66,7 +68,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
     conditionURL += "&limit=" + limit + "&page=" + page + "&sort=" + sort;
 
     let limit_list_body = jQuery("#limit_list");
-    limit_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
+    limit_list_body.append("<form id=\"limit_form\" action=\"movielist.html\" method=\"GET\">\n" +
         "    <p align=\"center\"><strong>Results per page: </strong>\n" +
         "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
         "        <input type=\"hidden\" name=\"sort\" value=\"" + sort + "\"/>\n" +
@@ -84,7 +86,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         "</script>");
 
     let sort_list_body = jQuery("#sort_list");
-    sort_list_body.append("<form action=\"movielist.html\" method=\"GET\">\n" +
+    sort_list_body.append("<form id=\"sort_form\" action=\"movielist.html\" method=\"GET\">\n" +
         "    <p align=\"center\"><strong>Sort by: </strong>\n" +
         "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
         "        <input type=\"hidden\" name=\"limit\" value=\"" + limit + "\"/>\n" +
@@ -116,9 +118,10 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
             // Add a link to single-movie.html with id passed with GET url parameter
             '<a href=' + "single-movie.html?id=" + resultData[i]['id'] + conditionURL + ">"
             + resultData[i]["title"] +     // display title for the link text
-            '</a>' + "<form action=\"cart.html\" id=\"add_to_cart\" method=\"post\">" +
-            "<button type=\"submit\" name=\"movieId\" value=\""+ resultData[i]['id'] + "\" onclick=\"submitAddToCart(this, '" + resultData[i]['id'] + "')\">Add to Cart</button>" +
-            "</form>" +
+            '</a>' +
+            " <button id=\"add_to_cart\" action=\"cart.html\" method=\"post\" " +
+            "onclick=\"submitAddToCart('" + resultData[i]['id'] + "')\">" +
+            "Add to Cart</button>" +
             "</th>";
         rowHTML += "<th>" + resultData[i]["year"] + "</th>";
         rowHTML += "<th>" + resultData[i]["director"] + "</th>";
@@ -212,9 +215,10 @@ function redirectToCart(resultDataString) {
     window.location.replace("cart.html");
 }
 
-function submitAddToCart(formSubmitEvent, movieId) {
-    console.log("add '" + movieId + "' to cart");
+function submitAddToCart(id) {
+    console.log("add '" + id + "' to cart");
     //alert("you have added this to cart");
+    add_to_cart.movieId = id;
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
@@ -226,7 +230,7 @@ function submitAddToCart(formSubmitEvent, movieId) {
         "api/movielist", {
             method: "POST",
             // Serialize the login form to the data sent by POST request
-            data: add_to_cart.serialize,
+            data: add_to_cart,
             success: redirectToCart
         }
     );
