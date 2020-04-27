@@ -1,4 +1,52 @@
-let updateCount = "";
+let payment_form = $("#payment_form");
+
+/**
+ * Handle the data returned by LoginServlet
+ * @param resultDataString jsonObject
+ */
+function handlePaymentResult(resultDataString) {
+    let resultDataJson = JSON.parse(resultDataString);
+
+
+    // If login succeeds, it will redirect the user to index.html
+    if (resultDataJson["status"] === "success") {
+        window.location.replace("confirmation.html");
+    } else {
+        // If login fails, the web page will display
+        // error messages on <div> with id "login_error_message"
+        console.log("show error message");
+        console.log(resultDataJson["message"]);
+        alert(resultDataJson["message"]);
+    }
+}
+
+/**
+ * Submit the form content with POST method
+ * @param formSubmitEvent
+ */
+function submitPaymentForm(formSubmitEvent) {
+    console.log("submit login form");
+    /**
+     * When users click the submit button, the browser will not direct
+     * users to the url defined in HTML form. Instead, it will call this
+     * event handler when the event is triggered.
+     */
+    formSubmitEvent.preventDefault();
+
+    $.ajax(
+        "api/payment", {
+            method: "POST",
+            // Serialize the login form to the data sent by POST request
+            data: payment_form.serialize(),
+            success: handlePaymentResult
+        }
+    );
+}
+
+// Bind the submit action of the form to a handler function
+payment_form.submit(submitPaymentForm);
+
+
 function getParameterByName(target) {
     // Get request URL
     let url = window.location.href;
@@ -24,7 +72,6 @@ function handleSessionData(resultData) {
     //$("#sessionID").text("Session ID: " + resultDataJson["sessionID"]);
     //$("#lastAccessTime").text("Last access time: " + resultDataJson["lastAccessTime"]);
 
-    console.log("submit cart form");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
@@ -35,15 +82,14 @@ function handleSessionData(resultData) {
 
         // Populate the movielist table
         // Find the empty table body by id "movielist_table_body"
-    let cartTableBodyElement = jQuery("#cart_table_body");
+    let cartTableBodyElement = jQuery("#order_body");
 
-    // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < resultData.length; i++) {
         //console.log(resultData.length);
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
-        //rowHTML += "<th>"+ (i+1).toString() + "</th>";
+        rowHTML += "<th>"+ (i+1).toString() + "</th>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
@@ -52,11 +98,7 @@ function handleSessionData(resultData) {
             '</a>' +
             "</th>";
 
-        rowHTML += "<th>" + "<form id='quantity_form' name='quantity_form' action='cart.html' method='GET'>" +
-                    "<input type='text' id='" + resultData[i]['id'] + "' name='" + resultData[i]['id'] +  "'"
-                    + " value='" + resultData[i]["Quantity"] + "'" + "/>" + "<input type='submit' value='Update'/>" +
-                    "</form>" +
-                    "</th>";
+        rowHTML += "<th>" + resultData[i]["Quantity"] + "</th>";
         rowHTML += "</tr>";
 
         // quantityMap.set(resultData[i]['id'], resultData[i]['Quantity']);
@@ -64,34 +106,12 @@ function handleSessionData(resultData) {
         // Append the row created to the table body, which will refresh the page
         cartTableBodyElement.append(rowHTML);
     }
-    let paymentButton = jQuery("#payment_button");
-    paymentButton.append("<button onclick=\"window.location.href='payment.html" +
-                        "'\">Go to Payment</button>");
 }
 
-
-/**
- * Handle the items in item list
- * @param resultDataString jsonObject, needs to be parsed to html
- */
-
-let url_string = "api/cart";
-let key_id = "";
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const keys = urlParams.keys();
-for(const key of keys) {key_id = key;}
-
-updateCount = getParameterByName(key_id);
-if(updateCount){
-    url_string += "?" + key_id + "=" + updateCount;
-}
-
-console.log(url_string);
 jQuery.ajax({
     dataType: "json", // Setting return data type
     method: "GET", // Setting request method
-    url: url_string,
+    url: "api/payment",
     success: (resultData) => handleSessionData(resultData)
 });
 
