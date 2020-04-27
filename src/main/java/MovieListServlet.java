@@ -203,7 +203,7 @@ public class MovieListServlet extends HttpServlet {
         Enumeration<String> myParameters = request.getParameterNames();
         //System.out.println(myParameters.toString());
         String movieId = myParameters.nextElement();
-        System.out.println(movieId);
+        //System.out.println(movieId);
 
         log("adding '" + movieId + "' to cart\n");
         response.setContentType("application/json");

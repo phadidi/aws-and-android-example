@@ -55,6 +55,17 @@ public class ConfirmationServlet extends HttpServlet {
             for (Map.Entry<String, Integer> val : previousItems.entrySet()){
 
                 int saleId = (int) (Math.random() * 10000);
+
+                String queryUniqueResult = "select id from sales where id = '" + Integer.toString(saleId) + "';";
+                ResultSet rsUniqueResult =  statement.executeQuery(queryUniqueResult);
+                while (rsUniqueResult.next()) {
+                    int tempId = rsUniqueResult.getInt("id");
+                    while (tempId == saleId) { // check if sale with id already exists
+                        saleId = (int) (Math.random() * 1000000);
+                        rsUniqueResult =  statement.executeQuery(queryUniqueResult);
+                    }
+                }
+
                 String query = "INSERT INTO sales VALUES(" + Integer.toString(saleId) + "," + Integer.toString(customerId)
                         + ", '" + val.getKey() + "'," + "CURDATE()" + "," + val.getValue()
                         + ")";
