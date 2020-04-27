@@ -93,10 +93,10 @@ public class CartServlet extends HttpServlet {
                     count = Integer.toString(val.getValue());
 
                     String newQuantity = request.getParameter(movieId);
-                    if(newQuantity != null)
+                    if(newQuantity != null && newQuantity.compareTo(count) != 0)
                     {
+                        currentUser.changeQuantity(movieId, Integer.parseInt(newQuantity));
                         count = newQuantity;
-                        currentUser.addToCart(movieId);
                     }
                     System.out.println(movieId + " " + movieTitle + " " + count);
 

@@ -26,7 +26,20 @@
 
 <p align="center"><strong>Your Order</strong></p>
 <div id="cart_info" style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
+    <table class="table table-striped" id=cart_table>
+        <thead>
+        <tr>
+            <!-- Titles of each column-->
+            <th>Title</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <!-- Table body is left empty here, will be populated with the data retrieved with movielist.js -->
+        <!-- Again, id "movielist_table_body" is useful for jQuery to find this html element -->
+        <tbody id=order_table></tbody>
 
+    </table>
+</div>
 <p align="center"><strong>Please fill out your Payment info</strong></p>
 <div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
     <form action="#" id="payment_form" method="post">
@@ -42,10 +55,9 @@
         <label>
             <input name="ccnumber" placeholder="Enter your card number" type="text">
         </label><br>
-        <br>
         <label><b>Expiration Date</b></label><br>
         <label>
-            <input name="exp_date" placeholder="Enter expiration date" type="text">
+            <input name="exp_date" placeholder="Enter expiration date" type="date">
         </label>
         <br>
         <input type="submit" value="Place Order">

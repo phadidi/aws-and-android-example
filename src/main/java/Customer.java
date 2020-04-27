@@ -54,8 +54,26 @@ public class Customer {
     }
 
     public void removeFromCart(String movieId) {
-        if (cart.containsKey(movieId))
-            cart.remove(movieId);
+        if (cart.containsKey(movieId)) {
+            if (cart.get(movieId) != 0) {
+                int value = cart.get(movieId);
+                cart.replace(movieId, value - 1);
+            } else {
+                cart.remove(movieId);
+            }
+        }
+    }
+
+    public void changeQuantity(String movieId, int count){
+        if (cart.containsKey(movieId)){
+            if(count == 0)
+            {
+                cart.remove(movieId);
+            }
+            else {
+                cart.replace(movieId, count);
+            }
+        }
     }
 
     public void checkoutCart() {

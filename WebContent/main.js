@@ -37,6 +37,94 @@ function handleGenreResult(resultData) {
         "</label>" + "<br>" +
         "        <p align='center'><input type=\"submit\"/></p>\n" +
         "</form>");
+
+    let letterBody = jQuery("#letter_body");
+
+    letterBody.append("<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "1" + ">"
+        + "1" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "2" + ">"
+        + "2" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "3" + ">"
+        + "3" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "4" + ">"
+        + "4" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "5" + ">"
+        + "5" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "6" + ">"
+        + "6" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "7" + ">"
+        + "7" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "8" + ">"
+        + "8" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "9" + ">"
+        + "9" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "0" + ">"
+        + "0" + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "A" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "B" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "C" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "D" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "E" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "F" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "G" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "H" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "I" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "J" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>" +
+        "<span>| " +
+        '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&letter=" + "B" + ">"
+        + resultData[i]['genre'] + " </a>" +
+        "</span>" + "<span>|</span>"
+    )
 }
 
 
