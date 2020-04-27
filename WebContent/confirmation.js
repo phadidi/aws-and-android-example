@@ -28,12 +28,11 @@ function handleSessionData(resultData) {
         rowHTML +=
 
         rowHTML += "<th>" + resultData[i]["quantity"] + "</th>";
-        rowHTML += "<th>$" + (parseInt(resultData[i]["Quantity"], 10) * 10.99).toString() + "</th>";
+        rowHTML += "<th>$" + (parseInt(resultData[i]["quantity"], 10) * 10.99).toString() + "</th>";
         rowHTML += "<th>" + resultData[i]["saleDate"] + "</th>";
         rowHTML += "</tr>";
         total += parseInt(resultData[i]["quantity"], 10);
 
-        // quantityMap.set(resultData[i]['id'], resultData[i]['Quantity']);
 
         // Append the row created to the table body, which will refresh the page
         confirmOrderBody.append(rowHTML);

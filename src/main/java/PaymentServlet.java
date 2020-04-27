@@ -69,7 +69,6 @@ public class PaymentServlet extends HttpServlet {
                 //System.out.println(query);
 
                 // Declare Statement
-                statement = dbcon.createStatement();
                 rs = statement.executeQuery(query);
 
                 String movieId = "";
@@ -88,7 +87,6 @@ public class PaymentServlet extends HttpServlet {
                     jsonObject.addProperty("Quantity", count);
                     jsonArray.add(jsonObject);
                 }
-                // write JSON string to output
                 rs.close();
             }
             out.write(jsonArray.toString());

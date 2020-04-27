@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Map;
 
 @WebServlet(name = "ConfirmationServlet", urlPatterns = "/api/confirmation")
@@ -49,44 +50,44 @@ public class ConfirmationServlet extends HttpServlet {
 
             int customerId = currentUser.getId();
 
+            ArrayList<String> salesIds = new ArrayList<String>();
+
             Statement statement = dbcon.createStatement();
+            Statement getLatest = dbcon.createStatement();
+
             ResultSet rs;
 
             for (Map.Entry<String, Integer> val : previousItems.entrySet()){
 
-                int saleId = (int) (Math.random() * 10000);
+                String query = "INSERT INTO sales(customerId, movieId, saleDate, quantity) VALUES(" + Integer.toString(customerId)
+                        + ", '" + val.getKey() + "'," + "CURDATE()" + "," + Integer.toString(val.getValue())
+                        + ");";
 
-                String queryUniqueResult = "select id from sales where id = '" + Integer.toString(saleId) + "';";
-                ResultSet rsUniqueResult =  statement.executeQuery(queryUniqueResult);
-                while (rsUniqueResult.next()) {
-                    int tempId = rsUniqueResult.getInt("id");
-                    while (tempId == saleId) { // check if sale with id already exists
-                        saleId = (int) (Math.random() * 1000000);
-                        rsUniqueResult =  statement.executeQuery(queryUniqueResult);
-                    }
+                statement.executeUpdate(query);
+
+                String fetchLatest = "select * from sales where idsales=(SELECT LAST_INSERT_ID());";
+
+                rs = getLatest.executeQuery(fetchLatest);
+                while(rs.next()){
+                    salesIds.add(rs.getString("idsales"));
                 }
-
-                String query = "INSERT INTO sales VALUES(" + Integer.toString(saleId) + "," + Integer.toString(customerId)
-                        + ", '" + val.getKey() + "'," + "CURDATE()" + "," + val.getValue()
-                        + ")";
-
-                System.out.println(query);
-                // Declare Statement
-                statement = dbcon.createStatement();
-                rs = statement.executeQuery(query);
                 rs.close();
             }
 
             statement.close();
+            getLatest.close();
 
             Statement statement1 = dbcon.createStatement();
             ResultSet rs1;
             JsonArray jsonArray = new JsonArray();
 
+            String salesIds_string = String.join(",", salesIds);
+            System.out.println(salesIds_string);
 
             String query1 = "select s.idsales, s.customerId, s.movieId, m.title, s.saleDate, s.quantity\n" +
                     "from sales s, movies m\n" +
-                    "where s.movieId = m.id and s.customerId =" + Integer.toString(customerId);
+                    "where s.movieId = m.id and s.customerId =" + Integer.toString(customerId)
+                    + " and s.idsales in (" + salesIds_string + ");";
             System.out.println(query1);
 
             // Declare Statement
@@ -97,8 +98,8 @@ public class ConfirmationServlet extends HttpServlet {
             String cId = "";
             String movieId = "";
             String movieTitle = "";
-            String date = ""
-;           String count = "";
+            String date = "";
+            String count = "";
 
             while (rs1.next()) {
                 sId = rs1.getString("idsales");
@@ -118,7 +119,10 @@ public class ConfirmationServlet extends HttpServlet {
                 jsonObject.addProperty("quantity", count);
                 jsonArray.add(jsonObject);
             }
+
+            currentUser.checkoutCart();
             // write JSON string to output
+
             rs1.close();
 
             out.write(jsonArray.toString());
