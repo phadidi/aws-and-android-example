@@ -191,7 +191,7 @@ public class MovieListServlet extends HttpServlet {
             throws ServletException, IOException {
         Enumeration<String> myParameters = request.getParameterNames();
         System.out.println(myParameters.toString());
-        String movieId = request.getParameter("movieId");
+        String movieId = myParameters.nextElement();
 
         log("adding '" + movieId + "' to cart\n");
         response.setContentType("application/json");
