@@ -44,6 +44,14 @@ public class Customer {
         dbcon.close();
     }
 
+    public int getId() {return id;}
+    public String getEmail() {return email;}
+    public String getPassword() {return password;}
+    public String getFirstName() {return firstName;}
+    public String getLastName() {return lastName;}
+    public String getCreditCardId() {return creditCardId;}
+    public String getAddress() {return address;}
+
     public Map<String, Integer> getCart() {
         return cart;
     }

@@ -113,5 +113,4 @@ public class SingleStarServlet extends HttpServlet {
         out.close();
 
     }
-
 }

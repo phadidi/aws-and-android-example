@@ -24,7 +24,6 @@ public class PaymentServlet extends HttpServlet {
     // Create a dataSource which registered in web.xml
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
-    private String newQuantity;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
