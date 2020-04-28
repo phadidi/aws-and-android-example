@@ -79,7 +79,7 @@ public class MovieListServlet extends HttpServlet {
             }
 
             if (searchYear != null){
-                query += "AND m.year='%" + searchYear + "%'\n";
+                query += "AND m.year=" + searchYear + "\n";
             }
             if (searchDirector != null){
                 query += "AND m.director like'%" + searchDirector + "%'\n";
@@ -123,14 +123,22 @@ public class MovieListServlet extends HttpServlet {
                 query += "HAVING  starNamesAndIds like \"%" + searchStar + "%\"";
             }
 
-            if (sort.compareTo("title_then_rating_ASC") == 0) {
-                query += "ORDER BY m.title, r.rating\n";
-            } else if (sort.compareTo("title_then_rating_DESC") == 0) {
+            if (sort.compareTo("title_asc_rating_asc") == 0) {
+                query += "ORDER BY m.title asc, r.rating asc\n";
+            } else if (sort.compareTo("title_desc_rating_desc") == 0) {
                 query += "ORDER BY m.title DESC, r.rating DESC\n";
-            } else if (sort.compareTo("rating_then_title_ASC") == 0) {
-                query += "ORDER BY r.rating, m.title\n";
-            } else if (sort.compareTo("rating_then_title_DESC") == 0) {
+            } else if (sort.compareTo("rating_asc_title_asc") == 0) {
+                query += "ORDER BY r.rating asc, m.title asc\n";
+            } else if (sort.compareTo("rating_desc_title_DESC") == 0) {
                 query += "ORDER BY r.rating DESC, m.title DESC\n";
+            } else if (sort.compareTo("rating_asc_title_desc") == 0) {
+                query += "ORDER BY r.rating asc, m.title DESC\n";
+            } else if (sort.compareTo("rating_desc_title_asc") == 0) {
+                query += "ORDER BY r.rating DESC, m.title ASC\n";
+            } else if (sort.compareTo("title_asc_rating_desc") == 0) {
+                query += "ORDER BY m.title asc, r.rating desc\n";
+            } else if (sort.compareTo("title_desc_rating_asc") == 0) {
+                query += "ORDER BY m.title desc, r.rating asc\n";
             }
 
             if (limit.compareTo("10") == 0) {

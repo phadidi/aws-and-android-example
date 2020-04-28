@@ -84,27 +84,22 @@ public class ConfirmationServlet extends HttpServlet {
             String salesIds_string = String.join(",", salesIds);
             System.out.println(salesIds_string);
 
-            String query1 = "select s.idsales, s.customerId, s.movieId, m.title, s.saleDate, s.quantity\n" +
+            String query1 = "select s.idsales, m.title, s.saleDate, s.quantity\n" +
                     "from sales s, movies m\n" +
                     "where s.movieId = m.id and s.customerId =" + Integer.toString(customerId)
                     + " and s.idsales in (" + salesIds_string + ");";
             System.out.println(query1);
 
             // Declare Statement
-            statement = dbcon.createStatement();
-            rs1 = statement.executeQuery(query1);
+            rs1 = statement1.executeQuery(query1);
 
             String sId = "";
-            String cId = "";
-            String movieId = "";
             String movieTitle = "";
             String date = "";
             String count = "";
 
             while (rs1.next()) {
                 sId = rs1.getString("idsales");
-                cId = rs1.getString("customerId");
-                movieId = rs1.getString("movieId");
                 movieTitle = rs1.getString("title");
                 date = rs1.getString("saleDate");
                 count = rs1.getString("quantity");
@@ -112,8 +107,6 @@ public class ConfirmationServlet extends HttpServlet {
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("idsales", sId);
-                jsonObject.addProperty("customerId", cId);
-                jsonObject.addProperty("movieId", movieId);
                 jsonObject.addProperty("title", movieTitle);
                 jsonObject.addProperty("saleDate", date);
                 jsonObject.addProperty("quantity", count);
@@ -123,14 +116,12 @@ public class ConfirmationServlet extends HttpServlet {
             currentUser.checkoutCart();
             // write JSON string to output
 
-            rs1.close();
-
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
             response.setStatus(200);
 
+            rs1.close();
             statement1.close();
-
             dbcon.close();
         } catch (Exception e) {
 
