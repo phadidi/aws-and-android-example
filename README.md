@@ -19,7 +19,7 @@ Create a new user for MySQL on your AWS machine with the following credentials:
 
 ```password: mypassword```
 
-Make sure this user has all access and run the createtable.sql and movie-data.sql scripts to create and populate your database.
+Make sure this user has all access and run the createtable.sql scripts to create your database.
 
 Then to prepare your war file, run the following commands:
 
