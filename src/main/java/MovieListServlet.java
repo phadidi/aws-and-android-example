@@ -79,7 +79,7 @@ public class MovieListServlet extends HttpServlet {
             }
 
             if (searchYear != null){
-                query += "AND m.year='%" + searchYear + "%'\n";
+                query += "AND m.year=" + searchYear + "\n";
             }
             if (searchDirector != null){
                 query += "AND m.director like'%" + searchDirector + "%'\n";
