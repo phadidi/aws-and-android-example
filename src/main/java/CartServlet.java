@@ -95,9 +95,6 @@ public class CartServlet extends HttpServlet {
                     String newQuantity = request.getParameter(movieId);
                     if(newQuantity != null && newQuantity.compareTo(count) != 0)
                     {
-                        if(Integer.parseInt(newQuantity) == 0){
-                            currentUser.checkoutCart();
-                        }
                         currentUser.changeQuantity(movieId, Integer.parseInt(newQuantity));
                         count = newQuantity;
                     }
