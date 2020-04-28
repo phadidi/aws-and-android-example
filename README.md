@@ -47,6 +47,8 @@ The Payment page takes a Customer's first and last names with a credit card numb
 The Confirmation page is redirected to after Payment Servlet to confirm a purchase to a customer before deciding to complete it or not.
 ### pom.xml
 The pom.xml file contains a list of artifacts to use, including mysql-connector-java and javax.servlet, along with directions to handle the Maven war packaging and the necessary maven-compiler-plugin and maven-war-plugin.
+### Our Substring Design
+For searching, we simnply used LIKE "%some pattern provided by user%" to match with any value that has that pattern somewhere in the string value. For example, "%vid m%" would match the field "David Mirkin." Similarly, for matching beginning letters like 'A', we used LIKE "A%". This pattern will match anything with A as the first letter in the string value.
 
 ## Contributions
 Parsa Hadidi:
