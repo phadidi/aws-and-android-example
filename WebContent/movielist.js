@@ -96,10 +96,14 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         "        <input type=\"hidden\" name=\"page\" value=\"" + page + "\"/>\n" +
         "        <input type=\"hidden\" name=\"limit\" value=\"" + limit + "\"/>\n" +
         "        <select name=\"sort\">\n" +
-        "            <option value=\"title_then_rating_ASC\" selected>title (then rating) ascending</option>\n" +
-        "            <option value=\"title_then_rating_DESC\">rating (then title) descending</option>\n" +
-        "            <option value=\"rating_then_title_ASC\">rating (then title) ascending </option>\n" +
-        "            <option value=\"rating_then_title_DESC\">rating (then title) descending</option>\n" +
+        "            <option value=\"title_asc_rating_asc\" selected>title (asc) rating (asc)</option>\n" +
+        "            <option value=\"title_desc_rating_desc\">title (desc) rating (desc)</option>\n" +
+        "            <option value=\"rating_asc_title_asc\">rating (asc) title (asc) </option>\n" +
+        "            <option value=\"rating_desc_title_DESC\">rating (desc) title (desc)</option>\n" +
+        "            <option value=\"rating_asc_title_desc\">rating (asc) title (desc)</option>\n" +
+        "            <option value=\"rating_desc_title_asc\">rating (desc) title (asc)</option>\n" +
+        "            <option value=\"title_asc_rating_desc\">title (asc) rating (desc)</option>\n" +
+        "            <option value=\"title_desc_rating_asc\">title (desc) rating (asc)</option>\n" +
         "        </select>\n" +
         conditionString +
         "        <input type=\"submit\"/></p>\n" +
