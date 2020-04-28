@@ -25,7 +25,6 @@ function handleSessionData(resultData) {
         rowHTML += "<tr>";
         rowHTML += "<th>" + resultData[i]["idsales"] + "</th>";
         rowHTML += "<th>" + resultData[i]["title"] + "</th>";
-        rowHTML +=
 
         rowHTML += "<th>" + resultData[i]["quantity"] + "</th>";
         rowHTML += "<th>$" + (parseInt(resultData[i]["quantity"], 10) * 10.99).toString() + "</th>";
