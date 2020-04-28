@@ -8,7 +8,7 @@ function handleGenreResult(resultData) {
     for (let i = 0; i < resultData.length; i++) {
 
         rowHTML += "<span>| " +
-            '<a href=' + "movielist.html?page=1&limit=10&sort=title_then_rating_ASC" + "&genre=" + resultData[i]['genre'] + ">"
+            '<a href=' + "movielist.html?page=1&limit=10&sort=title_asc_rating_asc" + "&genre=" + resultData[i]['genre'] + ">"
             + resultData[i]['genre'] + " </a>" +
             "</span>";
     }
@@ -19,11 +19,11 @@ function handleGenreResult(resultData) {
     let alphabet_list = alphabet.split(" ");
     let letter_string = "";
     for(let i = 0; i < alphabet_list.length; i++){
-        letter_string += "<span>| <a href='movielist.html?page=1&limit=10&sort=title_then_rating_ASC&letter=" + alphabet_list[i] + "'>"
+        letter_string += "<span>| <a href='movielist.html?page=1&limit=10&sort=title_asc_rating_asc&letter=" + alphabet_list[i] + "'>"
                          + alphabet_list[i] + " </a>" + "</span>";
     }
 
-    letter_string += "<span>| <a href='movielist.html?page=1&limit=10&sort=title_then_rating_ASC&letter=non_alphanumeric'>"
+    letter_string += "<span>| <a href='movielist.html?page=1&limit=10&sort=title_asc_rating_asc&letter=non_alphanumeric'>"
         + "Non-Alphanumeric" + " </a>" + "</span>";
 
     letter_string += "<span>|</span>";
@@ -35,7 +35,7 @@ function handleGenreResult(resultData) {
 
     searchBody.append("<form action=\"movielist.html\" method=\"GET\">\n" +
         "        <input type=\"hidden\" name=\"page\" value=\"1\"/>\n" +
-        "        <input type=\"hidden\" name=\"sort\" value=\"title_then_rating_ASC\"/>\n" +
+        "        <input type=\"hidden\" name=\"sort\" value=\"title_asc_rating_asc\"/>\n" +
         "        <input type=\"hidden\" name=\"limit\" value=\"10\"/>\n" +
         "<label>" +
         "<input name=\"search_title\" placeholder=\"Enter a title\" type=\"text\">" +
