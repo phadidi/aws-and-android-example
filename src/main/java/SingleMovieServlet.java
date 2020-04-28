@@ -1,134 +1,154 @@
 package main.java;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-@WebServlet("/movie")
+// Declaring a WebServlet called SingleMovieServlet, which maps to url "/api/single-movie"
+@WebServlet(name = "SingleMovieServlet", urlPatterns = "/api/single-movie")
 
 public class SingleMovieServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
+    private String thisId;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+    // Create a dataSource which registered in web.xml
+    @Resource(name = "jdbc/moviedb")
+    private DataSource dataSource;
 
-        // set response mime type
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     * response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        log("beginning of SingleMovieServlet\n");
+        response.setContentType("application/json"); // Response mime type
 
-        // get the printwriter for writing response
+        // Retrieve parameter id from url request.
+        thisId = request.getParameter("id");
+
+        // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
-        out.println("<html>");
-        out.println("<head><title>Fabflix</title></head>");
-
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            // create database connection
-            Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-            // declare statement
-            Statement statement = connection.createStatement();
-            // prepare query
-            String movieId = request.getParameter("action");
-            String query = "select m.id, m.title as title, m.year as year, m.director, group_concat(distinct g.name separator ', ')\n" +
-                    "as genres, group_concat(distinct s.name separator ', ') as stars\n" +
-                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim\n" +
-                    "where s.id = sim.starId and m.id = sim.movieId\n" +
-                    "and g.id = gim.genreId and m.id = gim.movieId\n" +
-                    "and m.id = '" + movieId + "';";
-            // execute query
-            ResultSet resultSet = statement.executeQuery(query);
+            // Get a connection from dataSource
+            Connection dbcon = dataSource.getConnection();
 
-            out.println("<body>");
-            out.println("<h1>Single Movie Page</h1>");
+            // Construct a query with parameter represented by "?"
+            String query = "select m.id, m.title as title, m.year as year, m.director, \n" +
+                    "group_concat(distinct g.name ORDER BY g.name separator ', ') as genrenames, \n" +
+                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
+                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim \n" +
+                    "where s.id = sim.starId and m.id = sim.movieId \n" +
+                    "and g.id = gim.genreId and m.id = gim.movieId \n" +
+                    "and m.id = '" + thisId + "';";
 
+            // Declare our statement
+            Statement statement = dbcon.createStatement();
 
-            // add a row for every star result
-            while (resultSet.next()) {
-                // get a star from result set
-                String title = resultSet.getString("title");
-                String year = resultSet.getString("year");
-                String director = resultSet.getString("director");
-                String genres = resultSet.getString("genres");
-                String stars = resultSet.getString("stars");
+            // Set the parameter represented by "?" in the query to the id we get from url,
+            // num 1 indicates the first "?" in the query
+            //statement.setString(1, id);
 
-                out.println("<p>Title: " + title + "</p>");
-                if (year == null)
-                    out.println("<p>Year: N/A</p>");
-                else
-                    out.println("<p>Year: " + year + "</p>");
-                out.println("<p>Director: " + director + "</p>");
-                out.print("<p>Genre(s):</p>");
-                String[] genresSplit = genres.split(",");
-                out.print("<ul>");
-                for (String m : genresSplit) {
-                    out.print("<li>" + m + "</li>");
-                }
-                out.println("</ul>");
+            // Perform the query
+            ResultSet rs = statement.executeQuery(query);
 
-                out.print("<p>Star(s):</p>");
-                String[] starsSplit = stars.split(",");
-                out.print("<ul>");
-                for (String s : starsSplit) {
-                    if (s.startsWith(" ")) {
-                        s = s.substring(1, s.length());
-                    }
-                    out.print("<li><a href='starlist?action=" + s + "'>" + s + "</a></li>");
-                }
-                out.println("</ul>");
+            JsonArray jsonArray = new JsonArray();
+
+            String movieId = "";
+            String movieTitle = "";
+            String movieYear = "";
+            String movieDirector = "";
+            String movieGenres = "";
+            String movieStars = "";
+	    String price = "10.99";
+
+            // With one movie id, we are expecting to get up to one movie
+            while (rs.next()) {
+
+                movieId = rs.getString("id");
+                movieTitle = rs.getString("title");
+                movieYear = rs.getString("year");
+                movieDirector = rs.getString("director");
+                movieGenres = rs.getString("genrenames");
+                movieStars = rs.getString("starNamesAndIds");
             }
 
-            // get the rating - done separately to catch case where a movie has no rating
-            query = "select rating from ratings where movieId = '" + movieId + "'";
-            resultSet = statement.executeQuery(query);
+            // Create a JsonObject based on the data we retrieve from rs
 
-            String rating = " ";
-            while (resultSet.next()) {
-                rating = resultSet.getString("rating");
-                out.println("<p>Rating: " + rating + "</p>");
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("id", movieId);
+            jsonObject.addProperty("title", movieTitle);
+            jsonObject.addProperty("year", movieYear);
+            jsonObject.addProperty("director", movieDirector);
+            jsonObject.addProperty("genres", movieGenres);
+            jsonObject.addProperty("stars", movieStars);
+
+            query = "select rating from ratings where movieId = '" + thisId + "';";
+            rs = statement.executeQuery(query);
+            String movieRating = "N/A";
+            while (rs.next()) {
+                String tempRating = rs.getString("rating");
+                if (tempRating != null)
+                    if (!tempRating.isEmpty())
+                        movieRating = tempRating;
             }
-            if(rating.equals(" ")){
-                out.println("<p>Rating: N/A</p>");
-            }
-            out.println("<p><a href='/cs122b-spring20-team-13/'>Return to Movie List</a></p>");
+            jsonObject.addProperty("rating", movieRating);
+            jsonObject.addProperty("price", price);
 
-            out.println("</body>");
+            jsonArray.add(jsonObject);
 
-            resultSet.close();
+
+            // write JSON string to output
+            out.write(jsonArray.toString());
+            // set response status to 200 (OK)
+            response.setStatus(200);
+
+            rs.close();
             statement.close();
-            connection.close();
-
+            dbcon.close();
         } catch (Exception e) {
-            /*
-             * After you deploy the WAR file through tomcat manager webpage,
-             *   there's no console to see the print messages.
-             * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
-             *
-             * To view the last n lines (for example, 100 lines) of messages you can use:
-             *   tail -100 catalina.out
-             * This can help you debug your program after deploying it on AWS.
-             */
-            e.printStackTrace();
+            // write error message JSON object to output
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
 
-            out.println("<body>");
-            out.println("<p>");
-            out.println("Exception in doGet: " + e.getMessage());
-            out.println("</p>");
-            out.print("</body>");
+            // set reponse status to 500 (Internal Server Error)
+            response.setStatus(500);
         }
-
-        out.println("</html>");
         out.close();
+
     }
+
+    //doPost will be used to add movie to cart
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //String movieId = request.getParameter("id");
+
+        log("adding '" + thisId + "' to cart\n");
+        response.setContentType("application/json");
+        HttpSession session = request.getSession();
+        Customer currentUser = (Customer) session.getAttribute("user");
+        currentUser.addToCart(thisId);
+        session.setAttribute("user", currentUser);
+        JsonObject responseJsonObject = new JsonObject();
+        responseJsonObject.addProperty("status", "success");
+        responseJsonObject.addProperty("message", "success");
+        response.getWriter().write(responseJsonObject.toString());
+    }
+
 
 }

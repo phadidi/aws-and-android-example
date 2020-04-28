@@ -1,7 +1,6 @@
 # cs122b-spring20-team-13 Project 2
 This is a submission for Project 2 with Java Servlet, Javascript, and HTML pages for a Fabflix website where a customer can log in, search from a list of movies by title, stars, genres, and other criteria, add a selection of movies to a shopping cart, and checkout a cart with a credit card payment. There is also a createtable.sql file included for providing the format of the 'moviedb' database so that it can be populated for the webpages' use.
 
-
 - Demo Video: [TO BE ADDED]
 
 ## Getting Started

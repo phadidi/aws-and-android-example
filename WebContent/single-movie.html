@@ -1,0 +1,78 @@
+<!-- This example is following frontend and backend separation.
+
+    This .html performs two steps:
+    1. Create a html template skeleton, with all the elements defined (some left empty) and named with ids.
+    2. Load single-movie.js to populate the data into empty elements.
+    -->
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet">
+
+    <title>Single Movie | Fabflix</title>
+</head>
+<style>
+    .btn{
+        display: inline-block;
+        text-decoration: none;
+        background: #ff8181;
+        color: #FFF;
+        width: 120px;
+        height: 120px;
+        line-height: 120px;
+        border-radius: 50%;
+        text-align: center;
+        font-weight: bold;
+        vertical-align: middle;
+        overflow: hidden;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+        border-bottom: solid 3px #bd6565;
+        transition: .4s;
+    }
+
+    .btn:active{
+        -ms-transform: translateY(2px);
+        -webkit-transform: translateY(2px);
+        transform: translateY(2px);
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+        border-bottom: none;
+    }
+</style>
+<body>
+<div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
+    <a href="main.html"><h1>Fabflix</h1></a>
+    <h2>Single Movie</h2>
+</div>
+
+<!-- H3 body is left empty here, will be populated with the data retrieved with single-movie.js -->
+<!-- single-movie.js will find this html element by it's id "movie_info" -->
+<div style="width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
+    <p id="movie_info"></p>
+</div>
+<form action="cart.html" id="add_to_cart" method="post"><p align="center"><input type="submit" value="Add to Cart"></p></form>
+<div id="return_link"></div>
+
+<button style="position: fixed; right: 2rem; bottom: 2rem;" class="btn" onclick="window.location.href='cart.html'">Check out</button>
+
+<!-- Load jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<!-- Load our own JS file -->
+<!-- The path is relative to single-movie.html, since these two files are in the same directory -->
+<!-- Note the url does not contain a "/" in the beginning, which means the url is relative to current path
+     otherwise the url is relative to the root path-->
+<script src="single-movie.js"></script>
+
+</body>
+
+
+</html>
