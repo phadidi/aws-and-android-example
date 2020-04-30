@@ -95,6 +95,7 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     movieInfo.append("<p>Price: "+ resultData[0]["price"] + "</p>")
 
     let returnLink = jQuery("#return_link");
+    //TODO: check if this returns to movielist correctly, and fix it if not so!
     returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");
 }
 
