@@ -18,9 +18,9 @@ function handleGenreResult(resultData) {
     let alphabet = "1 2 3 4 5 6 7 8 9 0 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
     let alphabet_list = alphabet.split(" ");
     let letter_string = "";
-    for(let i = 0; i < alphabet_list.length; i++){
+    for (let i = 0; i < alphabet_list.length; i++) {
         letter_string += "<span>| <a href='movielist.html?page=1&limit=10&sort=title_asc_rating_asc&letter=" + alphabet_list[i] + "'>"
-                         + alphabet_list[i] + " </a>" + "</span>";
+            + alphabet_list[i] + " </a>" + "</span>";
     }
 
     letter_string += "<span>| <a href='movielist.html?page=1&limit=10&sort=title_asc_rating_asc&letter=non_alphanumeric'>"

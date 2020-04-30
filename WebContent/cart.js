@@ -1,4 +1,5 @@
 let updateCount = "";
+
 function getParameterByName(target) {
     // Get request URL
     let url = window.location.href;
@@ -52,10 +53,10 @@ function handleSessionData(resultData) {
             "</th>";
 
         rowHTML += "<th>" + "<form id='quantity_form' name='quantity_form' action='cart.html' method='GET'>" +
-                    "<input type='text' id='" + resultData[i]['id'] + "' name='" + resultData[i]['id'] +  "'"
-                    + " value='" + resultData[i]["Quantity"] + "'" + "/>" + "<input type='submit' value='Update' onclick='clickAlert()'/>" +
-                    "</form>" +
-                    "</th>";
+            "<input type='text' id='" + resultData[i]['id'] + "' name='" + resultData[i]['id'] + "'"
+            + " value='" + resultData[i]["Quantity"] + "'" + "/>" + "<input type='submit' value='Update' onclick='clickAlert()'/>" +
+            "</form>" +
+            "</th>";
         rowHTML += "</tr>";
 
         // quantityMap.set(resultData[i]['id'], resultData[i]['Quantity']);
@@ -65,7 +66,7 @@ function handleSessionData(resultData) {
     }
     let paymentButton = jQuery("#payment_button");
     paymentButton.append("<button onclick=\"window.location.href='payment.html" +
-                        "'\">Go to Payment</button>");
+        "'\">Go to Payment</button>");
 }
 
 function clickAlert() {
@@ -77,10 +78,12 @@ let key_id = "";
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const keys = urlParams.keys();
-for(const key of keys) {key_id = key;}
+for (const key of keys) {
+    key_id = key;
+}
 
 updateCount = getParameterByName(key_id);
-if(updateCount){
+if (updateCount) {
     url_string += "?" + key_id + "=" + updateCount;
 }
 

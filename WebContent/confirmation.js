@@ -1,5 +1,3 @@
-
-
 function handleSessionData(resultData) {
     //console.log("handle session response");
     //console.log(resultDataJson);
@@ -39,7 +37,7 @@ function handleSessionData(resultData) {
     total = total * 10.99;
 
     let totalBody = jQuery("#total_body");
-    totalBody.append("<strong>" + "Total = $" + total.toString() + "</strong>" );
+    totalBody.append("<strong>" + "Total = $" + total.toString() + "</strong>");
 }
 
 jQuery.ajax({

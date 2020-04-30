@@ -43,26 +43,26 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     console.log("handleResult: populating star info from resultData");
 
     let conditionURL = "";
-    if(searchTitle){
+    if (searchTitle) {
         let title_split = searchTitle.split(" ");
         searchTitle = title_split.join('+');
         conditionURL += "&search_title=" + searchTitle;
     }
-    if(searchYear){
+    if (searchYear) {
         conditionURL += "&search_year=" + searchYear;
     }
-    if(searchDirector){
+    if (searchDirector) {
         let director_split = searchDirector.split(" ");
         searchDirector = director_split.join('+');
         conditionURL += "&search_director=" + searchDirector;
     }
-    if(searchStar){
+    if (searchStar) {
         let star_split = searchStar.split(" ");
         searchStar = star_split.join('+');
         conditionURL += "&search_star=" + searchStar;
     }
 
-    if(condition){
+    if (condition) {
         conditionURL += "&genre=" + condition;
     }
     conditionURL += "&limit=" + limit + "&page=" + page + "&sort=" + sort;
@@ -92,7 +92,7 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
             movieInfo.append(", ");
     }
     movieInfo.append("</p>" + "<p>Rating: " + resultData[0]["rating"] + "</p>");
-    movieInfo.append("<p>Price: "+ resultData[0]["price"] + "</p>")
+    movieInfo.append("<p>Price: " + resultData[0]["price"] + "</p>")
 
     let returnLink = jQuery("#return_link");
     //TODO: check if this returns to movielist correctly, and fix it if not so!
@@ -142,19 +142,19 @@ let searchYear = getParameterByName('search_year');
 let searchDirector = getParameterByName('search_director');
 let searchStar = getParameterByName('search_star');
 let url_string = "api/single-movie?id=" + movieId + "&page=" + pageNumber + "&limit=" + limit + '&sort=' + sort; // Setting request url;
-if(genreName) {
+if (genreName) {
     url_string += "&genre=" + genreName; //appending genre query if genre is defined
 }
-if(searchTitle){
+if (searchTitle) {
     url_string += "&search_title=" + searchTitle; //appending search title query if genre is defined
 }
-if(searchYear){
+if (searchYear) {
     url_string += "&search_year=" + searchYear; //appending search title query if genre is defined
 }
-if(searchDirector){
+if (searchDirector) {
     url_string += "&search_director=" + searchDirector; //appending search title query if genre is defined
 }
-if(searchStar){
+if (searchStar) {
     url_string += "&search_star=" + searchStar; //appending search title query if genre is defined
 }
 

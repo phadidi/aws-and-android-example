@@ -61,7 +61,7 @@ public class PaymentServlet extends HttpServlet {
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 
-            for (Map.Entry<String, Integer> val : previousItems.entrySet()){
+            for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
                 // for debugging purposes
                 System.out.println(val.getKey() + ": " + val.getValue());
 
@@ -141,9 +141,9 @@ public class PaymentServlet extends HttpServlet {
 
 
             String query = "select * from creditcards where firstName = '" + first_name
-                            + "' and lastName = '" + last_name
-                            + "' and id = '" + ccnumber
-                            + "' and expiration = '" + exp_date + "';";
+                    + "' and lastName = '" + last_name
+                    + "' and id = '" + ccnumber
+                    + "' and expiration = '" + exp_date + "';";
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
                 //resultEmail = rs.getString("email");
@@ -157,7 +157,7 @@ public class PaymentServlet extends HttpServlet {
 
             JsonObject responseJsonObject = new JsonObject();
             if (first_name.equals(resultFirstname) && last_name.equals(resultLastname)
-                && ccnumber.equals(resultCreditCard) && exp_date.equals(resultExpirationDate)) {
+                    && ccnumber.equals(resultCreditCard) && exp_date.equals(resultExpirationDate)) {
                 // Card accepted:
 
                 // set this user into the session

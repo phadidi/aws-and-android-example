@@ -57,7 +57,7 @@ public class ConfirmationServlet extends HttpServlet {
 
             ResultSet rs;
 
-            for (Map.Entry<String, Integer> val : previousItems.entrySet()){
+            for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
 
                 String query = "INSERT INTO sales(customerId, movieId, saleDate, quantity) VALUES(" + Integer.toString(customerId)
                         + ", '" + val.getKey() + "'," + "CURDATE()" + "," + Integer.toString(val.getValue())
@@ -68,7 +68,7 @@ public class ConfirmationServlet extends HttpServlet {
                 String fetchLatest = "select * from sales where idsales=(SELECT LAST_INSERT_ID());";
 
                 rs = getLatest.executeQuery(fetchLatest);
-                while(rs.next()){
+                while (rs.next()) {
                     salesIds.add(rs.getString("idsales"));
                 }
                 rs.close();

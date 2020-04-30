@@ -17,7 +17,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Enumeration;
-import java.util.List;
 
 
 // Declaring a WebServlet called MovieListServlet, which maps to url "/api/movielist"
@@ -74,22 +73,21 @@ public class MovieListServlet extends HttpServlet {
                     "m.id=sim.movieId AND\n" +
                     "sim.starId=s.id\n";
 
-            if (searchTitle != null){
+            if (searchTitle != null) {
                 query += "AND m.title like'%" + searchTitle + "%'\n";
             }
 
-            if (searchYear != null){
+            if (searchYear != null) {
                 query += "AND m.year=" + searchYear + "\n";
             }
-            if (searchDirector != null){
+            if (searchDirector != null) {
                 query += "AND m.director like'%" + searchDirector + "%'\n";
             }
 
-            if (searchLetter != null){
-                if(searchLetter.equals("non_alphanumeric")){
+            if (searchLetter != null) {
+                if (searchLetter.equals("non_alphanumeric")) {
                     query += "AND m.title REGEXP '^[^0-9A-Za-z]'";
-                }
-                else {
+                } else {
                     query += "AND m.title like'" + searchLetter + "%'\n";
                 }
             }
@@ -119,7 +117,7 @@ public class MovieListServlet extends HttpServlet {
                 query += "HAVING  genresname like \"%" + genreName + "%\"";
             }
 
-            if (searchStar != null){
+            if (searchStar != null) {
                 query += "HAVING  starNamesAndIds like \"%" + searchStar + "%\"";
             }
 
@@ -165,7 +163,7 @@ public class MovieListServlet extends HttpServlet {
                 String movie_starNamesAndIds = rs.getString("starNamesAndIds");
                 String movieRating = "N/A";
                 String tempRating = rs.getString("rating");
-		String price = "10.99";
+                String price = "10.99";
                 if (tempRating != null) {
                     movieRating = tempRating;
                 }
@@ -179,7 +177,7 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.addProperty("genres", movie_genres);
                 jsonObject.addProperty("starNamesAndIds", movie_starNamesAndIds);
                 jsonObject.addProperty("rating", movieRating);
-		jsonObject.addProperty("price", price);
+                jsonObject.addProperty("price", price);
                 jsonArray.add(jsonObject);
             }
 

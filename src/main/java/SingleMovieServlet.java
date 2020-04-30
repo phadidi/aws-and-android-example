@@ -74,7 +74,7 @@ public class SingleMovieServlet extends HttpServlet {
             String movieDirector = "";
             String movieGenres = "";
             String movieStars = "";
-	    String price = "10.99";
+            String price = "10.99";
 
             // With one movie id, we are expecting to get up to one movie
             while (rs.next()) {

@@ -2,7 +2,6 @@ package main.java;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.omg.CORBA.INTERNAL;
 
 import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
@@ -16,8 +15,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -72,7 +69,7 @@ public class CartServlet extends HttpServlet {
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 
-            for (Map.Entry<String, Integer> val : previousItems.entrySet()){
+            for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
                 // for debugging purposes
                 // System.out.println(val.getKey() + ": " + val.getValue());
 
@@ -93,8 +90,7 @@ public class CartServlet extends HttpServlet {
                     count = Integer.toString(val.getValue());
 
                     String newQuantity = request.getParameter(movieId);
-                    if(newQuantity != null && newQuantity.compareTo(count) != 0)
-                    {
+                    if (newQuantity != null && newQuantity.compareTo(count) != 0) {
                         currentUser.changeQuantity(movieId, Integer.parseInt(newQuantity));
                         count = newQuantity;
                     }

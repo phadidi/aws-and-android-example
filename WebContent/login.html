@@ -1,15 +1,17 @@
 <!-- This page will be redirected from any url if you are not logged in -->
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login | Fabflix</title>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <style>
     #outer-div {
         width: 100%;
         text-align: center;
     }
+
     #inner-div {
         display: inline-block;
         margin: 0 auto;
@@ -33,21 +35,22 @@
      The default action is disabled to allow your own implementation. -->
 <div id="outer-div" width="100%">
     <div id="inner-div">
-<form action="#" id="login_form" method="post">
-    <label>
-        Username
-        <input name="email" placeholder="Enter Email" type="text">
-    </label>
-    <label>
-        Password
-        <input name="password" placeholder="Enter Password" type="password">
-    </label>
-    <label>
-    <input type="submit" value="Login">
-    </label>
-</form>
-<div id="login_error_message"></div>
-</div>
+        <form action="form-recaptcha" id="login_form" method="post">
+            <label>
+                Username
+                <input name="email" placeholder="Enter Email" type="text">
+            </label>
+            <label>
+                Password
+                <input name="password" placeholder="Enter Password" type="password">
+            </label>
+            <label>
+                <input type="submit" value="Login">
+                <div class="g-recaptcha" data-sitekey="6LeKvPAUAAAAABY_fGoGUY8FVwSafDXBozZJvk4I"></div>
+            </label>
+        </form>
+        <div id="login_error_message"></div>
+    </div>
 </div>
 
 <!-- include jQuery-->

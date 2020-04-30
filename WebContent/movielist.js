@@ -38,34 +38,34 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
     let conditionString = "";
     let conditionURL = "";
 
-    if(searchLetter){
+    if (searchLetter) {
         conditionString += "<input type=\"hidden\" name=\"letter\" value=\"" + searchLetter + "\"/>\n";
         conditionURL += "&search_title=" + searchLetter;
     }
-    if(searchTitle){
+    if (searchTitle) {
         conditionString += "<input type=\"hidden\" name=\"search_title\" value=\"" + searchTitle + "\"/>\n";
         let title_split = searchTitle.split(" ");
         searchTitle = title_split.join('+');
         conditionURL += "&search_title=" + searchTitle;
     }
-    if(searchYear){
+    if (searchYear) {
         conditionString += "<input type=\"hidden\" name=\"search_year\" value=\"" + searchYear + "\"/>\n";
         conditionURL += "&search_year=" + searchYear;
     }
-    if(searchDirector){
+    if (searchDirector) {
         conditionString += "<input type=\"hidden\" name=\"search_director\" value=\"" + searchDirector + "\"/>\n";
         let director_split = searchDirector.split(" ");
         searchDirector = director_split.join('+');
         conditionURL += "&search_director=" + searchDirector;
     }
-    if(searchStar){
+    if (searchStar) {
         conditionString += "<input type=\"hidden\" name=\"search_star\" value=\"" + searchStar + "\"/>\n";
         let star_split = searchStar.split(" ");
         searchStar = star_split.join('+');
         conditionURL += "&search_star=" + searchStar;
     }
 
-    if(condition){
+    if (condition) {
         conditionString += "<input type=\"hidden\" name=\"genre\" value=\"" + condition + "\"/>\n";
         conditionURL += "&genre=" + condition;
     }
@@ -122,7 +122,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
-        rowHTML += "<th>"+ (i+1).toString() + "</th>";
+        rowHTML += "<th>" + (i + 1).toString() + "</th>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
@@ -141,7 +141,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         let genreCount = Math.min(3, genresSplit.length);
         for (let j = 0; j < genreCount; j++) {
             rowHTML += "<a href='movielist.html?page=1&limit=10&sort=title_asc_rating_asc&genre=" + genresSplit[j]
-                        + "'>" + genresSplit[j] + "</a>";
+                + "'>" + genresSplit[j] + "</a>";
             if (j < genreCount - 1) // add commas before the last entry
                 rowHTML += ", ";
         }
@@ -153,7 +153,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         for (let j = 0; j < starCount; j++) {
             // TODO: tie star ID to star Names using SQL query for future html queries
             let starEntrySplit = starsSplit[j].split('_');
-            rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] +  conditionURL + ">"
+            rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] + conditionURL + ">"
                 + starEntrySplit[0] +
                 '</a>'; // hyperlink star name [1] to star id [0]
             if (j < starCount - 1) // add commas before the last entry
@@ -204,22 +204,22 @@ let searchYear = getParameterByName('search_year');
 let searchDirector = getParameterByName('search_director');
 let searchStar = getParameterByName('search_star');
 let url_string = "api/movielist?page=" + pageNumber + "&limit=" + limit + '&sort=' + sort; // Setting request url;
-if(searchLetter) {
+if (searchLetter) {
     url_string += "&letter=" + searchLetter; //appending genre query if genre is defined
 }
-if(genreName) {
+if (genreName) {
     url_string += "&genre=" + genreName; //appending genre query if genre is defined
 }
-if(searchTitle){
+if (searchTitle) {
     url_string += "&search_title=" + searchTitle; //appending search title query if genre is defined
 }
-if(searchYear){
+if (searchYear) {
     url_string += "&search_year=" + searchYear; //appending search title query if genre is defined
 }
-if(searchDirector){
+if (searchDirector) {
     url_string += "&search_director=" + searchDirector; //appending search title query if genre is defined
 }
-if(searchStar){
+if (searchStar) {
     url_string += "&search_star=" + searchStar; //appending search title query if genre is defined
 }
 

@@ -47,12 +47,12 @@ public class LoginServlet extends HttpServlet {
             String resultAddress = "";
 
             String queryUniqueResult = "select id from customers where id = '" + Integer.toString(resultId) + "';";
-            ResultSet rsUniqueResult =  statement.executeQuery(queryUniqueResult);
+            ResultSet rsUniqueResult = statement.executeQuery(queryUniqueResult);
             while (rsUniqueResult.next()) {
                 int tempId = rsUniqueResult.getInt("id");
                 while (tempId == resultId) { // check if customer with id already exists
                     resultId = (int) (Math.random() * 1000000);
-                    rsUniqueResult =  statement.executeQuery(queryUniqueResult);
+                    rsUniqueResult = statement.executeQuery(queryUniqueResult);
                 }
             }
 
