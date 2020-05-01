@@ -13,8 +13,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Map;
 
 /**
@@ -65,7 +65,7 @@ public class CartServlet extends HttpServlet {
 
             // Construct a query to retrieve every movie whose id is in currentUser.cart
 
-            Statement statement = dbcon.createStatement();
+            //Statement statement = dbcon.createStatement();
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 
@@ -77,8 +77,8 @@ public class CartServlet extends HttpServlet {
                 System.out.println(query);
 
                 // Declare Statement
-                statement = dbcon.createStatement();
-                rs = statement.executeQuery(query);
+                PreparedStatement statement = dbcon.prepareStatement(query);
+                rs = statement.executeQuery();
 
                 String movieId = "";
                 String movieTitle = "";
@@ -104,13 +104,12 @@ public class CartServlet extends HttpServlet {
                     jsonArray.add(jsonObject);
                 }
                 // write JSON string to output
+                statement.close();
                 rs.close();
             }
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
             response.setStatus(200);
-
-            statement.close();
 
             dbcon.close();
         } catch (Exception e) {

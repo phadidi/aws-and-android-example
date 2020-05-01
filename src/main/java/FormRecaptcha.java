@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 @WebServlet(name = "FormReCaptcha", urlPatterns = "/form-recaptcha")
 public class FormRecaptcha extends HttpServlet {
@@ -38,7 +38,7 @@ public class FormRecaptcha extends HttpServlet {
             out.println("<p>" + e.getMessage() + "</p>");
             out.println("</body>");
             out.println("</html>");
-            
+
             out.close();
             return;
         }
@@ -55,18 +55,16 @@ public class FormRecaptcha extends HttpServlet {
             // Create a new connection to database
             Connection dbCon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 
-            // Declare a new statement
-            Statement statement = dbCon.createStatement();
-
             // Retrieve parameter "name" from request, which refers to the value of <input name="name"> in index.html
             String name = request.getParameter("name");
 
-            // Generate a SQL query
+            // Declare a new statement + Generate a SQL query
             String query = String.format("SELECT * from stars where name like '%s'", name);
+            PreparedStatement statement = dbCon.prepareStatement(query);
 
             // Perform the query
-            ResultSet rs = statement.executeQuery(query);
-            
+            ResultSet rs = statement.executeQuery();
+
             // building page head with title
             out.println("<html><head><title>MovieDB: Found Records</title></head>");
 
@@ -84,7 +82,7 @@ public class FormRecaptcha extends HttpServlet {
                 out.println(String.format("<tr><td>%s</td><td>%s</td></tr>", m_ID, m_Name));
             }
             out.println("</table>");
-            
+
             out.println("</body></html>");
 
 
@@ -101,7 +99,7 @@ public class FormRecaptcha extends HttpServlet {
             out.println("<p>" + e.getMessage() + "</p>");
             out.println("</body>");
             out.println("</html>");
-            
+
             out.close();
             return;
         }

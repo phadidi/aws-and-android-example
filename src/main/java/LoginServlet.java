@@ -1,6 +1,7 @@
 package main.java;
 
 import com.google.gson.JsonObject;
+import com.mysql.jdbc.PreparedStatement;
 
 import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Declare our statement
-            Statement statement = dbcon.createStatement();
+            //Statement statement = dbcon.createStatement();
 
         /* This example only allows username/password to be test/test
         /  in the real project, you should talk to the database to verify username/password
@@ -46,18 +46,25 @@ public class LoginServlet extends HttpServlet {
             String resultCreditCard = "";
             String resultAddress = "";
 
-            String queryUniqueResult = "select id from customers where id = '" + Integer.toString(resultId) + "';";
-            ResultSet rsUniqueResult = statement.executeQuery(queryUniqueResult);
+            //TODO: modify code passing for resultId for preparedStatement so casting isn't needed!
+            //String queryUniqueResult = "select id from customers where id = '" + Integer.toString(resultId) + "';";
+            PreparedStatement statement = (PreparedStatement) dbcon.prepareStatement("select id from customers where id = '?';");
+            statement.setString(1, Integer.toString(resultId));
+            ResultSet rsUniqueResult = statement.executeQuery();
             while (rsUniqueResult.next()) {
                 int tempId = rsUniqueResult.getInt("id");
                 while (tempId == resultId) { // check if customer with id already exists
                     resultId = (int) (Math.random() * 1000000);
-                    rsUniqueResult = statement.executeQuery(queryUniqueResult);
+                    statement.setString(1, Integer.toString(resultId));
+                    rsUniqueResult = statement.executeQuery();
                 }
             }
 
-            String query = "select * from customers where email = '" + email + "' and password = '" + password + "';";
-            ResultSet rs = statement.executeQuery(query);
+            PreparedStatement statementLogin = (PreparedStatement) dbcon.prepareStatement("select * from customers where email = '?' and password = '?';");
+            statementLogin.setString(1, email);
+            statementLogin.setString(2, password);
+            //String query = "select * from customers where email = '" + email + "' and password = '" + password + "';";
+            ResultSet rs = statementLogin.executeQuery();
             while (rs.next()) {
                 resultEmail = rs.getString("email");
                 resultPassword = rs.getString("password");
@@ -81,12 +88,14 @@ public class LoginServlet extends HttpServlet {
                 responseJsonObject.addProperty("message", "success");
 
             } else {
+                // TODO: add case for user exists but password is incorrect
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
 
                 // Error messages to check if an account exists or not if the username and/or password is incorrect
-                query = "select * from customers where email = '" + email + "';";
-                rs = statement.executeQuery(query);
+                statementLogin.setString(1, email);
+                //query = "select * from customers where email = '" + email + "';";
+                rs = statement.executeQuery();
                 String existingEmail = "";
                 while (rs.next()) {
                     existingEmail = rs.getString("email");
@@ -100,6 +109,7 @@ public class LoginServlet extends HttpServlet {
             response.getWriter().write(responseJsonObject.toString());
             rs.close();
             statement.close();
+            statementLogin.close();
             dbcon.close();
         } catch (Exception e) {
 

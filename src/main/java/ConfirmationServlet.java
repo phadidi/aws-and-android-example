@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -52,8 +53,7 @@ public class ConfirmationServlet extends HttpServlet {
 
             ArrayList<String> salesIds = new ArrayList<String>();
 
-            Statement statement = dbcon.createStatement();
-            Statement getLatest = dbcon.createStatement();
+
 
             ResultSet rs;
 
@@ -63,19 +63,21 @@ public class ConfirmationServlet extends HttpServlet {
                         + ", '" + val.getKey() + "'," + "CURDATE()" + "," + Integer.toString(val.getValue())
                         + ");";
 
-                statement.executeUpdate(query);
+                PreparedStatement statement = dbcon.prepareStatement(query);
+                statement.executeUpdate();
 
                 String fetchLatest = "select * from sales where idsales=(SELECT LAST_INSERT_ID());";
+                PreparedStatement getLatest = dbcon.prepareStatement(fetchLatest);
+                rs = getLatest.executeQuery();
 
-                rs = getLatest.executeQuery(fetchLatest);
                 while (rs.next()) {
                     salesIds.add(rs.getString("idsales"));
                 }
                 rs.close();
+                statement.close();
+                getLatest.close();
             }
 
-            statement.close();
-            getLatest.close();
 
             Statement statement1 = dbcon.createStatement();
             ResultSet rs1;

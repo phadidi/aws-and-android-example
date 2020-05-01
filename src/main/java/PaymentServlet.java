@@ -13,8 +13,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Map;
 
 @WebServlet(name = "PaymentServlet", urlPatterns = "/api/payment")
@@ -57,7 +57,7 @@ public class PaymentServlet extends HttpServlet {
 
             // Construct a query to retrieve every movie whose id is in currentUser.cart
 
-            Statement statement = dbcon.createStatement();
+
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 
@@ -66,10 +66,11 @@ public class PaymentServlet extends HttpServlet {
                 System.out.println(val.getKey() + ": " + val.getValue());
 
                 String query = "select id, title from movies where id = '" + val.getKey() + "'";
+                PreparedStatement statement = dbcon.prepareStatement(query);
                 //System.out.println(query);
 
                 // Declare Statement
-                rs = statement.executeQuery(query);
+                rs = statement.executeQuery();
 
                 String movieId = "";
                 String movieTitle = "";
@@ -88,12 +89,12 @@ public class PaymentServlet extends HttpServlet {
                     jsonArray.add(jsonObject);
                 }
                 rs.close();
+                statement.close();
             }
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
             response.setStatus(200);
 
-            statement.close();
 
             dbcon.close();
         } catch (Exception e) {
@@ -121,12 +122,8 @@ public class PaymentServlet extends HttpServlet {
             String exp_date = request.getParameter("exp_date");
             log(exp_date);
 
-
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
-
-            // Declare our statement
-            Statement statement = dbcon.createStatement();
 
         /* This example only allows username/password to be test/test
         /  in the real project, you should talk to the database to verify username/password
@@ -139,12 +136,13 @@ public class PaymentServlet extends HttpServlet {
             String resultCreditCard = "";
             String resultExpirationDate = "";
 
-
+            // Declare our statement
             String query = "select * from creditcards where firstName = '" + first_name
                     + "' and lastName = '" + last_name
                     + "' and id = '" + ccnumber
                     + "' and expiration = '" + exp_date + "';";
-            ResultSet rs = statement.executeQuery(query);
+            PreparedStatement statement = dbcon.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 //resultEmail = rs.getString("email");
                 //resultPassword = rs.getString("password");

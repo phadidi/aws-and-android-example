@@ -14,8 +14,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Enumeration;
 
 
@@ -60,7 +60,7 @@ public class MovieListServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Declare our statement
-            Statement statement = dbcon.createStatement();
+
             String query = "select m.id, m.title, m.year, m.director,\n" +
                     "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
                     "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
@@ -147,9 +147,9 @@ public class MovieListServlet extends HttpServlet {
 
             System.out.println(query);
 
-            //String query = "select id, title, year from movies;";
             // Perform the query
-            ResultSet rs = statement.executeQuery(query);
+            PreparedStatement statement = dbcon.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
 
             JsonArray jsonArray = new JsonArray();
 

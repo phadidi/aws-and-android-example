@@ -13,8 +13,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 
 // Declaring a WebServlet called StarsServlet, which maps to url "/api/main"
@@ -41,11 +41,11 @@ public class MainPage extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Declare our statement
-            Statement statement = dbcon.createStatement();
+
 
             String query = "select * from genres order by name;";
-
-            ResultSet rs = statement.executeQuery(query);
+            PreparedStatement statement = dbcon.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
 
             JsonArray jsonArray = new JsonArray();
 

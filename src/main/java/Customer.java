@@ -3,8 +3,8 @@ package main.java;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,10 +35,10 @@ public class Customer {
 
     public void addCustomerToTable() throws SQLException {
         Connection dbcon = dataSource.getConnection();
-        Statement statement = dbcon.createStatement();
         String query = "Insert into customers VALUES(" + Integer.toString(this.id) + ", '" + this.firstName + "', '" + this.lastName
                 + "', '" + this.creditCardId + "', '" + this.address + "', '" + this.email + "', '" + this.password + "');";
-        statement.executeUpdate(query);
+        PreparedStatement statement = dbcon.prepareStatement(query);
+        statement.executeUpdate();
         statement.close();
         dbcon.close();
     }
