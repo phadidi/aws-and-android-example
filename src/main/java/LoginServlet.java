@@ -1,7 +1,7 @@
 package main.java;
 
 import com.google.gson.JsonObject;
-import com.mysql.jdbc.PreparedStatement;
+//import com.mysql.jdbc.PreparedStatement;
 
 import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +12,9 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
@@ -32,9 +34,6 @@ public class LoginServlet extends HttpServlet {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
 
-            // Declare our statement
-            //Statement statement = dbcon.createStatement();
-
         /* This example only allows username/password to be test/test
         /  in the real project, you should talk to the database to verify username/password
         */
@@ -46,9 +45,8 @@ public class LoginServlet extends HttpServlet {
             String resultCreditCard = "";
             String resultAddress = "";
 
-            //TODO: modify code passing for resultId for preparedStatement so casting isn't needed!
-            //String queryUniqueResult = "select id from customers where id = '" + Integer.toString(resultId) + "';";
-            PreparedStatement statement = (PreparedStatement) dbcon.prepareStatement("select id from customers where id = '?';");
+            // Declare our statement
+            PreparedStatement statement = dbcon.prepareStatement("select id from customers where id = ?;");
             statement.setString(1, Integer.toString(resultId));
             ResultSet rsUniqueResult = statement.executeQuery();
             while (rsUniqueResult.next()) {
@@ -60,10 +58,9 @@ public class LoginServlet extends HttpServlet {
                 }
             }
 
-            PreparedStatement statementLogin = (PreparedStatement) dbcon.prepareStatement("select * from customers where email = '?' and password = '?';");
+            PreparedStatement statementLogin = dbcon.prepareStatement("select * from customers where email = ? and password = ?;");
             statementLogin.setString(1, email);
             statementLogin.setString(2, password);
-            //String query = "select * from customers where email = '" + email + "' and password = '" + password + "';";
             ResultSet rs = statementLogin.executeQuery();
             while (rs.next()) {
                 resultEmail = rs.getString("email");
@@ -93,18 +90,19 @@ public class LoginServlet extends HttpServlet {
                 responseJsonObject.addProperty("status", "fail");
 
                 // Error messages to check if an account exists or not if the username and/or password is incorrect
-                statementLogin.setString(1, email);
-                //query = "select * from customers where email = '" + email + "';";
+                PreparedStatement statementFail = dbcon.prepareStatement("select * from customers where email = ?;");
+                statementFail.setString(1, email);
                 rs = statement.executeQuery();
                 String existingEmail = "";
-                while (rs.next()) {
+                while (rs.next() && existingEmail.equals("")) { // stops if email confirmed to already exist
                     existingEmail = rs.getString("email");
                 }
-                if (!existingEmail.equals("")) {
+                if (existingEmail.equals("")) {
                     responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
                 } else {
                     responseJsonObject.addProperty("message", "incorrect password");
                 }
+                statementFail.close();
             }
             response.getWriter().write(responseJsonObject.toString());
             rs.close();
@@ -112,7 +110,6 @@ public class LoginServlet extends HttpServlet {
             statementLogin.close();
             dbcon.close();
         } catch (Exception e) {
-
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
@@ -120,7 +117,6 @@ public class LoginServlet extends HttpServlet {
 
             // set reponse status to 500 (Internal Server Error)
             response.setStatus(500);
-
         }
         out.close();
     }

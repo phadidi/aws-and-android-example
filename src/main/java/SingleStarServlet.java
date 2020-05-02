@@ -45,11 +45,13 @@ public class SingleStarServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Construct a query with parameter represented by "?"
-            String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m where m.id = sim.movieId and sim.starId = s.id and s.id = '" + id + "'"
-                    + "ORDER BY title";
+            /*String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m where m.id = sim.movieId and sim.starId = s.id and s.id = '" + id + "'"
+                    + "ORDER BY title";*/
 
             // Declare our statement
-            PreparedStatement statement = dbcon.prepareStatement(query);
+            PreparedStatement statement = dbcon.prepareStatement("SELECT * from stars as s, stars_in_movies as sim, " +
+                    "movies as m where m.id = sim.movieId and sim.starId = s.id and s.id = ? ORDER BY title");
+            statement.setString(1, id);
 
             // Set the parameter represented by "?" in the query to the id we get from url,
             // num 1 indicates the first "?" in the query

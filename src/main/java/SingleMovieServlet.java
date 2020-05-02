@@ -48,16 +48,23 @@ public class SingleMovieServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Construct a query with parameter represented by "?"
-            String query = "select m.id, m.title as title, m.year as year, m.director, \n" +
+            /*String query = "select m.id, m.title as title, m.year as year, m.director, \n" +
                     "group_concat(distinct g.name ORDER BY g.name separator ', ') as genrenames, \n" +
                     "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
                     "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim \n" +
                     "where s.id = sim.starId and m.id = sim.movieId \n" +
                     "and g.id = gim.genreId and m.id = gim.movieId \n" +
-                    "and m.id = '" + thisId + "';";
+                    "and m.id = '" + thisId + "';";*/
 
             // Declare our statement
-            PreparedStatement statement = dbcon.prepareStatement(query);
+            PreparedStatement statement = dbcon.prepareStatement("select m.id, m.title as title, m.year as year, m.director, \n" +
+                    "group_concat(distinct g.name ORDER BY g.name separator ', ') as genrenames, \n" +
+                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
+                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim \n" +
+                    "where s.id = sim.starId and m.id = sim.movieId \n" +
+                    "and g.id = gim.genreId and m.id = gim.movieId \n" +
+                    "and m.id = ?;");
+            statement.setString(1, thisId);
 
             // Set the parameter represented by "?" in the query to the id we get from url,
             // num 1 indicates the first "?" in the query
@@ -97,10 +104,12 @@ public class SingleMovieServlet extends HttpServlet {
             jsonObject.addProperty("genres", movieGenres);
             jsonObject.addProperty("stars", movieStars);
 
-            query = "select rating from ratings where movieId = '" + thisId + "';";
-            rs = statement.executeQuery(query);
+            //query = "select rating from ratings where movieId = '" + thisId + "';";
+            PreparedStatement statementRatings = dbcon.prepareStatement("select rating from ratings where movieId = ?;");
+            statementRatings.setString(1, thisId);
+            ResultSet rsRatings = statementRatings.executeQuery();
             String movieRating = "N/A";
-            while (rs.next()) {
+            while (rsRatings.next()) {
                 String tempRating = rs.getString("rating");
                 if (tempRating != null)
                     if (!tempRating.isEmpty())
@@ -116,8 +125,9 @@ public class SingleMovieServlet extends HttpServlet {
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
             response.setStatus(200);
-
+            rsRatings.close();
             rs.close();
+            statementRatings.close();
             statement.close();
             dbcon.close();
         } catch (Exception e) {

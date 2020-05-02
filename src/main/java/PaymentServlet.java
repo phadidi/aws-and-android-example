@@ -137,11 +137,15 @@ public class PaymentServlet extends HttpServlet {
             String resultExpirationDate = "";
 
             // Declare our statement
-            String query = "select * from creditcards where firstName = '" + first_name
+            /*String query = "select * from creditcards where firstName = '" + first_name
                     + "' and lastName = '" + last_name
                     + "' and id = '" + ccnumber
-                    + "' and expiration = '" + exp_date + "';";
-            PreparedStatement statement = dbcon.prepareStatement(query);
+                    + "' and expiration = '" + exp_date + "';";*/
+            PreparedStatement statement = dbcon.prepareStatement("select * from creditcards where firstName = ? and lastName = ? and id = ? and expiration = ?;");
+            statement.setString(1, first_name);
+            statement.setString(2, last_name);
+            statement.setString(3, ccnumber);
+            statement.setString(4, exp_date);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 //resultEmail = rs.getString("email");
