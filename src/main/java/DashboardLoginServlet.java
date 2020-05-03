@@ -14,8 +14,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-@WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
-public class LoginServlet extends HttpServlet {
+// TODO: Implement HTTPS to dashboard once successfully configured!
+@WebServlet(name = "DashboardLoginServlet", urlPatterns = "/api/_dashboard")
+public class DashboardLoginServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
@@ -37,37 +38,18 @@ public class LoginServlet extends HttpServlet {
         */
             String resultEmail = "";
             String resultPassword = "";
-            int resultId = (int) (Math.random() * 1000000);
-            String resultFirstname = "";
-            String resultLastname = "";
-            String resultCreditCard = "";
-            String resultAddress = "";
+            String resultFullname = "";
 
             // Declare our statement
-            PreparedStatement statement = dbcon.prepareStatement("select id from customers where id = ?;");
-            statement.setString(1, Integer.toString(resultId));
-            ResultSet rsUniqueResult = statement.executeQuery();
-            while (rsUniqueResult.next()) {
-                int tempId = rsUniqueResult.getInt("id");
-                while (tempId == resultId) { // check if customer with id already exists
-                    resultId = (int) (Math.random() * 1000000);
-                    statement.setString(1, Integer.toString(resultId));
-                    rsUniqueResult = statement.executeQuery();
-                }
-            }
-
-            PreparedStatement statementLogin = dbcon.prepareStatement("select * from customers where email = ? and password = ?;");
+            PreparedStatement statementLogin = dbcon.prepareStatement("select * from employees where email = ? and password = ?;");
             statementLogin.setString(1, email);
             statementLogin.setString(2, password);
             ResultSet rs = statementLogin.executeQuery();
             while (rs.next()) {
                 resultEmail = rs.getString("email");
                 resultPassword = rs.getString("password");
-                resultId = rs.getInt("id");
-                resultFirstname = rs.getString("firstName");
-                resultLastname = rs.getString("lastName");
-                resultCreditCard = rs.getString("ccId");
-                resultAddress = rs.getString("address");
+                resultFullname = rs.getString("fullname");
+
             }
 
             JsonObject responseJsonObject = new JsonObject();
@@ -75,20 +57,19 @@ public class LoginServlet extends HttpServlet {
                 // Login success:
 
                 // set this user into the session
-                Customer currentUser = new Customer(resultId, resultEmail, resultPassword, resultFirstname,
-                        resultLastname, resultCreditCard, resultAddress);
-                request.getSession().setAttribute("user", currentUser);
+                Employee currentEmployee = new Employee(resultEmail, resultPassword, resultFullname);
+                request.getSession().setAttribute("employee", currentEmployee);
 
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
 
             } else {
-                // TODO: add case for user exists but password is incorrect
+                // TODO: add case for employee exists but password is incorrect
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
 
                 // Error messages to check if an account exists or not if the username and/or password is incorrect
-                PreparedStatement statementFail = dbcon.prepareStatement("select * from customers where email = ?;");
+                PreparedStatement statementFail = dbcon.prepareStatement("select * from employee where email = ?;");
                 statementFail.setString(1, email);
                 rs = statementFail.executeQuery();
                 String existingEmail = "";
@@ -96,7 +77,7 @@ public class LoginServlet extends HttpServlet {
                     existingEmail = rs.getString("email");
                 }
                 if (existingEmail.equals("")) {
-                    responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
+                    responseJsonObject.addProperty("message", "employee " + email + " doesn't exist");
                 } else {
                     responseJsonObject.addProperty("message", "incorrect password");
                 }
@@ -104,7 +85,6 @@ public class LoginServlet extends HttpServlet {
             }
             response.getWriter().write(responseJsonObject.toString());
             rs.close();
-            statement.close();
             statementLogin.close();
             dbcon.close();
         } catch (Exception e) {
@@ -113,7 +93,7 @@ public class LoginServlet extends HttpServlet {
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
 
-            // set reponse status to 500 (Internal Server Error)
+            // set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }
         out.close();

@@ -59,7 +59,7 @@ public class SingleMovieServlet extends HttpServlet {
             // Declare our statement
             PreparedStatement statement = dbcon.prepareStatement("select m.id, m.title as title, m.year as year, m.director, \n" +
                     "group_concat(distinct g.name ORDER BY g.name separator ', ') as genrenames, \n" +
-                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
+                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds \n" +
                     "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim \n" +
                     "where s.id = sim.starId and m.id = sim.movieId \n" +
                     "and g.id = gim.genreId and m.id = gim.movieId \n" +
