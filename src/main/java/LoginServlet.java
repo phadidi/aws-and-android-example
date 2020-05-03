@@ -94,7 +94,7 @@ public class LoginServlet extends HttpServlet {
                 statementFail.setString(1, email);
                 rs = statement.executeQuery();
                 String existingEmail = "";
-                while (rs.next() && existingEmail.equals("")) { // stops if email confirmed to already exist
+                while (rs.next()) {
                     existingEmail = rs.getString("email");
                 }
                 if (existingEmail.equals("")) {

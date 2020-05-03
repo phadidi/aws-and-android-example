@@ -70,8 +70,14 @@ public class CartServlet extends HttpServlet {
             JsonArray jsonArray = new JsonArray();
 
             for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
+                // for debugging purposes
+                // System.out.println(val.getKey() + ": " + val.getValue());
+
+                String query = "select id, title from movies where id = ?";
+                System.out.println(query);
+
                 // Declare Statement
-                PreparedStatement statement = dbcon.prepareStatement("select id, title from movies where id = ?;");
+                PreparedStatement statement = dbcon.prepareStatement(query);
                 statement.setString(1, val.getKey());
                 rs = statement.executeQuery();
 

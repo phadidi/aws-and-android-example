@@ -53,25 +53,36 @@ public class ConfirmationServlet extends HttpServlet {
 
             ArrayList<String> salesIds = new ArrayList<String>();
 
-
-
             ResultSet rs;
 
+            String testQuantity = "SELECT COUNT(*)\n" +
+                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
+                    "WHERE table_schema = 'moviedb'\n" +
+                    "  AND table_name = 'sales';";
+            PreparedStatement checkQuantity = dbcon.prepareStatement(testQuantity);
+            ResultSet r = checkQuantity.executeQuery();
+            int columnCount = 0;
+            while(r.next()){
+                columnCount = r.getInt("COUNT(*)");
+            }
+
+            if(columnCount == 4) {
+                String alterQuery = "alter table sales add column quantity int DEFAULT 1;";
+                PreparedStatement alterStatement = dbcon.prepareStatement(alterQuery);
+                int alterResult = alterStatement.executeUpdate();
+                System.out.println("altering customers table schema completed, " + alterResult + " rows affected");
+            }
             for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
 
-                /*String query = "INSERT INTO sales(customerId, movieId, saleDate, quantity) VALUES(" + Integer.toString(customerId)
+                String query = "INSERT INTO sales(customerId, movieId, saleDate, quantity) VALUES(" + Integer.toString(customerId)
                         + ", '" + val.getKey() + "'," + "CURDATE()" + "," + Integer.toString(val.getValue())
-                        + ");";*/
+                        + ");";
 
-                PreparedStatement statement = dbcon.prepareStatement("INSERT INTO sales(customerId, movieId, saleDate, quantity) " +
-                        "VALUES(?, ?, " + "CURDATE()" + ", ?);");
-                statement.setString(1, Integer.toString(customerId));
-                statement.setString(2, val.getKey());
-                statement.setString(3, Integer.toString(val.getValue()));
+                PreparedStatement statement = dbcon.prepareStatement(query);
                 statement.executeUpdate();
 
-                //String fetchLatest = "select * from sales where idsales=(SELECT LAST_INSERT_ID());";
-                PreparedStatement getLatest = dbcon.prepareStatement("select * from sales where idsales=(SELECT LAST_INSERT_ID());");
+                String fetchLatest = "select * from sales where idsales=(SELECT LAST_INSERT_ID());";
+                PreparedStatement getLatest = dbcon.prepareStatement(fetchLatest);
                 rs = getLatest.executeQuery();
 
                 while (rs.next()) {
@@ -83,7 +94,7 @@ public class ConfirmationServlet extends HttpServlet {
             }
 
 
-
+            Statement statement1 = dbcon.createStatement();
             ResultSet rs1;
             JsonArray jsonArray = new JsonArray();
 
@@ -97,12 +108,6 @@ public class ConfirmationServlet extends HttpServlet {
             System.out.println(query1);
 
             // Declare Statement
-            PreparedStatement statement1 = dbcon.prepareStatement("select s.idsales, m.title, s.saleDate, s.quantity\n" +
-                    "from sales s, movies m\n" +
-                    "where s.movieId = m.id and s.customerId = ?" +
-                    " and s.idsales in (?);");
-            statement1.setString(1, Integer.toString(customerId));
-            statement1.setString(2, salesIds_string);
             rs1 = statement1.executeQuery(query1);
 
             String sId = "";
