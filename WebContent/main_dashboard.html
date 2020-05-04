@@ -4,7 +4,70 @@
     <meta charset="UTF-8">
     <title>Employee Dashboard</title>
 </head>
+<style>
+    #outer-div {
+        width: 100%;
+        text-align: center;
+    }
+
+    #inner-div {
+        display: inline-block;
+        margin: 0 auto;
+        padding: 3px;
+    }
+
+    label, input {
+        display: block;
+    }
+
+    label {
+        margin-bottom: 20px;
+    }
+</style>
 <body>
+<div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
+    <h1>Fabflix Dashboard</h1>
+    <h2>Add a Movie to Fabflix</h2>
+</div>
+<div id="outer-div" width="100%">
+    <div id="inner-div">
+        <form id="dashboard_newMovie_form" method="post">
+            <label>
+                ID
+                <input name="movieId" placeholder="Enter Movie ID" type="text">
+            </label>
+            <label>
+                Title
+                <input name="movieTitle" placeholder="Enter Movie Title" type="text">
+            </label>
+            <label>
+                Year
+                <input name="movieYear" placeholder="Enter Movie Year" type="number">
+            </label>
+            <label>
+                Director
+                <input name="movieDirector" placeholder="Enter Movie Director" type="text">
+            </label>
+            <label>
+                Star
+                <input name="movieStar" placeholder="Enter Movie Star" type="text">
+            </label>
+            <label>
+                Genre
+                <input name="movieGenre" placeholder="Enter Movie Genre" type="text">
+            </label>
+            <label>
+                <input type="submit" value="Add Movie">
+            </label>
+        </form>
+        <div id="newMovie_error_message"></div>
+    </div>
+</div>
+
+<!-- include jQuery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- include our own JS file -->
+<script src="./main_dashboard.js"></script>
 
 </body>
 </html>

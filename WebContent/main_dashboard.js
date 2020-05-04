@@ -1,25 +1,27 @@
-let dashboard_login_form = $("#dashboard_login_form");
+let dashboard_newMovie_form = $("#dashboard_newMovie_form");
 
 /**
  * Handle the data returned by LoginServlet
  * @param resultDataString jsonObject
  */
-function handleLoginResult(resultDataString) {
+function handleMovieResult(resultDataString) {
     let resultDataJson = JSON.parse(resultDataString);
 
-    console.log("handle login response");
+    console.log("handle add_movie response");
     console.log(resultDataJson);
     console.log(resultDataJson["status"]);
 
     // If login succeeds, it will redirect the employee to main_dashboard.html
     if (resultDataJson["status"] === "success") {
+        // TODO: change this to the appropriate employee page after adding a movie to the database
+        alert("You added a movie to the database");
         window.location.replace("main_dashboard.html");
     } else {
-        // If login fails, the web page will display
+        // If add_movie fails, the web page will display
         // error messages on <div> with id "login_error_message"
         console.log("show error message");
         console.log(resultDataJson["message"]);
-        $("#login_error_message").text(resultDataJson["message"]);
+        $("#newMovie_error_message").text(resultDataJson["message"]);
     }
 }
 
@@ -27,8 +29,8 @@ function handleLoginResult(resultDataString) {
  * Submit the form content with POST method
  * @param formSubmitEvent
  */
-function submitLoginForm(formSubmitEvent) {
-    console.log("submit employee login form");
+function submitMovieForm(formSubmitEvent) {
+    console.log("submit add_movie form");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
@@ -37,14 +39,14 @@ function submitLoginForm(formSubmitEvent) {
     formSubmitEvent.preventDefault();
 
     $.ajax(
-        "api/_dashboard", {
+        "api/main_dashboard", {
             method: "POST",
             // Serialize the login form to the data sent by POST request
-            data: dashboard_login_form.serialize(),
-            success: handleLoginResult
+            data: dashboard_newMovie_form.serialize(),
+            success: handleMovieResult
         }
     );
 }
 
 // Bind the submit action of the form to a handler function
-dashboard_login_form.submit(submitLoginForm);
+dashboard_newMovie_form.submit(submitMovieForm);
