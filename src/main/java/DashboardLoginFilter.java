@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 
 // TODO: Implement HTTPS to dashboard once successfully configured!
-@WebFilter(filterName = "DashboardLoginFilter", urlPatterns = "/api/main_dashboard")
+@WebFilter(filterName = "DashboardLoginFilter", urlPatterns = "/api/_dashboard")
 public class DashboardLoginFilter implements Filter {
     private final ArrayList<String> allowedURIs = new ArrayList<>();
 
@@ -52,12 +52,13 @@ public class DashboardLoginFilter implements Filter {
     }
 
     public void init(FilterConfig fConfig) {
-        allowedURIs.add("login.html");
-        allowedURIs.add("login.js");
-        allowedURIs.add("api/login");
+        // Go to dashboard before login
         allowedURIs.add("_dashboard.html");
         allowedURIs.add("_dashboard.js");
         allowedURIs.add("/api/_dashboard");
+        allowedURIs.add("login.html");
+        allowedURIs.add("login.js");
+        allowedURIs.add("api/login");
     }
 
     public void destroy() {
