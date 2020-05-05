@@ -11,11 +11,11 @@ function handleMovieResult(resultDataString) {
     console.log(resultDataJson);
     console.log(resultDataJson["status"]);
 
-    // If login succeeds, it will redirect the employee to main_dashboard.html
+    // If login succeeds, it will redirect the employee to _dashboard_main.html
     if (resultDataJson["status"] === "success") {
         // TODO: change this to the appropriate employee page after adding a movie to the database
         alert("You added a movie to the database");
-        window.location.replace("main_dashboard.html");
+        window.location.replace("_dashboard_main.html");
     } else {
         // If add_movie fails, the web page will display
         // error messages on <div> with id "login_error_message"
@@ -39,7 +39,7 @@ function submitMovieForm(formSubmitEvent) {
     formSubmitEvent.preventDefault();
 
     $.ajax(
-        "api/main_dashboard", {
+        "api/_dashboard_main", {
             method: "POST",
             // Serialize the login form to the data sent by POST request
             data: dashboard_newMovie_form.serialize(),

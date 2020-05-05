@@ -7,7 +7,6 @@
     <welcome-file-list>
         <welcome-file>movielist.html</welcome-file>
     </welcome-file-list>
-    <!--  Uncomment this when https works
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>HTTPSOnly</web-resource-name>
@@ -17,7 +16,6 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-     -->
     <!-- Register the DataSource which defined in META-INF/context.xml-->
     <resource-ref>
         <description>MySQL DataSource</description>

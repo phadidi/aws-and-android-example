@@ -24,18 +24,22 @@ public class LoginFilter implements Filter {
 
         System.out.println("LoginFilter: " + httpRequest.getRequestURI());
 
+        String thisURL = httpRequest.getRequestURI();
+
         // Check if this URL is allowed to access without logging in
-        if (this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
+        if (this.isUrlAllowedWithoutLogin(thisURL)) {
             // Keep default action: pass along the filter chain
             chain.doFilter(request, response);
             return;
         }
 
-        // Redirect to login page if the "user" attribute doesn't exist in session
-        if (httpRequest.getSession().getAttribute("user") == null && httpRequest.getSession().getAttribute("employee") == null) {
+        // Redirect to login page if the "user" attribute doesn't exist in session and thisURL isn't _dashboard_main
+        if (httpRequest.getSession().getAttribute("user") == null
+                && !thisURL.endsWith("_dashboard_main.html") && !thisURL.endsWith("_dashboard_main.js") && !thisURL.endsWith("api/_dashboard_main")) {
             httpResponse.sendRedirect("login.html");
-        } else if (httpRequest.getSession().getAttribute("user") == null && httpRequest.getSession().getAttribute("employee") != null) {
-            httpResponse.sendRedirect("_dashboard.html"); //TODO: enable employee login without user login
+        } else if (httpRequest.getSession().getAttribute("employee") == null
+                && (thisURL.endsWith("_dashboard_main.html") || thisURL.endsWith("_dashboard_main.js") || thisURL.endsWith("api/_dashboard_main")) ) {
+            httpResponse.sendRedirect("_dashboard.html");
         }
         else {
             chain.doFilter(request, response);
@@ -59,6 +63,10 @@ public class LoginFilter implements Filter {
         allowedURIs.add("_dashboard.html");
         allowedURIs.add("_dashboard.js");
         allowedURIs.add("/api/_dashboard");
+        // links below are allowed but also checked for a valid employee
+        /*allowedURIs.add("_dashboard_main.html");
+        allowedURIs.add("_dashboard_main.js");
+        allowedURIs.add("/api/main_dashboard");*/
     }
 
     public void destroy() {
