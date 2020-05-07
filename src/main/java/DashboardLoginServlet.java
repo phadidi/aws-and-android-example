@@ -1,6 +1,7 @@
 package main.java;
 
 import com.google.gson.JsonObject;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
@@ -41,9 +42,8 @@ public class DashboardLoginServlet extends HttpServlet {
             String resultFullname = "";
 
             // Declare our statement
-            PreparedStatement statementLogin = dbcon.prepareStatement("select * from employees where email = ? and password = ?;");
+            PreparedStatement statementLogin = dbcon.prepareStatement("select * from employees where email = ?;");
             statementLogin.setString(1, email);
-            statementLogin.setString(2, password);
             ResultSet rs = statementLogin.executeQuery();
             while (rs.next()) {
                 resultEmail = rs.getString("email");
@@ -53,7 +53,9 @@ public class DashboardLoginServlet extends HttpServlet {
             }
 
             JsonObject responseJsonObject = new JsonObject();
-            if (email.equals(resultEmail) && password.equals(resultPassword)) {
+            boolean success = new StrongPasswordEncryptor().checkPassword(password, resultPassword);
+
+            if (email.equals(resultEmail) && success) {
                 // Login success:
 
                 // set this user into the session
