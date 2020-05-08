@@ -55,13 +55,12 @@ public class MainDashboardServlet extends HttpServlet {
 
             if (!resultId.equals(id) || !resultTitle.equals(title) || !resultDirector.equals(director)) {
                 // No duplicate movie, add this movie to Fabflix moviedb + Declare our statement
-                PreparedStatement statementAdd = dbcon.prepareStatement("call add_movie(?,?,?,?,?,?)");
-                statementAdd.setString(1, id);
-                statementAdd.setString(2, title);
-                statementAdd.setInt(3, Integer.parseInt(year));
-                statementAdd.setString(4, director);
-                statementAdd.setString(5, star);
-                statementAdd.setString(6, genre);
+                PreparedStatement statementAdd = dbcon.prepareStatement("call add_movie(?,?,?,?,?)");
+                statementAdd.setString(1, title);
+                statementAdd.setInt(2, Integer.parseInt(year));
+                statementAdd.setString(3, director);
+                statementAdd.setString(4, star);
+                statementAdd.setString(5, genre);
                 statementAdd.executeQuery();
                 statementAdd.close();
 
