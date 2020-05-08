@@ -101,7 +101,6 @@ CREATE TABLE `sales`
     `customerId` int         NOT NULL,
     `movieId`    varchar(10) NOT NULL,
     `saleDate`   date        NOT NULL,
-    `quantity`   int default 1,
     PRIMARY KEY (`idsales`),
     KEY `customerIdRef_idx` (`customerId`),
     KEY `movieIdRef_idx` (`movieId`),
