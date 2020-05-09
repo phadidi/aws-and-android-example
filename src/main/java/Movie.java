@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -15,11 +16,41 @@ public class Movie {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
 
-    public Movie(String movieId, String movieTitle, int movieYear, String movieDirector) {
-        this.id = movieId;
+    public Movie(String movieTitle, int movieYear, String movieDirector) throws SQLException {
+        //this.id = movieId;
+        String idQuery = "SELECT CONCAT('tt', LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')) as movieId;";
+        Connection dbcon = dataSource.getConnection();
+        PreparedStatement statementId = dbcon.prepareStatement(idQuery);
+        ResultSet rs = statementId.executeQuery();
+        boolean idInit = false; // check if rs was empty
+        String tempId = "";
+        while (rs.next()) {
+            tempId = rs.getString("movieId");
+            idInit = true;
+            break; // stop after one loop due to final variable
+        }
+        if (!idInit) {
+            int resultId = (int) (Math.random() * 1000000);
+            tempId = "tt" + resultId;
+            String isNewIdQuery = "select id from movies where id = ?;";
+            PreparedStatement duplicateMovie = dbcon.prepareStatement(isNewIdQuery);
+            duplicateMovie.setString(1, tempId);
+            ResultSet rsDup = duplicateMovie.executeQuery();
+            while (rsDup.next()) {
+                if (tempId.equals(rsDup.getString("id"))) {
+                    resultId = (int) (Math.random() * 1000000);
+                    tempId = "tt" + resultId;
+                    rsDup = duplicateMovie.executeQuery(); // repeat until a unique id is found
+                }
+            }
+        }
+        this.id = tempId;
         this.title = movieTitle;
         this.year = movieYear;
         this.director = movieDirector;
+        rs.close();
+        statementId.close();
+        dbcon.close();
     }
 
     public String getId() {

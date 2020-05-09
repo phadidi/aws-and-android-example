@@ -27,7 +27,6 @@ public class MainDashboardServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
         try {
-            String id = request.getParameter("movieId");
             String title = request.getParameter("movieTitle");
             String year = request.getParameter("movieYear");
             String director = request.getParameter("movieDirector");
@@ -37,23 +36,22 @@ public class MainDashboardServlet extends HttpServlet {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
 
-            String resultId = "";
+            //String resultId = "";
             String resultTitle = "";
             String resultDirector = "";
 
-            PreparedStatement statementCheck = dbcon.prepareStatement("select id, title, director from movies where id = ? and title = ? and director = ?");
-            statementCheck.setString(1, id);
-            statementCheck.setString(2, title);
-            statementCheck.setInt(3, Integer.parseInt(year));
+            PreparedStatement statementCheck = dbcon.prepareStatement("select id, title, director from movies where title = ? and director = ?");
+            statementCheck.setString(1, title);
+            statementCheck.setInt(2, Integer.parseInt(year));
             ResultSet rs = statementCheck.executeQuery();
             while (rs.next()) {
-                resultId = rs.getString("id");
+                //resultId = rs.getString("id");
                 resultTitle = rs.getString("title");
                 resultDirector = rs.getString("director");
             }
             JsonObject responseJsonObject = new JsonObject();
 
-            if (!resultId.equals(id) || !resultTitle.equals(title) || !resultDirector.equals(director)) {
+            if (!resultTitle.equals(title) || !resultDirector.equals(director)) {
                 // No duplicate movie, add this movie to Fabflix moviedb + Declare our statement
                 PreparedStatement statementAdd = dbcon.prepareStatement("call add_movie(?,?,?,?,?)");
                 statementAdd.setString(1, title);
