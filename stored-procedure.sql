@@ -9,12 +9,12 @@ CREATE
                                                              movieGenre VARCHAR(32))
 BEGIN
     IF ((SELECT COUNT(*) FROM stars WHERE name = movieStar) = 0) THEN
-        INSERT INTO stars
-        VALUES (CONCAT('nm', (select LPAD(substring((select max(id) from movies), 3) + 1, 7, '0'))),
-                movieStar, NULL);
+		SET @starId = CONCAT('nm', (select LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')));
+        INSERT INTO stars VALUES (@starId, movieStar, NULL);
     END IF;
     IF ((SELECT COUNT(*) FROM genres WHERE name = movieGenre) = 0) THEN
-        INSERT INTO genres VALUES ((select max(id) + 1 from genres), movieGenre);
+		SET @genreId = (select max(id) + 1 from genres);
+        INSERT INTO genres VALUES (@genreId, movieGenre);
     END IF;
     SET @movieId = (SELECT CONCAT('tt', LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')));
     INSERT INTO movies VALUES (@movieId, movieTitle, movieYear, movieDirector);
@@ -23,3 +23,5 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+call add_movie('Pineapple Pool', 2020, 'Alex Valadez', 'Neema Atashbar', 'Drama');
