@@ -1,4 +1,4 @@
-package main.java;
+
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 
 public class Movie {
-    private final String id;
+    //private final String id;
     private final String title;
     private final int year;
     private final String director;
@@ -17,45 +17,30 @@ public class Movie {
     private DataSource dataSource;
 
     public Movie(String movieTitle, int movieYear, String movieDirector) throws SQLException {
-        //this.id = movieId;
-        String idQuery = "SELECT CONCAT('tt', LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')) as movieId;";
-        Connection dbcon = dataSource.getConnection();
-        PreparedStatement statementId = dbcon.prepareStatement(idQuery);
-        ResultSet rs = statementId.executeQuery();
-        boolean idInit = false; // check if rs was empty
-        String tempId = "";
-        while (rs.next()) {
-            tempId = rs.getString("movieId");
-            idInit = true;
-            break; // stop after one loop due to final variable
-        }
-        if (!idInit) {
-            int resultId = (int) (Math.random() * 1000000);
-            tempId = "tt" + resultId;
-            String isNewIdQuery = "select id from movies where id = ?;";
-            PreparedStatement duplicateMovie = dbcon.prepareStatement(isNewIdQuery);
-            duplicateMovie.setString(1, tempId);
-            ResultSet rsDup = duplicateMovie.executeQuery();
-            while (rsDup.next()) {
-                if (tempId.equals(rsDup.getString("id"))) {
-                    resultId = (int) (Math.random() * 1000000);
-                    tempId = "tt" + resultId;
-                    rsDup = duplicateMovie.executeQuery(); // repeat until a unique id is found
-                }
-            }
-        }
-        this.id = tempId;
+//        String idQuery = "SELECT CONCAT('tt', LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')) as movieId;";
+//        Connection dbcon = dataSource.getConnection();
+//        PreparedStatement statementId = dbcon.prepareStatement(idQuery);
+//        ResultSet rs = statementId.executeQuery();
+//        boolean idInit = false; // check if rs was empty
+//        String tempId = "";
+//        while (rs.next()) {
+//            tempId = rs.getString("movieId");
+//            idInit = true;
+//            break; // stop after one loop due to final variable
+//        }
+
+        //this.id = tempId;
         this.title = movieTitle;
         this.year = movieYear;
         this.director = movieDirector;
-        rs.close();
-        statementId.close();
-        dbcon.close();
+        //rs.close();
+        //statementId.close();
+        //dbcon.close();
     }
 
-    public String getId() {
-        return this.id;
-    }
+//    public String getId() {
+//        return this.id;
+//    }
 
     public String getTitle() {
         return this.title;
@@ -69,20 +54,20 @@ public class Movie {
         return this.director;
     }
 
-    public void addMovieToTable() throws SQLException {
-        Connection dbcon = dataSource.getConnection();
-        String query = "Insert into movies VALUES('" + this.id + "', '" + this.title + "', " + this.year
-                + ", '" + this.director + "');";
-        PreparedStatement statement = dbcon.prepareStatement(query);
-        statement.executeUpdate();
-        statement.close();
-        dbcon.close();
-    }
+//    public void addMovieToTable() throws SQLException {
+//        Connection dbcon = dataSource.getConnection();
+//        String query = "Insert into movies VALUES('" + this.id + "', '" + this.title + "', " + this.year
+//                + ", '" + this.director + "');";
+//        PreparedStatement statement = dbcon.prepareStatement(query);
+//        statement.executeUpdate();
+//        statement.close();
+//        dbcon.close();
+//    }
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Movie Details - ");
-        sb.append("Id:" + getId());
+        //sb.append("Id:" + getId());
         sb.append(", ");
         sb.append("Title:" + getTitle());
         sb.append(", ");

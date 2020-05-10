@@ -1,6 +1,5 @@
-package main.java;
-
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,15 +16,15 @@ import org.xml.sax.SAXException;
 
 public class DomMovieParser {
 
-    List<Movie> myEmpls;
+    List<Movie> myMovies;
     Document dom;
 
     public DomMovieParser() {
         //create a list to hold the employee objects
-        myEmpls = new ArrayList<>();
+        myMovies = new ArrayList<>();
     }
 
-    public void runExample() {
+    public void runExample() throws SQLException {
 
         //parse the xml file and get the dom object
         parseXmlFile();
@@ -59,12 +58,14 @@ public class DomMovieParser {
         }
     }
 
-    private void parseDocument() {
+    private void parseDocument() throws SQLException {
         //get the root elememt
         Element docEle = dom.getDocumentElement();
 
-        //get a nodelist of <employee> elements
-        NodeList nl = docEle.getElementsByTagName("Employee");
+        int c = 0;
+
+        //get a nodelist of <film> elements
+        NodeList nl = docEle.getElementsByTagName("film");
         if (nl != null && nl.getLength() > 0) {
             for (int i = 0; i < nl.getLength(); i++) {
 
@@ -75,32 +76,35 @@ public class DomMovieParser {
                 Movie m = getMovie(el);
 
                 //add it to list
-                myEmpls.add(m);
+                myMovies.add(m);
+                c += 1;
             }
         }
+
+        System.out.println(c);
     }
 
     /**
      * I take an employee element and read the values in, create
      * an Employee object and return it
      *
-     * @param empEl
+     * @param movieEl
      * @return
      */
-    private Movie getMovie(Element empEl) {
+    private Movie getMovie(Element movieEl) throws SQLException {
 
-        //for each <employee> element get text or int values of
-        //name ,id, age and name
-        String title = getTextValue(empEl, "Name");
-        int year = getIntValue(empEl, "Id");
-        int director = getIntValue(empEl, "Age");
+        // t tag is currently giving null pointer exceptions; HOWEVER, getting tag 'fid' works
+        // error might be due to line 125 (getTextValue).
+        String title = getTextValue(movieEl, "t"); // getting title
+        //int year = getIntValue(movieEl, "year");
+        //String director = getTextValue(movieEl, "dirn");
 
-        String type = empEl.getAttribute("type");
+        //String type = movieEl.getAttribute("type");
 
         //Create a new Employee with the value read from the xml nodes
-        Movie m = new Movie(title, year, director);
+        //Movie m = new Movie("", 0, director);
 
-        return m;
+        return new Movie("",0,""); // temporary return
     }
 
     /**
@@ -142,20 +146,20 @@ public class DomMovieParser {
      */
     private void printData() {
 
-        System.out.println("No of Employees '" + myEmpls.size() + "'.");
+        System.out.println("No of Movies '" + myMovies.size() + "'.");
 
-        Iterator<Movie> it = myEmpls.iterator();
+        Iterator<Movie> it = myMovies.iterator();
         while (it.hasNext()) {
             System.out.println(it.next().toString());
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         //create an instance
-        DomMovieParser dpe = new DomMovieParser();
+        DomMovieParser dpm = new DomMovieParser();
 
         //call run example
-        dpe.runExample();
+        dpm.runExample();
     }
 
 }
