@@ -9,14 +9,14 @@ import java.sql.SQLException;
 
 
 public class Movie {
-    //private final String id;
+    private final String id;
     private final String title;
     private final int year;
     private final String director;
-    @Resource(name = "jdbc/moviedb")
+    //@Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
 
-    public Movie(String movieTitle, int movieYear, String movieDirector) throws SQLException {
+    public Movie(String id, String movieTitle, int movieYear, String movieDirector) {
 //        String idQuery = "SELECT CONCAT('tt', LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')) as movieId;";
 //        Connection dbcon = dataSource.getConnection();
 //        PreparedStatement statementId = dbcon.prepareStatement(idQuery);
@@ -30,6 +30,7 @@ public class Movie {
 //        }
 
         //this.id = tempId;
+        this.id = id;
         this.title = movieTitle;
         this.year = movieYear;
         this.director = movieDirector;
@@ -38,9 +39,9 @@ public class Movie {
         //dbcon.close();
     }
 
-//    public String getId() {
-//        return this.id;
-//    }
+    public String getId() {
+        return this.id;
+    }
 
     public String getTitle() {
         return this.title;
@@ -67,7 +68,7 @@ public class Movie {
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("Movie Details - ");
-        //sb.append("Id:" + getId());
+        sb.append("Id:" + getId());
         sb.append(", ");
         sb.append("Title:" + getTitle());
         sb.append(", ");

@@ -24,7 +24,7 @@ public class DomMovieParser {
         myMovies = new ArrayList<>();
     }
 
-    public void runExample() throws SQLException {
+    public void runExample() {
 
         //parse the xml file and get the dom object
         parseXmlFile();
@@ -58,11 +58,9 @@ public class DomMovieParser {
         }
     }
 
-    private void parseDocument() throws SQLException {
+    private void parseDocument() {
         //get the root elememt
         Element docEle = dom.getDocumentElement();
-
-        int c = 0;
 
         //get a nodelist of <film> elements
         NodeList nl = docEle.getElementsByTagName("film");
@@ -77,11 +75,8 @@ public class DomMovieParser {
 
                 //add it to list
                 myMovies.add(m);
-                c += 1;
             }
         }
-
-        System.out.println(c);
     }
 
     /**
@@ -91,20 +86,24 @@ public class DomMovieParser {
      * @param movieEl
      * @return
      */
-    private Movie getMovie(Element movieEl) throws SQLException {
+    private Movie getMovie(Element movieEl) {
 
         // t tag is currently giving null pointer exceptions; HOWEVER, getting tag 'fid' works
         // error might be due to line 125 (getTextValue).
+        String id = getTextValue(movieEl, "fid");
+        if(id == null){
+            id = getTextValue(movieEl, "filmed");
+        }
         String title = getTextValue(movieEl, "t"); // getting title
-        //int year = getIntValue(movieEl, "year");
-        //String director = getTextValue(movieEl, "dirn");
+        int year = getIntValue(movieEl, "year");
+        String director = getTextValue(movieEl, "dirn");
 
         //String type = movieEl.getAttribute("type");
 
         //Create a new Employee with the value read from the xml nodes
-        //Movie m = new Movie("", 0, director);
+        Movie m = new Movie(id, title, year, director);
 
-        return new Movie("",0,""); // temporary return
+        return m; // temporary return
     }
 
     /**
@@ -122,9 +121,14 @@ public class DomMovieParser {
         NodeList nl = ele.getElementsByTagName(tagName);
         if (nl != null && nl.getLength() > 0) {
             Element el = (Element) nl.item(0);
-            textVal = el.getFirstChild().getNodeValue();
-        }
+            try {
+                textVal = el.getFirstChild().getNodeValue();
+            }
+            catch (NullPointerException npe){
+                textVal = null;
 
+            }
+        }
         return textVal;
     }
 
@@ -137,7 +141,15 @@ public class DomMovieParser {
      */
     private int getIntValue(Element ele, String tagName) {
         //in production application you would catch the exception
-        return Integer.parseInt(getTextValue(ele, tagName));
+        int result = 0;
+        try {
+            result = Integer.parseInt(getTextValue(ele, tagName));
+        }
+        catch(NumberFormatException nfe){
+            result = 0;
+        }
+
+        return result;
     }
 
     /**
@@ -154,7 +166,7 @@ public class DomMovieParser {
         }
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         //create an instance
         DomMovieParser dpm = new DomMovieParser();
 
