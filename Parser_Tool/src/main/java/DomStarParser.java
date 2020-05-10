@@ -14,14 +14,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public class DomMovieParser {
+public class DomStarParser {
 
-    List<Movie> myMovies;
+    List<Star> myStars;
     Document dom;
 
-    public DomMovieParser() {
+    public DomStarParser() {
         //create a list to hold the employee objects
-        myMovies = new ArrayList<>();
+        myStars = new ArrayList<>();
     }
 
     public void runExample() {
@@ -47,7 +47,7 @@ public class DomMovieParser {
             DocumentBuilder db = dbf.newDocumentBuilder();
 
             //parse using builder to get DOM representation of the XML file
-            dom = db.parse("mains243.xml");
+            dom = db.parse("actors63.xml");
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -63,7 +63,7 @@ public class DomMovieParser {
         Element docEle = dom.getDocumentElement();
 
         //get a nodelist of <film> elements
-        NodeList nl = docEle.getElementsByTagName("film");
+        NodeList nl = docEle.getElementsByTagName("actor");
         if (nl != null && nl.getLength() > 0) {
             for (int i = 0; i < nl.getLength(); i++) {
 
@@ -71,10 +71,10 @@ public class DomMovieParser {
                 Element el = (Element) nl.item(i);
 
                 //get the Employee object
-                Movie m = getMovie(el);
+                Star s = getStar(el);
 
                 //add it to list
-                myMovies.add(m);
+                myStars.add(s);
             }
         }
     }
@@ -83,24 +83,18 @@ public class DomMovieParser {
      * I take an employee element and read the values in, create
      * an Employee object and return it
      *
-     * @param movieEl
+     * @param starEl
      * @return
      */
-    private Movie getMovie(Element movieEl) {
+    private Star getStar(Element starEl) {
 
-        String id = getTextValue(movieEl, "fid");
-        if(id == null){
-            // some movie id is tagged with <filmed> for some reason
-            id = getTextValue(movieEl, "filmed");
-        }
-        String title = getTextValue(movieEl, "t"); // getting title
-        int year = getIntValue(movieEl, "year");
-        String director = getTextValue(movieEl, "dirn");
+        String name = getTextValue(starEl, "stagename"); // getting title
+        int dob = getIntValue(starEl, "dob");
 
         //Create a new Employee with the value read from the xml nodes
-        Movie m = new Movie(id, title, year, director);
+        Star s = new Star(name, dob);
 
-        return m; // temporary return
+        return s;
     }
 
     /**
@@ -122,8 +116,8 @@ public class DomMovieParser {
                 textVal = el.getFirstChild().getNodeValue();
             }
             catch (NullPointerException npe){
-                // no title in XML
                 textVal = null;
+
             }
         }
         return textVal;
@@ -143,7 +137,7 @@ public class DomMovieParser {
             result = Integer.parseInt(getTextValue(ele, tagName));
         }
         catch(NumberFormatException nfe){
-            // no release year
+            // no birth year, needs to be turned to NULL when inserting
             result = 0;
         }
 
@@ -156,9 +150,9 @@ public class DomMovieParser {
      */
     private void printData() {
 
-        System.out.println("No of Movies '" + myMovies.size() + "'.");
+        System.out.println("No of Stars '" + myStars.size() + "'.");
 
-        Iterator<Movie> it = myMovies.iterator();
+        Iterator<Star> it = myStars.iterator();
         while (it.hasNext()) {
             System.out.println(it.next().toString());
         }
@@ -166,7 +160,7 @@ public class DomMovieParser {
 
     public static void main(String[] args) {
         //create an instance
-        DomMovieParser dpm = new DomMovieParser();
+        DomStarParser dpm = new DomStarParser();
 
         //call run example
         dpm.runExample();
