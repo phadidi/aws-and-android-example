@@ -4,7 +4,7 @@ import java.util.*;
 
 public class MovieBatchInsert {
 
-    public static void main (String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public void insertMovieAndGenres() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
         Connection conn = null;
 
@@ -110,13 +110,12 @@ public class MovieBatchInsert {
             PreparedStatement psInsertGenres=conn.prepareStatement(sqlInsertGenres);
             PreparedStatement psInsertGim=conn.prepareStatement(sqlInsertGim);
 
-            Iterator<Movie> it = movies.iterator();
             for(int m = 0; m < movies.size(); m++)
             {
                 if (dbMovies.get(movies.get(m).getTitle()) != null){
                     //System.out.println(dbMovies.get(movies.get(m).getTitle()));
-                    if(dbMovies.get(movies.get(m).getTitle()).get(0).compareTo(Integer.toString(it.next().getYear())) == 0 &&
-                            dbMovies.get(movies.get(m).getTitle()).get(1).compareTo(it.next().getDirector()) == 0){
+                    if(dbMovies.get(movies.get(m).getTitle()).get(0).compareTo(Integer.toString(movies.get(m).getYear())) == 0 &&
+                            dbMovies.get(movies.get(m).getTitle()).get(1).compareTo(movies.get(m).getDirector()) == 0){
                         continue;
                     }
                 }
@@ -132,8 +131,8 @@ public class MovieBatchInsert {
 
                 if(genresMap.get(g) == null){
                     genre_id += 1;
-                    System.out.print(genre_id);
-                    System.out.println(" " + g);
+                    //System.out.print(genre_id);
+                    //System.out.println(" " + g);
                     genresMap.put(g, genre_id);
                     psInsertGenres.setInt(1,genre_id);
                     psInsertGenres.setString(2,g);

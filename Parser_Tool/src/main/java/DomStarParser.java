@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +27,7 @@ public class DomStarParser {
         myStars = new ArrayList<>();
     }
 
-    public void runExample() {
+    public List<Star> runStarParser() {
 
         //parse the xml file and get the dom object
         parseXmlFile();
@@ -37,7 +36,9 @@ public class DomStarParser {
         parseDocument();
 
         //Iterate through the list and print the data
-        printData();
+        //printData();
+
+        return getMyStars();
 
     }
 
@@ -167,7 +168,7 @@ public class DomStarParser {
         DomStarParser dpm = new DomStarParser();
 
         //call run example
-        dpm.runExample();
+        dpm.runStarParser();
     }
 
 }
