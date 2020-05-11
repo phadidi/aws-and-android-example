@@ -35,30 +35,38 @@ public class StarDashboardServlet extends HttpServlet {
 
             JsonObject responseJsonObject = new JsonObject();
             if (name != null || !name.equals("")) {
-                PreparedStatement statementAdd = dbcon.prepareStatement("INSERT into stars VALUES(?,?,?);");
+
                 String idQuery = "SELECT CONCAT('nm', (select LPAD(substring((select max(id) from stars), 3) + 1, 7, '0'))) as starId;";
                 PreparedStatement statementId = dbcon.prepareStatement(idQuery);
                 ResultSet rs = statementId.executeQuery();
                 while (rs.next()) {
                     id = rs.getString("starId");
                 }
-                statementAdd.setString(1, id);
-                statementAdd.setString(2, name);
-                if (birthYear != null || !birthYear.equals(""))
-                    statementAdd.setInt(3, Integer.parseInt(birthYear));
-                else
-                    statementAdd.setString(3, "N/A");
-                statementAdd.executeUpdate();
 
+                if (birthYear != null && !birthYear.equals("")) {
+                    PreparedStatement statementAdd = dbcon.prepareStatement("INSERT INTO stars (id, name, birthYear) VALUES(?,?,?);");
+                    statementAdd.setString(1, id);
+                    statementAdd.setString(2, name);
+                    statementAdd.setInt(3, Integer.parseInt(birthYear));
+                    statementAdd.executeUpdate();
+                    statementAdd.close();
+                }
+                else {
+                    PreparedStatement statementAdd = dbcon.prepareStatement("INSERT INTO stars (id, name) VALUES(?,?);");
+                    statementAdd.setString(1, id);
+                    statementAdd.setString(2, name);
+                    statementAdd.executeUpdate();
+                    statementAdd.close();
+                }
+                
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
                 rs.close();
                 statementId.close();
-                statementAdd.close();
             } else {
                 // add star fail
                 responseJsonObject.addProperty("status", "fail");
-                // Error message if a movie already exists
+                // Error message if a star name is left blank
                 responseJsonObject.addProperty("message", "star name cannot be blank");
             }
 
