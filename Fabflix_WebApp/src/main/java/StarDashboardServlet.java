@@ -58,7 +58,7 @@ public class StarDashboardServlet extends HttpServlet {
                     statementAdd.executeUpdate();
                     statementAdd.close();
                 }
-                
+
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
                 rs.close();

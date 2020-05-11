@@ -53,37 +53,23 @@ public class DashboardLoginServlet extends HttpServlet {
             }
 
             JsonObject responseJsonObject = new JsonObject();
-            boolean success = new StrongPasswordEncryptor().checkPassword(password, resultPassword);
 
-            if (email.equals(resultEmail) && success) {
-                // Login success:
+            if (email.equals(resultEmail)) {
+                if (new StrongPasswordEncryptor().checkPassword(password, resultPassword)) {
+                    // Login success: set this user into the session
+                    Employee currentEmployee = new Employee(resultEmail, resultPassword, resultFullname);
+                    request.getSession().setAttribute("employee", currentEmployee);
 
-                // set this user into the session
-                Employee currentEmployee = new Employee(resultEmail, resultPassword, resultFullname);
-                request.getSession().setAttribute("employee", currentEmployee);
-
-                responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success");
-
-            } else {
-                // TODO: add case for employee exists but password is incorrect
-                // Login fail
-                responseJsonObject.addProperty("status", "fail");
-
-                // Error messages to check if an account exists or not if the username and/or password is incorrect
-                PreparedStatement statementFail = dbcon.prepareStatement("select * from employee where email = ?;");
-                statementFail.setString(1, email);
-                rs = statementFail.executeQuery();
-                String existingEmail = "";
-                while (rs.next()) {
-                    existingEmail = rs.getString("email");
-                }
-                if (existingEmail.equals("")) {
-                    responseJsonObject.addProperty("message", "employee " + email + " doesn't exist");
-                } else {
+                    responseJsonObject.addProperty("status", "success");
+                    responseJsonObject.addProperty("message", "success");
+                } else { // TODO: set case for correct email but incorrect password
+                    responseJsonObject.addProperty("status", "fail");
                     responseJsonObject.addProperty("message", "incorrect password");
                 }
-                statementFail.close();
+            } else { //TODO: set case for email doesn't exist
+                // Login fail
+                responseJsonObject.addProperty("status", "fail");
+                responseJsonObject.addProperty("message", "employee " + email + " doesn't exist");
             }
             response.getWriter().write(responseJsonObject.toString());
             rs.close();
