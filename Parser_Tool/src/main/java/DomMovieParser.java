@@ -27,10 +27,12 @@ public class DomMovieParser {
         this.genreCode.put("epic","Epic");
         this.genreCode.put("horr","Horror");
         this.genreCode.put("noir","Black");
-        this.genreCode.put("scfi","Science Fiction");
+        this.genreCode.put("scfi","Sci-Fi");
+        this.genreCode.put("s.f.","Sci-Fi");
+        this.genreCode.put("biop","Biological Picture");
         this.genreCode.put("west","Western");
         this.genreCode.put("advt","Adventure");
-        this.genreCode.put("cart","Cartoon");
+        this.genreCode.put("cart","Animation");
         this.genreCode.put("docu","Documentary");
         this.genreCode.put("faml","Family");
         this.genreCode.put("musc","Music");
@@ -41,8 +43,13 @@ public class DomMovieParser {
         this.genreCode.put("dram","Drama");
         this.genreCode.put("hist","History");
         this.genreCode.put("myst","Mystery");
-        this.genreCode.put("romt","Romantic");
+        this.genreCode.put("romt","Romance");
         this.genreCode.put("susp","Thriller");
+        this.genreCode.put("tv","TV Show");
+        this.genreCode.put("tvs","TV Series");
+        this.genreCode.put("TVm","TV miniseries");
+        this.genreCode.put("biog","Biography");
+        this.genreCode.put("fant","Fantasy");
     }
 
     public List<Movie> getMyMovies(){
@@ -142,6 +149,9 @@ public class DomMovieParser {
         }
         else {
             genre = this.genreCode.get(cat.trim().toLowerCase());
+            if(genre == null){
+                genre = "Null";
+            }
         }
         //Create a new Employee with the value read from the xml nodes
         Movie m = new Movie(id, title, year, director, genre);
