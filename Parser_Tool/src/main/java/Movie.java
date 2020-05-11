@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 public class Movie {
     private final String id;
+    //private String db_id = "";
     private final String title;
     private final int year;
     private final String director;
@@ -40,6 +41,14 @@ public class Movie {
         //statementId.close();
         //dbcon.close();
     }
+
+//    public void setDbId(String id){
+//        this.db_id = id;
+//    }
+//
+//    public String getDbId(){
+//        return this.db_id;
+//    }
 
     public String getId() {
         return this.id;

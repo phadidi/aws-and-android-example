@@ -23,24 +23,85 @@ public class StarBatchInsert {
         int[] iNoRows=null;
 
         //create an instance
-        DomStarParser dpm = new DomStarParser();
+        DomCastParser dpc = new DomCastParser();
 
         //call parser
-        List<Star> stars = dpm.runStarParser();
+        List<StarInMovie> casts = dpc.runCastParser();
 
-        // build a hashMap of stars already in db
-        Map<String,Integer> dbStars= new HashMap<String,Integer>();
+        //create an instance
+        DomStarParser dps = new DomStarParser();
 
-        String getDBMovies = "select * from stars";
+        //call parser
+        List<Star> stars = dps.runStarParser();
+
+        //create an instance
+        DomMovieParser dpm = new DomMovieParser();
+
+        //call parser
+        List<Movie> movies = dpm.runMovieParser();
+
+        // build a hashMap of movies already in db
+        Map<List<String>, List<String>> dbMovies= new HashMap<List<String>, List<String>>();
+
+        String getDBMovies = "select * from movies";
         try {
             PreparedStatement getMovies = conn.prepareStatement(getDBMovies);
             ResultSet rs = getMovies.executeQuery();
 
             while(rs.next()){
-                String name = rs.getString("name");
-                int birthYear = rs.getInt("birthYear");
+                String id = rs.getString("id");
+                String title = rs.getString("title");
+                String year = rs.getString("year");
+                String director = rs.getString("director");
 
-                dbStars.put(name, birthYear);
+                List<String> key = new ArrayList<>();
+                key.add(title);
+                key.add(year);
+
+                List<String> yearDirector = new ArrayList<>();
+                yearDirector.add(id);
+                yearDirector.add(year);
+                yearDirector.add(director);
+
+                dbMovies.put(key, yearDirector);
+            }
+
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        // build a hashMap of stars already in db
+        Map<String,String> dbStars= new HashMap<String,String>();
+
+        String getDBStars = "select * from stars";
+        try {
+            PreparedStatement getMovies = conn.prepareStatement(getDBStars);
+            ResultSet rs = getMovies.executeQuery();
+
+            while(rs.next()){
+                String name = rs.getString("name");
+                String starId = rs.getString("id");
+
+                dbStars.put(name, starId);
+
+            }
+
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        Map<String,String> dbCasts= new HashMap<String,String>();
+
+        String getDBCasts = "select * from stars_in_movies";
+        try {
+            PreparedStatement getCasts = conn.prepareStatement(getDBCasts);
+            ResultSet rs = getCasts.executeQuery();
+
+            while(rs.next()){
+                String starId = rs.getString("starId");
+                String movieId = rs.getString("movieId");
+
+                dbCasts.put(starId, movieId);
 
             }
 
@@ -65,18 +126,19 @@ public class StarBatchInsert {
         }
 
         sqlInsertRecord="insert into stars values(?,?,?)";
+        String sqlInsertSim="insert into stars_in_movies values(?,?)";
         try {
             conn.setAutoCommit(false);
 
 
             psInsertRecord=conn.prepareStatement(sqlInsertRecord);
-
+            PreparedStatement psInsertSim=conn.prepareStatement(sqlInsertSim);
             for(int s = 0; s < stars.size(); s++)
             {
                 String name = stars.get(s).getName();
                 int byear = stars.get(s).getBirthYear();
 
-                if (dbStars.get(name) != null && dbStars.get(name)==byear){
+                if (dbStars.get(name) != null){
                     continue;
                 }
 
@@ -99,6 +161,7 @@ public class StarBatchInsert {
                 }else {
                     psInsertRecord.setInt(3, byear);
                 }
+                dbStars.put(name,sid);
                 psInsertRecord.addBatch();
 
 
@@ -107,7 +170,35 @@ public class StarBatchInsert {
                 sid = "nm";
             }
 
+            for(int c = 0; c < casts.size(); c++) {
+                String mId = casts.get(c).getMovieId();
+                String sname = casts.get(c).getStarName();
+
+                // if the star in cast parsing does not exist in stars, then skip
+                if(dbStars.get(sname) == null){
+                    continue;
+                }
+                // TO DO: Match mId to id of Movie Object, gets the equivalent ID that is in database, gets the id of stars in db, then insert
+                int m = matchStarsandMovies(mId, movies);
+                String movieId = "";
+                String starId = "";
+                List<String> k = new ArrayList<>();
+                k.add(movies.get(m).getTitle());
+                k.add(Integer.toString(movies.get(m).getYear()));
+                if(dbMovies.get(k) != null
+                        && dbMovies.get(k).get(1).compareTo(Integer.toString(movies.get(m).getYear())) == 0
+                        && dbMovies.get(k).get(2).compareTo(movies.get(m).getDirector()) == 0){
+                    movieId = dbMovies.get(k).get(0);
+                    starId = dbStars.get(sname);
+
+                    psInsertSim.setString(1, starId);
+                    psInsertSim.setString(2, movieId);
+                    psInsertSim.addBatch();
+                }
+            }
+
             iNoRows=psInsertRecord.executeBatch();
+            psInsertSim.executeBatch();
             conn.commit();
 
         } catch (SQLException e) {
@@ -120,6 +211,17 @@ public class StarBatchInsert {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int matchStarsandMovies(String sfid, List<Movie> movies){
+        int index = 0;
+        for(int m = 0; m < movies.size(); m++){
+            if(movies.get(m).getId().compareTo(sfid) == 0){
+                index = m;
+                break;
+            }
+        }
+        return index;
     }
 
 }

@@ -29,7 +29,7 @@ public class MovieBatchInsert {
         List<Movie> movies = dpm.runMovieParser();
 
         // build a hashMap of movies already in db
-        Map<String, List<String>> dbMovies= new HashMap<String, List<String>>();
+        Map<List<String>, List<String>> dbMovies= new HashMap<List<String>, List<String>>();
 
         String getDBMovies = "select * from movies";
         try {
@@ -41,11 +41,15 @@ public class MovieBatchInsert {
                 String year = rs.getString("year");
                 String director = rs.getString("director");
 
+                List<String> key = new ArrayList<>();
+                key.add(title);
+                key.add(year);
+
                 List<String> yearDirector = new ArrayList<>();
                 yearDirector.add(year);
                 yearDirector.add(director);
 
-                dbMovies.put(title, yearDirector);
+                dbMovies.put(key, yearDirector);
 
             }
 
@@ -112,10 +116,14 @@ public class MovieBatchInsert {
 
             for(int m = 0; m < movies.size(); m++)
             {
-                if (dbMovies.get(movies.get(m).getTitle()) != null){
+                List<String> k = new ArrayList<>();
+                k.add(movies.get(m).getTitle());
+                k.add(Integer.toString(movies.get(m).getYear()));
+
+                if (dbMovies.get(k) != null){
                     //System.out.println(dbMovies.get(movies.get(m).getTitle()));
-                    if(dbMovies.get(movies.get(m).getTitle()).get(0).compareTo(Integer.toString(movies.get(m).getYear())) == 0 &&
-                            dbMovies.get(movies.get(m).getTitle()).get(1).compareTo(movies.get(m).getDirector()) == 0){
+                    if(dbMovies.get(k).get(0).compareTo(Integer.toString(movies.get(m).getYear())) == 0 &&
+                            dbMovies.get(k).get(1).compareTo(movies.get(m).getDirector()) == 0){
                         continue;
                     }
                 }

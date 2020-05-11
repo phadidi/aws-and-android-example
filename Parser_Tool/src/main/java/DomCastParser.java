@@ -13,21 +13,21 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 
-public class DomStarParser {
+public class DomCastParser {
 
-    private List<Star> myStars;
+    private List<StarInMovie> myCasts;
     private Document dom;
 
-    public List<Star> getMyStars(){
-        return myStars;
+    public List<StarInMovie> getMyCasts(){
+        return myCasts;
     }
 
-    public DomStarParser() {
+    public DomCastParser() {
         //create a list to hold the employee objects
-        myStars = new ArrayList<>();
+        myCasts = new ArrayList<>();
     }
 
-    public List<Star> runStarParser() {
+    public List<StarInMovie> runCastParser() {
 
         //parse the xml file and get the dom object
         parseXmlFile();
@@ -38,7 +38,7 @@ public class DomStarParser {
         //Iterate through the list and print the data
         //printData();
 
-        return getMyStars();
+        return getMyCasts();
 
     }
 
@@ -52,7 +52,7 @@ public class DomStarParser {
             DocumentBuilder db = dbf.newDocumentBuilder();
 
             //parse using builder to get DOM representation of the XML file
-            dom = db.parse("actors63.xml");
+            dom = db.parse("casts124.xml");
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -68,7 +68,7 @@ public class DomStarParser {
         Element docEle = dom.getDocumentElement();
 
         //get a nodelist of <film> elements
-        NodeList nl = docEle.getElementsByTagName("actor");
+        NodeList nl = docEle.getElementsByTagName("m");
         if (nl != null && nl.getLength() > 0) {
             for (int i = 0; i < nl.getLength(); i++) {
 
@@ -76,10 +76,10 @@ public class DomStarParser {
                 Element el = (Element) nl.item(i);
 
                 //get the Employee object
-                Star s = getStar(el);
+                StarInMovie s = getCast(el);
 
                 //add it to list
-                myStars.add(s);
+                myCasts.add(s);
             }
         }
     }
@@ -88,15 +88,15 @@ public class DomStarParser {
      * I take an employee element and read the values in, create
      * an Employee object and return it
      *
-     * @param starEl
+     * @param castEl
      * @return
      */
-    private Star getStar(Element starEl) {
-        String name = getTextValue(starEl, "stagename"); // getting title
-        int dob = getIntValue(starEl, "dob");
+    private StarInMovie getCast(Element castEl) {
+        String name = getTextValue(castEl, "a");
+        String mid = getTextValue(castEl, "f");
 
         //Create a new Employee with the value read from the xml nodes
-        Star s = new Star(name, dob);
+        StarInMovie s = new StarInMovie(mid, name);
 
         return s;
     }
@@ -154,9 +154,9 @@ public class DomStarParser {
      */
     private void printData() {
 
-        System.out.println("No of Stars '" + myStars.size() + "'.");
+        System.out.println("No of Casts '" + myCasts.size() + "'.");
 
-        Iterator<Star> it = myStars.iterator();
+        Iterator<StarInMovie> it = myCasts.iterator();
         while (it.hasNext()) {
             System.out.println(it.next().toString());
         }
@@ -167,7 +167,7 @@ public class DomStarParser {
 //        DomCastParser dpm = new DomCastParser();
 //
 //        //call run example
-//        dpm.runStarParser();
+//        dpm.runCastParser();
 //    }
 
 }
