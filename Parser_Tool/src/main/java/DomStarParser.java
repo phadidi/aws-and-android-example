@@ -1,15 +1,17 @@
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 public class DomStarParser {
@@ -17,21 +19,13 @@ public class DomStarParser {
     private List<Star> myStars;
     private Document dom;
 
+    public List<Star> getMyStars(){
+        return myStars;
+    }
+
     public DomStarParser() {
         //create a list to hold the employee objects
         myStars = new ArrayList<>();
-    }
-
-    public static void main(String[] args) {
-        //create an instance
-        DomStarParser dpm = new DomStarParser();
-
-        //call run example
-        dpm.runExample();
-    }
-
-    public List<Star> getMyStars() {
-        return myStars;
     }
 
     public void runExample() {
@@ -39,7 +33,7 @@ public class DomStarParser {
         //parse the xml file and get the dom object
         parseXmlFile();
 
-        //get each employee element and create a Employee object
+        //get each star element and create a Star object
         parseDocument();
 
         //Iterate through the list and print the data
@@ -124,7 +118,8 @@ public class DomStarParser {
             Element el = (Element) nl.item(0);
             try {
                 textVal = el.getFirstChild().getNodeValue();
-            } catch (NullPointerException npe) {
+            }
+            catch (NullPointerException npe){
                 textVal = null;
 
             }
@@ -144,7 +139,8 @@ public class DomStarParser {
         int result = 0;
         try {
             result = Integer.parseInt(getTextValue(ele, tagName));
-        } catch (NumberFormatException nfe) {
+        }
+        catch(NumberFormatException nfe){
             // no birth year, needs to be turned to NULL when inserting
             result = 0;
         }
@@ -164,6 +160,14 @@ public class DomStarParser {
         while (it.hasNext()) {
             System.out.println(it.next().toString());
         }
+    }
+
+    public static void main(String[] args) {
+        //create an instance
+        DomStarParser dpm = new DomStarParser();
+
+        //call run example
+        dpm.runExample();
     }
 
 }
