@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @WebServlet(name = "StarDashboardServlet", urlPatterns = "/api/_dashboard_star")
-public class MainDashboardServlet extends HttpServlet {
+public class StarDashboardServlet extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
@@ -32,11 +33,12 @@ public class MainDashboardServlet extends HttpServlet {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
 
+            JsonObject responseJsonObject = new JsonObject();
             if (name != null || !name.equals("")) {
                 PreparedStatement statementAdd = dbcon.prepareStatement("INSERT into stars VALUES(?,?,?);");
                 String idQuery = "SELECT CONCAT('nm', (select LPAD(substring((select max(id) from stars), 3) + 1, 7, '0'))) as starId;";
                 PreparedStatement statementId = dbcon.prepareStatement(idQuery);
-                resultSet rs = statementId.executeQuery();
+                ResultSet rs = statementId.executeQuery();
                 while (rs.next()) {
                     id = rs.getString("starId");
                 }
