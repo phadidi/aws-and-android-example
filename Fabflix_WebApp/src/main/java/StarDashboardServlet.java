@@ -50,8 +50,7 @@ public class StarDashboardServlet extends HttpServlet {
                     statementAdd.setInt(3, Integer.parseInt(birthYear));
                     statementAdd.executeUpdate();
                     statementAdd.close();
-                }
-                else {
+                } else {
                     PreparedStatement statementAdd = dbcon.prepareStatement("INSERT INTO stars (id, name) VALUES(?,?);");
                     statementAdd.setString(1, id);
                     statementAdd.setString(2, name);
