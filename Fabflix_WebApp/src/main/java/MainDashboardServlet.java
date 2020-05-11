@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-// TODO: call add_movie stored procedure from sql using data in form from _dashboard_main.html
 @WebServlet(name = "MainDashboardServlet", urlPatterns = "/api/_dashboard_main")
 public class MainDashboardServlet extends HttpServlet {
     /**

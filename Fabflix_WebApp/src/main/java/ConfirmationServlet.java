@@ -62,11 +62,11 @@ public class ConfirmationServlet extends HttpServlet {
             PreparedStatement checkQuantity = dbcon.prepareStatement(testQuantity);
             ResultSet r = checkQuantity.executeQuery();
             int columnCount = 0;
-            while(r.next()){
+            while (r.next()) {
                 columnCount = r.getInt("COUNT(*)");
             }
 
-            if(columnCount == 4) {
+            if (columnCount == 4) {
                 String alterQuery = "alter table sales add column quantity int DEFAULT 1;";
                 PreparedStatement alterStatement = dbcon.prepareStatement(alterQuery);
                 int alterResult = alterStatement.executeUpdate();

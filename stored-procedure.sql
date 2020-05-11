@@ -9,7 +9,7 @@ CREATE
                                                              movieGenre VARCHAR(32))
 BEGIN
     IF ((SELECT COUNT(*) FROM stars WHERE name = movieStar) = 0) THEN
-		SET @starId = CONCAT('nm', (select LPAD(substring((select max(id) from stars), 3) + 1, 7, '0')));
+		SET @starId = CONCAT('nm', (select LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')));
         INSERT INTO stars VALUES (@starId, movieStar, NULL);
     END IF;
     IF ((SELECT COUNT(*) FROM genres WHERE name = movieGenre) = 0) THEN

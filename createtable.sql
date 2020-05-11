@@ -123,13 +123,13 @@ CREATE TABLE `ratings`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_general_ci;
-  
+
 DROP TABLE IF EXISTS dbo.employees;
 CREATE TABLE `employees`
 (
-    email varchar(50) primary key,
-	password varchar(20) not null,
-	fullname varchar(100)
+    email    varchar(50) primary key,
+    password varchar(20) not null,
+    fullname varchar(100)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_general_ci;

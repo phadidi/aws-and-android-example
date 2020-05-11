@@ -1,15 +1,12 @@
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.*;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 
 public class DomMovieParser {
@@ -18,41 +15,49 @@ public class DomMovieParser {
     private HashMap<String, String> genreCode = new HashMap<>();
     private Document dom;
 
-    public void inititalizeGenreCode(){
-        // use to decode genre
-        this.genreCode.put("ctxx","Unknown");
-        this.genreCode.put("actn","Violence");
-        this.genreCode.put("camp","Now-Camp");
-        this.genreCode.put("comd","Comedy");
-        this.genreCode.put("disa","Disaster");
-        this.genreCode.put("epic","Epic");
-        this.genreCode.put("horr","Horror");
-        this.genreCode.put("noir","Black");
-        this.genreCode.put("scfi","Science Fiction");
-        this.genreCode.put("west","Western");
-        this.genreCode.put("advt","Adventure");
-        this.genreCode.put("cart","Cartoon");
-        this.genreCode.put("docu","Documentary");
-        this.genreCode.put("faml","Family");
-        this.genreCode.put("musc","Music");
-        this.genreCode.put("porn","Pornography");
-        this.genreCode.put("surl","Sureal");
-        this.genreCode.put("avGa","Avant Garde");
-        this.genreCode.put("cnr","Cops and Robbers");
-        this.genreCode.put("dram","Drama");
-        this.genreCode.put("hist","History");
-        this.genreCode.put("myst","Mystery");
-        this.genreCode.put("romt","Romantic");
-        this.genreCode.put("susp","Thriller");
-    }
-
-    public List<Movie> getMyMovies(){
-        return myMovies;
-    }
-
     public DomMovieParser() {
         //create a list to hold the employee objects
         myMovies = new ArrayList<>();
+    }
+
+    public static void main(String[] args) {
+        //create an instance
+        DomMovieParser dpm = new DomMovieParser();
+
+        //call run example
+        dpm.runExample();
+    }
+
+    public void inititalizeGenreCode() {
+        // use to decode genre
+        this.genreCode.put("ctxx", "Unknown");
+        this.genreCode.put("actn", "Violence");
+        this.genreCode.put("camp", "Now-Camp");
+        this.genreCode.put("comd", "Comedy");
+        this.genreCode.put("disa", "Disaster");
+        this.genreCode.put("epic", "Epic");
+        this.genreCode.put("horr", "Horror");
+        this.genreCode.put("noir", "Black");
+        this.genreCode.put("scfi", "Science Fiction");
+        this.genreCode.put("west", "Western");
+        this.genreCode.put("advt", "Adventure");
+        this.genreCode.put("cart", "Cartoon");
+        this.genreCode.put("docu", "Documentary");
+        this.genreCode.put("faml", "Family");
+        this.genreCode.put("musc", "Music");
+        this.genreCode.put("porn", "Pornography");
+        this.genreCode.put("surl", "Sureal");
+        this.genreCode.put("avGa", "Avant Garde");
+        this.genreCode.put("cnr", "Cops and Robbers");
+        this.genreCode.put("dram", "Drama");
+        this.genreCode.put("hist", "History");
+        this.genreCode.put("myst", "Mystery");
+        this.genreCode.put("romt", "Romantic");
+        this.genreCode.put("susp", "Thriller");
+    }
+
+    public List<Movie> getMyMovies() {
+        return myMovies;
     }
 
     public void runExample() {
@@ -121,7 +126,7 @@ public class DomMovieParser {
     private Movie getMovie(Element movieEl) {
 
         String id = getTextValue(movieEl, "fid");
-        if(id == null){
+        if (id == null) {
             // some movie id is tagged with <filmed> for some reason
             id = getTextValue(movieEl, "filmed");
         }
@@ -130,10 +135,9 @@ public class DomMovieParser {
         String director = getTextValue(movieEl, "dirn");
         String cat = getTextValue(movieEl, "cat");
         String genre = "";
-        if(cat == null){
+        if (cat == null) {
             genre = "Unknown";
-        }
-        else {
+        } else {
             genre = this.genreCode.get(cat.trim().toLowerCase());
         }
         //Create a new Employee with the value read from the xml nodes
@@ -159,8 +163,7 @@ public class DomMovieParser {
             Element el = (Element) nl.item(0);
             try {
                 textVal = el.getFirstChild().getNodeValue();
-            }
-            catch (NullPointerException npe){
+            } catch (NullPointerException npe) {
                 // no title in XML
                 textVal = null;
             }
@@ -180,8 +183,7 @@ public class DomMovieParser {
         int result = 0;
         try {
             result = Integer.parseInt(getTextValue(ele, tagName));
-        }
-        catch(NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             // no release year
             result = 0;
         }
@@ -201,14 +203,6 @@ public class DomMovieParser {
         while (it.hasNext()) {
             System.out.println(it.next().toString());
         }
-    }
-
-    public static void main(String[] args) {
-        //create an instance
-        DomMovieParser dpm = new DomMovieParser();
-
-        //call run example
-        dpm.runExample();
     }
 
 }

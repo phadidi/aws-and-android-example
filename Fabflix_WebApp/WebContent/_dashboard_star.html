@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+</head>
+<style>
+    #outer-div {
+        width: 100%;
+        text-align: center;
+    }
+
+    #inner-div {
+        display: inline-block;
+        margin: 0 auto;
+        padding: 3px;
+    }
+
+    label, input {
+        display: block;
+    }
+
+    label {
+        margin-bottom: 20px;
+    }
+</style>
+<body>
+<div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
+    <h1>Fabflix Dashboard</h1>
+    <h2>Add a Star to Fabflix</h2>
+</div>
+<div id="outer-div" width="100%">
+    <div id="inner-div">
+        <form id="dashboard_newStar_form" method="post">
+            <label>
+                Name
+                <input name="starName" placeholder="Enter Star Name" type="text">
+            </label>
+            <label>
+                Birth Year
+                <input name="starBirthYear" placeholder="Enter Star Birth Year" type="number">
+            </label>
+            <label>
+                <input type="submit" value="Add Star">
+            </label>
+        </form>
+        <div id="newStar_error_message"></div>
+    </div>
+</div>
+
+<!-- include jQuery-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- include our own JS file -->
+<script src="_dashboard_star.js"></script>
+
+</body>
+</html>
