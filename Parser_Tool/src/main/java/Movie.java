@@ -13,10 +13,11 @@ public class Movie {
     private final String title;
     private final int year;
     private final String director;
+    private final String genre;
     //@Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
 
-    public Movie(String id, String movieTitle, int movieYear, String movieDirector) {
+    public Movie(String id, String movieTitle, int movieYear, String movieDirector, String genre) {
 //        String idQuery = "SELECT CONCAT('tt', LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')) as movieId;";
 //        Connection dbcon = dataSource.getConnection();
 //        PreparedStatement statementId = dbcon.prepareStatement(idQuery);
@@ -34,6 +35,7 @@ public class Movie {
         this.title = movieTitle;
         this.year = movieYear;
         this.director = movieDirector;
+        this.genre = genre;
         //rs.close();
         //statementId.close();
         //dbcon.close();
@@ -41,6 +43,10 @@ public class Movie {
 
     public String getId() {
         return this.id;
+    }
+
+    public String getGenre(){
+        return this.genre;
     }
 
     public String getTitle() {
@@ -73,6 +79,8 @@ public class Movie {
         sb.append("Title:" + getTitle());
         sb.append(", ");
         sb.append("Year:" + getYear());
+        sb.append(", ");
+        sb.append("Genre:" + getGenre());
         sb.append(", ");
         sb.append("Director:" + getDirector());
         sb.append(".");

@@ -16,8 +16,12 @@ import org.xml.sax.SAXException;
 
 public class DomStarParser {
 
-    List<Star> myStars;
-    Document dom;
+    private List<Star> myStars;
+    private Document dom;
+
+    public List<Star> getMyStars(){
+        return myStars;
+    }
 
     public DomStarParser() {
         //create a list to hold the employee objects

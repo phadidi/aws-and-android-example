@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,8 +14,41 @@ import org.xml.sax.SAXException;
 
 public class DomMovieParser {
 
-    List<Movie> myMovies;
-    Document dom;
+    private List<Movie> myMovies;
+    private HashMap<String, String> genreCode = new HashMap<>();
+    private Document dom;
+
+    public void inititalizeGenreCode(){
+        // use to decode genre
+        this.genreCode.put("ctxx","Unknown");
+        this.genreCode.put("actn","Violence");
+        this.genreCode.put("camp","Now-Camp");
+        this.genreCode.put("comd","Comedy");
+        this.genreCode.put("disa","Disaster");
+        this.genreCode.put("epic","Epic");
+        this.genreCode.put("horr","Horror");
+        this.genreCode.put("noir","Black");
+        this.genreCode.put("scfi","Science Fiction");
+        this.genreCode.put("west","Western");
+        this.genreCode.put("advt","Adventure");
+        this.genreCode.put("cart","Cartoon");
+        this.genreCode.put("docu","Documentary");
+        this.genreCode.put("faml","Family");
+        this.genreCode.put("musc","Music");
+        this.genreCode.put("porn","Pornography");
+        this.genreCode.put("surl","Sureal");
+        this.genreCode.put("avGa","Avant Garde");
+        this.genreCode.put("cnr","Cops and Robbers");
+        this.genreCode.put("dram","Drama");
+        this.genreCode.put("hist","History");
+        this.genreCode.put("myst","Mystery");
+        this.genreCode.put("romt","Romantic");
+        this.genreCode.put("susp","Thriller");
+    }
+
+    public List<Movie> getMyMovies(){
+        return myMovies;
+    }
 
     public DomMovieParser() {
         //create a list to hold the employee objects
@@ -26,6 +57,7 @@ public class DomMovieParser {
 
     public void runExample() {
 
+        inititalizeGenreCode();
         //parse the xml file and get the dom object
         parseXmlFile();
 
@@ -96,9 +128,16 @@ public class DomMovieParser {
         String title = getTextValue(movieEl, "t"); // getting title
         int year = getIntValue(movieEl, "year");
         String director = getTextValue(movieEl, "dirn");
-
+        String cat = getTextValue(movieEl, "cat");
+        String genre = "";
+        if(cat == null){
+            genre = "Unknown";
+        }
+        else {
+            genre = this.genreCode.get(cat.trim().toLowerCase());
+        }
         //Create a new Employee with the value read from the xml nodes
-        Movie m = new Movie(id, title, year, director);
+        Movie m = new Movie(id, title, year, director, genre);
 
         return m; // temporary return
     }
