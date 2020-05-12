@@ -33,13 +33,14 @@ function getParameterByName(target) {
 
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
- * @param resultData jsonObject
+ * @param resultDataString jsonObject
  */
 
-function handleResult(resultData) {
+function handleResult(resultDataString) {
     console.log("handleResult: entering employee dashboard");
     let result_data = jQuery("#result_data");
-    result_data.append(resultData.toString());
+    let resultDataJson = JSON.parse(resultDataString);
+    result_data.append(resultDataJson["output"]);
 }
 
 /**
@@ -51,5 +52,5 @@ jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
     url: "api/_dashboard_menu", // Setting request url, which is mapped by MenuDashboardServlet in MenuDashboardServlet.java
-    success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
+    success: handleResult // Setting callback function to handle data returned successfully by the SingleStarServlet
 });

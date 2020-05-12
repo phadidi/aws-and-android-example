@@ -33,8 +33,6 @@ public class MenuDashboardServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
             DatabaseMetaData databaseMetaData = dbcon.getMetaData();
             ResultSet resultSet = databaseMetaData.getTables(null, null, "%", new String[]{"TABLE"});
-            JsonObject jsonObject = new JsonObject();
-
 
             while (resultSet.next()) {
                 out.write(resultSet.getString("movies"));
@@ -82,8 +80,11 @@ public class MenuDashboardServlet extends HttpServlet {
                 PK.close();
                 columns.close();
                 JsonObject responseJsonObject = new JsonObject();
+                responseJsonObject.addProperty("output", out.toString());
+
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
+                out.write(responseJsonObject.toString());
             }
             resultSet.close();
             dbcon.close();
