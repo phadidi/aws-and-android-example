@@ -60,10 +60,15 @@ public class MenuDashboardServlet extends HttpServlet {
                     String primaryKeyColumn = rsPK.getString("COLUMN_NAME");
                     output += ("\tPrimary Key Column: " + primaryKeyColumn + "\n");
                 }
+                rsColumns.close();
+                rsPK.close();
             }
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("output", output);
             out.write(jsonObject.toString());
+            response.setStatus(200);
+            rsTables.close();
+            dbcon.close();
         } catch (SQLException ex) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", ex.getMessage());

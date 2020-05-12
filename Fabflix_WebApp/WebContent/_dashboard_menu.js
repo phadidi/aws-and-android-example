@@ -36,11 +36,10 @@ function getParameterByName(target) {
  * @param resultDataString jsonObject
  */
 
-function handleResult(resultDataString) {
+function handleResult(resultData) {
     console.log("handleResult: entering employee dashboard");
     let result_data = jQuery("#result_data");
-    let resultDataJson = JSON.parse(resultDataString);
-    result_data.append(resultDataJson["output"]);
+    result_data.append(resultData["output"]);
 }
 
 /**
