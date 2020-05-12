@@ -36,16 +36,16 @@ public class MenuDashboardServlet extends HttpServlet {
 
 
             while (resultSet.next()) {
-                System.out.println(resultSet.getString("movies"));
-                System.out.println(resultSet.getString("stars"));
-                System.out.println(resultSet.getString("stars_in_movies"));
-                System.out.println(resultSet.getString("genres"));
-                System.out.println(resultSet.getString("genres_in_movies"));
-                System.out.println(resultSet.getString("customers"));
-                System.out.println(resultSet.getString("creditcards"));
-                System.out.println(resultSet.getString("sales"));
-                System.out.println(resultSet.getString("ratings"));
-                System.out.println(resultSet.getString("employees"));
+                out.println(resultSet.getString("movies"));
+                out.println(resultSet.getString("stars"));
+                out.println(resultSet.getString("stars_in_movies"));
+                out.println(resultSet.getString("genres"));
+                out.println(resultSet.getString("genres_in_movies"));
+                out.println(resultSet.getString("customers"));
+                out.println(resultSet.getString("creditcards"));
+                out.println(resultSet.getString("sales"));
+                out.println(resultSet.getString("ratings"));
+                out.println(resultSet.getString("employees"));
             }
 
             String[] tables = {"movies", "stars", "stars_in_movies", "genres", "genres_in_movies", "customers", "creditcards", "sales", "ratings", "employees"};
@@ -62,19 +62,19 @@ public class MenuDashboardServlet extends HttpServlet {
                     String isNullable = columns.getString("IS_NULLABLE");
                     String is_autoIncrment = columns.getString("IS_AUTOINCREMENT");
                     //Printing results
-                    System.out.println(columnName + "---" + datatype + "---" + columnsize + "---" + decimaldigits + "---" + isNullable + "---" + is_autoIncrment);
+                    out.println(columnName + "---" + datatype + "---" + columnsize + "---" + decimaldigits + "---" + isNullable + "---" + is_autoIncrment);
                 }
 
                 ResultSet PK = databaseMetaData.getPrimaryKeys(null, null, t);
-                System.out.println("------------PRIMARY KEYS-------------");
+                out.println("------------PRIMARY KEYS-------------");
                 while (PK.next()) {
-                    System.out.println(PK.getString("COLUMN_NAME") + "===" + PK.getString("PK_NAME"));
+                    out.println(PK.getString("COLUMN_NAME") + "===" + PK.getString("PK_NAME"));
                 }
 
                 ResultSet FK = databaseMetaData.getImportedKeys(null, null, t);
-                System.out.println("------------FOREIGN KEYS-------------");
+                out.println("------------FOREIGN KEYS-------------");
                 while (FK.next()) {
-                    System.out.println(FK.getString("PKTABLE_NAME") + "---" + FK.getString("PKCOLUMN_NAME") + "===" + FK.getString("FKTABLE_NAME") + "---" + FK.getString("FKCOLUMN_NAME"));
+                    out.println(FK.getString("PKTABLE_NAME") + "---" + FK.getString("PKCOLUMN_NAME") + "===" + FK.getString("FKTABLE_NAME") + "---" + FK.getString("FKCOLUMN_NAME"));
                 }
 
                 FK.close();
@@ -96,6 +96,7 @@ public class MenuDashboardServlet extends HttpServlet {
             // set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }
+        out.toString();
         out.close();
 
     }
