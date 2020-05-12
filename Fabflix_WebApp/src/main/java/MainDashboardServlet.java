@@ -72,6 +72,8 @@ public class MainDashboardServlet extends HttpServlet {
 
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "added " + resultId + " to cart");
+                rsId.close();
+                statementId.close();
             } else {
                 // add_movie fail
                 responseJsonObject.addProperty("status", "fail");
