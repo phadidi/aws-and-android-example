@@ -35,22 +35,24 @@ public class MainDashboardServlet extends HttpServlet {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
 
-            //String resultId = "";
+
             String resultTitle = "";
             String resultDirector = "";
+            String resultYear = "";
 
-            PreparedStatement statementCheck = dbcon.prepareStatement("select id, title, director from movies where title = ? and director = ?");
+            PreparedStatement statementCheck = dbcon.prepareStatement("select title, director, year from movies where title = ? and director = ? and year = ?");
             statementCheck.setString(1, title);
-            statementCheck.setInt(2, Integer.parseInt(year));
+            statementCheck.setString(2, director);
+            statementCheck.setInt(3, Integer.parseInt(year));
             ResultSet rs = statementCheck.executeQuery();
             while (rs.next()) {
-                //resultId = rs.getString("id");
                 resultTitle = rs.getString("title");
                 resultDirector = rs.getString("director");
+                resultYear = rs.getString("year");
             }
             JsonObject responseJsonObject = new JsonObject();
 
-            if (!resultTitle.equals(title) || !resultDirector.equals(director)) {
+            if (!resultTitle.equals(title) || !resultDirector.equals(director) || !resultYear.equals(year)) {
                 // No duplicate movie, add this movie to Fabflix moviedb + Declare our statement
                 PreparedStatement statementAdd = dbcon.prepareStatement("call add_movie(?,?,?,?,?)");
                 statementAdd.setString(1, title);

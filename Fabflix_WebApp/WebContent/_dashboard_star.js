@@ -13,7 +13,7 @@ function handleStarResult(resultDataString) {
 
     // If login succeeds, it will redirect the employee to _dashboard_main.html
     if (resultDataJson["status"] === "success") {
-        alert("You added a star to the database");
+        alert(resultDataJson["message"]);
         window.location.replace("_dashboard_star.html");
     } else {
         // If add_movie fails, the web page will display
