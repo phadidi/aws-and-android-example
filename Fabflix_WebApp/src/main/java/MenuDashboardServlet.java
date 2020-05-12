@@ -60,7 +60,7 @@ public class MenuDashboardServlet extends HttpServlet {
                     String primaryKeyColumn = rsPK.getString("COLUMN_NAME");
                     output += ("\tPrimary Key Column: " + primaryKeyColumn + "\n");
                 }
-                output += "</p>\n";
+                output += "</p>\nhow";
                 rsColumns.close();
                 rsPK.close();
             }
