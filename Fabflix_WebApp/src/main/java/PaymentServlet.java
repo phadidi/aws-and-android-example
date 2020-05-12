@@ -30,11 +30,19 @@ public class PaymentServlet extends HttpServlet {
         String sessionId = session.getId();
         PrintWriter out = response.getWriter();
         long lastAccessTime = session.getLastAccessedTime();
+
+        /*JsonObject responseJsonObject = new JsonObject();
+        responseJsonObject.addProperty("sessionID", sessionId);
+        responseJsonObject.addProperty("lastAccessTime", new Date(lastAccessTime).toString());
+        // write all the data into the jsonObject
+        response.getWriter().write(responseJsonObject.toString());*/
+
         // added some functionalities found in POST so cart loads without having to click add
         Map<String, Integer> previousItems = (Map<String, Integer>) session.getAttribute("previousItems");
         Customer currentUser = (Customer) request.getSession().getAttribute("user");
         if (previousItems == null) {
             previousItems = currentUser.getCart();
+            // TODO: bypass this casting issue
             session.setAttribute("previousItems", previousItems);
         } else {
             // prevent corrupted states through sharing under multi-threads
@@ -128,11 +136,7 @@ public class PaymentServlet extends HttpServlet {
             String resultCreditCard = "";
             String resultExpirationDate = "";
 
-            // Declare our statement
-            /*String query = "select * from creditcards where firstName = '" + first_name
-                    + "' and lastName = '" + last_name
-                    + "' and id = '" + ccnumber
-                    + "' and expiration = '" + exp_date + "';";*/
+            // used preparedStatement for security reasons
             PreparedStatement statement = dbcon.prepareStatement("select * from creditcards where firstName = ? and lastName = ? and id = ? and expiration = ?;");
             statement.setString(1, first_name);
             statement.setString(2, last_name);
@@ -163,6 +167,19 @@ public class PaymentServlet extends HttpServlet {
             } else {
                 // Card declined
                 responseJsonObject.addProperty("status", "fail");
+
+                // Error messages to check if an account exists or not if the username and/or password is incorrect
+//                query = "select * from customers where email = '" + email + "';";
+//                rs = statement.executeQuery(query);
+//                String existingEmail = "";
+//                while (rs.next()) {
+//                    existingEmail = rs.getString("email");
+//                }
+//                if (!existingEmail.equals("")) {
+//                    responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
+//                } else {
+//                    responseJsonObject.addProperty("message", "incorrect password");
+//                }
                 responseJsonObject.addProperty("message", "Card information is incorrect");
             }
             response.getWriter().write(responseJsonObject.toString());
@@ -176,7 +193,7 @@ public class PaymentServlet extends HttpServlet {
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
 
-            // set response status to 500 (Internal Server Error)
+            // set reponse status to 500 (Internal Server Error)
             response.setStatus(500);
 
         }
