@@ -1,7 +1,7 @@
 # cs122b-spring20-team-13 Project 3
 This is a submission for Project 2 with Java Servlet, Javascript, and HTML pages for a Fabflix website where a customer can log in, search from a list of movies by title, stars, genres, and other criteria, add a selection of movies to a shopping cart, and checkout a cart with a credit card payment. There is also a createtable.sql file included for providing the format of the 'moviedb' database so that it can be populated for the webpages' use.
 
-- Demo Video: https://youtu.be/T7ij7OAysGY
+- Demo Video: https://www.youtube.com/watch?v=3EP_6TjkiXo&feature=youtu.be
 
 ## Getting Started
 Make sure to initialize a MySQL database with the included createtable.sql and populate it accordingly. This requires a list of movies, stars, genres, customers, customer ratings, creditcards, and the necessary relationships between them.
@@ -20,6 +20,8 @@ Create a new user for MySQL on your AWS machine with the following credentials:
 ```password: mypassword```
 
 Make sure this user has all access and run the createtable.sql scripts to create your database.
+
+Before going to the next step, remember to include your ReCaptchaConstant class which defines the Secret Key to your Fabflix src folder!!!!!
 
 Then to prepare your war file, run the following commands:
 
@@ -56,7 +58,24 @@ For searching, we simnply used LIKE "%some pattern provided by user%" to match w
 
 
 ### Parser_Tool
-Has multiple classes responsible for parsing movies, actors, and movie-actor relations in respective XML files and inserting them into the database if not existed already. Contains a MainParser class that calls all of these classes and run them in a main().
+Has multiple classes responsible for parsing movies, actors, and movie-actor relations in respective XML files and inserting them into the database if not existed already. Contains a MainParser class that calls all of these classes and run them in a main(). REMEMBER TO INCLUDE YOUR XML FILES IN YOUR PROJECT FOLDER
+
+#### Inconsistencies Report:
+not all movies have a "<t>" for titles. 
+Genre value has leading and trailing spaces and mismatching capitalization. 
+Some movie ids are notated with "<filmed>" instead of "<fid>"
+
+matched Animation(db) with Cartoon(xml) / 
+matched Sci-Fi(db) with science fiction(xml) / 
+matched Romance(db) with Romantic(xml). 
+
+Some genres are not listed on the standord website but exists in xml
+same as BioG, Fant.
+
+Decided to only stick to movies that have categories matched with code listed on stanford's category table.
+
+Full Report here:
+https://docs.google.com/document/d/1cx6k42_QxoWLpvTqp1aHjCpX1WMZW0Tzqum50D1mLGs/edit?usp=sharing
 
 #### Optimization methods
 We used batch insertion and hashmaps of existing data from database to ensure optimization of the parser. At a given point when we need to compare to something to the database, we would refer to a HashMap that contains the necessary information. Using batch inserts, we can treat multiple insert queries as one transactions, effectively reducing the runtime.
@@ -66,7 +85,7 @@ Another Java program that has 2 classes: 1 for encrypting employees password in 
 
 ## Contributions
 Parsa Hadidi:
-- reCaptcha implementation, created Dashboard and metadata, implemented stored procedure.
+- reCaptcha implementation, created Dashboard and metadata, implemented stored procedure and error messages.
 
 Duy Nguyen: 
 - Password encryption, Parsed XML files and insert into DB, ensured stored procedure checked for existing or new stars and genres before inserting.
