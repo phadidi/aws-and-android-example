@@ -60,9 +60,18 @@ public class MainDashboardServlet extends HttpServlet {
                 statementAdd.setString(5, genre);
                 statementAdd.executeQuery();
                 statementAdd.close();
+                PreparedStatement statementId = dbcon.prepareStatement("select id from movies where title = ? and year = ? and director = ?");
+                statementId.setString(1, title);
+                statementId.setInt(2, Integer.parseInt(year));
+                statementId.setString(3, director);
+                ResultSet rsId = statementId.executeQuery();
+                String resultId = "";
+                while (rsId.next()) {
+                    resultId = rsId.getString("id");
+                }
 
                 responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success");
+                responseJsonObject.addProperty("message", "added " + resultId + " to cart");
             } else {
                 // add_movie fail
                 responseJsonObject.addProperty("status", "fail");
