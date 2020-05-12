@@ -42,7 +42,7 @@ public class MenuDashboardServlet extends HttpServlet {
 
             while (rsTables.next()) {
                 String tableName = rsTables.getString(3);
-                output += ("\n=== TABLE: " + tableName + "\n");
+                output += ("<p>\n=== TABLE: " + tableName + "\n");
 
                 String columnNamePattern = null;
                 ResultSet rsColumns = databaseMetaData.getColumns(catalog, schemaPattern, tableName, columnNamePattern);
@@ -60,6 +60,7 @@ public class MenuDashboardServlet extends HttpServlet {
                     String primaryKeyColumn = rsPK.getString("COLUMN_NAME");
                     output += ("\tPrimary Key Column: " + primaryKeyColumn + "\n");
                 }
+                output += "</p>\n";
                 rsColumns.close();
                 rsPK.close();
             }
