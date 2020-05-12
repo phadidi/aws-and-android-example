@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-// TODO: Implement HTTPS to dashboard once successfully configured!
 @WebServlet(name = "DashboardLoginServlet", urlPatterns = "/api/_dashboard")
 public class DashboardLoginServlet extends HttpServlet {
     /**
@@ -62,11 +61,11 @@ public class DashboardLoginServlet extends HttpServlet {
 
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "success");
-                } else { // TODO: set case for correct email but incorrect password
+                } else {
                     responseJsonObject.addProperty("status", "fail");
                     responseJsonObject.addProperty("message", "incorrect password");
                 }
-            } else { //TODO: set case for email doesn't exist
+            } else {
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
                 responseJsonObject.addProperty("message", "employee " + email + " doesn't exist");

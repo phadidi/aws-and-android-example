@@ -34,7 +34,6 @@ public class ConfirmationServlet extends HttpServlet {
         Customer currentUser = (Customer) request.getSession().getAttribute("user");
         if (previousItems == null) {
             previousItems = currentUser.getCart();
-            // TODO: bypass this casting issue
             session.setAttribute("previousItems", previousItems);
         } else {
             // prevent corrupted states through sharing under multi-threads

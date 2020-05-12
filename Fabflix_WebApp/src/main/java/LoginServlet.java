@@ -79,11 +79,11 @@ public class LoginServlet extends HttpServlet {
                     request.getSession().setAttribute("user", currentUser);
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "success");
-                } else { // TODO: set case for correct email but incorrect password
+                } else {
                     responseJsonObject.addProperty("status", "fail");
                     responseJsonObject.addProperty("message", "incorrect password");
                 }
-            } else { //TODO: set case for email doesn't exist
+            } else {
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
                 responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
@@ -99,7 +99,7 @@ public class LoginServlet extends HttpServlet {
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
 
-            // set reponse status to 500 (Internal Server Error)
+            // set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }
         out.close();

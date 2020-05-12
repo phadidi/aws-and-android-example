@@ -13,7 +13,6 @@ function handleMovieResult(resultDataString) {
 
     // If login succeeds, it will redirect the employee to _dashboard_main.html
     if (resultDataJson["status"] === "success") {
-        // TODO: change this to the appropriate employee page after adding a movie to the database
         alert("You added a movie to the database");
         window.location.replace("_dashboard_main.html");
     } else {

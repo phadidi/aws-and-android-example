@@ -151,7 +151,6 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         let starsSplit = resultData[i]["starNamesAndIds"].split(',');
         let starCount = Math.min(3, starsSplit.length);
         for (let j = 0; j < starCount; j++) {
-            // TODO: tie star ID to star Names using SQL query for future html queries
             let starEntrySplit = starsSplit[j].split('_');
             rowHTML += '<a href=' + "single-star.html?id=" + starEntrySplit[1] + conditionURL + ">"
                 + starEntrySplit[0] +

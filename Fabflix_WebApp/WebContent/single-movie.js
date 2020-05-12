@@ -83,7 +83,6 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     let starsSplit = resultData[0]["stars"].split(',');
     movieInfo.append("<p>Stars: ");
     for (let i = 0; i < starsSplit.length; i++) {
-        // TODO: tie star ID to star Names using SQL query for future html queries
         let starEntrySplit = starsSplit[i].split('_');
         movieInfo.append('<a href=' + "single-star.html?id=" + starEntrySplit[1] + conditionURL + ">"
             + starEntrySplit[0] +
@@ -95,7 +94,6 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     movieInfo.append("<p>Price: " + resultData[0]["price"] + "</p>")
 
     let returnLink = jQuery("#return_link");
-    //TODO: check if this returns to movielist correctly, and fix it if not so!
     returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");
 }
 
@@ -166,5 +164,4 @@ jQuery.ajax({
     success: (resultData) => handleResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
 
-// TODO: determine if jQuery for POST is necessary, and how it would work
 add_to_cart.submit(submitAddToCart)

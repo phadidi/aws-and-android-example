@@ -31,8 +31,6 @@ function handleSessionData(resultData) {
      * users to the url defined in HTML form. Instead, it will call this
      * event handler when the event is triggered.
      */
-        //cartEvent.preventDefault();
-        //TODO: load cart like movielist here
 
         // Populate the movielist table
         // Find the empty table body by id "movielist_table_body"

@@ -36,11 +36,13 @@ public class LoginFilter implements Filter {
         // Redirect to login page if the "user" attribute doesn't exist in session and thisURL isn't _dashboard_main
         if (httpRequest.getSession().getAttribute("user") == null
                 && !thisURL.endsWith("_dashboard_main.html") && !thisURL.endsWith("_dashboard_main.js") && !thisURL.endsWith("api/_dashboard_main")
-                && !thisURL.endsWith("_dashboard_star.html") && !thisURL.endsWith("_dashboard_star.js") && !thisURL.endsWith("api/_dashboard_star")) {
+                && !thisURL.endsWith("_dashboard_star.html") && !thisURL.endsWith("_dashboard_star.js") && !thisURL.endsWith("api/_dashboard_star")
+                && !thisURL.endsWith("_dashboard_menu.html") && !thisURL.endsWith("_dashboard_menu.js") && !thisURL.endsWith("api/_dashboard_menu")) {
             httpResponse.sendRedirect("login.html");
         } else if (httpRequest.getSession().getAttribute("employee") == null
                 && (thisURL.endsWith("_dashboard_main.html") || thisURL.endsWith("_dashboard_main.js") || thisURL.endsWith("api/_dashboard_main") ||
-                thisURL.endsWith("_dashboard_star.html") || thisURL.endsWith("_dashboard_star.js") || thisURL.endsWith("api/_dashboard_star"))) {
+                thisURL.endsWith("_dashboard_star.html") || thisURL.endsWith("_dashboard_star.js") || thisURL.endsWith("api/_dashboard_star") ||
+                thisURL.endsWith("_dashboard_menu.html") || thisURL.endsWith("_dashboard_menu.js") || thisURL.endsWith("api/_dashboard_menu"))) {
             httpResponse.sendRedirect("_dashboard.html");
         } else {
             chain.doFilter(request, response);
