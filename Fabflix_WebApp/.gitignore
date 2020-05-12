@@ -16,7 +16,7 @@ local.properties
 .recommenders
 
 #ignore Recaptcha constant
-Fabflix_WebApp/src/main/java/RecaptchaConstants.java
+src/main/java/RecaptchaConstants.java
 
 # External tool builders
 .externalToolBuilders/
