@@ -1,5 +1,8 @@
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class StarBatchInsert {
@@ -9,18 +12,18 @@ public class StarBatchInsert {
         Connection conn = null;
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        String jdbcURL="jdbc:mysql://localhost:3306/moviedb";
+        String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
 
         try {
-            conn = DriverManager.getConnection(jdbcURL,"mytestuser", "mypassword");
+            conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        PreparedStatement psInsertRecord=null;
-        String sqlInsertRecord=null;
+        PreparedStatement psInsertRecord = null;
+        String sqlInsertRecord = null;
 
-        int[] iNoRows=null;
+        int[] iNoRows = null;
 
         //create an instance
         DomCastParser dpc = new DomCastParser();
@@ -41,14 +44,14 @@ public class StarBatchInsert {
         List<Movie> movies = dpm.runMovieParser();
 
         // build a hashMap of movies already in db
-        Map<List<String>, List<String>> dbMovies= new HashMap<List<String>, List<String>>();
+        Map<List<String>, List<String>> dbMovies = new HashMap<List<String>, List<String>>();
 
         String getDBMovies = "select * from movies";
         try {
             PreparedStatement getMovies = conn.prepareStatement(getDBMovies);
             ResultSet rs = getMovies.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 String id = rs.getString("id");
                 String title = rs.getString("title");
                 String year = rs.getString("year");
@@ -66,19 +69,19 @@ public class StarBatchInsert {
                 dbMovies.put(key, yearDirector);
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         // build a hashMap of stars already in db
-        Map<String,String> dbStars= new HashMap<String,String>();
+        Map<String, String> dbStars = new HashMap<String, String>();
 
         String getDBStars = "select * from stars";
         try {
             PreparedStatement getMovies = conn.prepareStatement(getDBStars);
             ResultSet rs = getMovies.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 String name = rs.getString("name");
                 String starId = rs.getString("id");
 
@@ -86,18 +89,18 @@ public class StarBatchInsert {
 
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        Map<String,String> dbCasts= new HashMap<String,String>();
+        Map<String, String> dbCasts = new HashMap<String, String>();
 
         String getDBCasts = "select * from stars_in_movies";
         try {
             PreparedStatement getCasts = conn.prepareStatement(getDBCasts);
             ResultSet rs = getCasts.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 String starId = rs.getString("starId");
                 String movieId = rs.getString("movieId");
 
@@ -105,7 +108,7 @@ public class StarBatchInsert {
 
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -117,37 +120,36 @@ public class StarBatchInsert {
             PreparedStatement getId = conn.prepareStatement(getStarId);
             ResultSet rs = getId.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 max_id = rs.getString("id");
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        sqlInsertRecord="insert into stars values(?,?,?)";
-        String sqlInsertSim="insert into stars_in_movies values(?,?)";
+        sqlInsertRecord = "insert into stars values(?,?,?)";
+        String sqlInsertSim = "insert into stars_in_movies values(?,?)";
         try {
             conn.setAutoCommit(false);
 
 
-            psInsertRecord=conn.prepareStatement(sqlInsertRecord);
-            PreparedStatement psInsertSim=conn.prepareStatement(sqlInsertSim);
-            for(int s = 0; s < stars.size(); s++)
-            {
+            psInsertRecord = conn.prepareStatement(sqlInsertRecord);
+            PreparedStatement psInsertSim = conn.prepareStatement(sqlInsertSim);
+            for (int s = 0; s < stars.size(); s++) {
                 String name = stars.get(s).getName();
                 int byear = stars.get(s).getBirthYear();
 
-                if (dbStars.get(name) != null){
+                if (dbStars.get(name) != null) {
                     continue;
                 }
 
                 // increment id
-                int id_num = Integer.parseInt(max_id.substring(2),10);
-                id_num+=1;
+                int id_num = Integer.parseInt(max_id.substring(2), 10);
+                id_num += 1;
                 String id_s = Integer.toString(id_num);
-                if(id_s.length() < 7){
-                    for(int i = 0; i < (7 - id_s.length()); i++){
+                if (id_s.length() < 7) {
+                    for (int i = 0; i < (7 - id_s.length()); i++) {
                         sid += "0"; // add back prefix 0
                     }
                 }
@@ -156,12 +158,12 @@ public class StarBatchInsert {
 
                 psInsertRecord.setString(1, sid);
                 psInsertRecord.setString(2, name);
-                if(byear == 0){
+                if (byear == 0) {
                     psInsertRecord.setNull(3, Types.NULL);
-                }else {
+                } else {
                     psInsertRecord.setInt(3, byear);
                 }
-                dbStars.put(name,sid);
+                dbStars.put(name, sid);
                 psInsertRecord.addBatch();
 
 
@@ -170,12 +172,12 @@ public class StarBatchInsert {
                 sid = "nm";
             }
 
-            for(int c = 0; c < casts.size(); c++) {
+            for (int c = 0; c < casts.size(); c++) {
                 String mId = casts.get(c).getMovieId();
                 String sname = casts.get(c).getStarName();
 
                 // if the star in cast parsing does not exist in stars, then skip
-                if(dbStars.get(sname) == null){
+                if (dbStars.get(sname) == null) {
                     continue;
                 }
                 // TO DO: Match mId to id of Movie Object, gets the equivalent ID that is in database, gets the id of stars in db, then insert
@@ -185,9 +187,9 @@ public class StarBatchInsert {
                 List<String> k = new ArrayList<>();
                 k.add(movies.get(m).getTitle());
                 k.add(Integer.toString(movies.get(m).getYear()));
-                if(dbMovies.get(k) != null
+                if (dbMovies.get(k) != null
                         && dbMovies.get(k).get(1).compareTo(Integer.toString(movies.get(m).getYear())) == 0
-                        && dbMovies.get(k).get(2).compareTo(movies.get(m).getDirector()) == 0){
+                        && dbMovies.get(k).get(2).compareTo(movies.get(m).getDirector()) == 0) {
                     movieId = dbMovies.get(k).get(0);
                     starId = dbStars.get(sname);
 
@@ -197,7 +199,7 @@ public class StarBatchInsert {
                 }
             }
 
-            iNoRows=psInsertRecord.executeBatch();
+            iNoRows = psInsertRecord.executeBatch();
             psInsertSim.executeBatch();
             conn.commit();
 
@@ -206,17 +208,17 @@ public class StarBatchInsert {
         }
 
         try {
-            if(psInsertRecord!=null) psInsertRecord.close();
-            if(conn!=null) conn.close();
-        } catch(Exception e) {
+            if (psInsertRecord != null) psInsertRecord.close();
+            if (conn != null) conn.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public int matchStarsandMovies(String sfid, List<Movie> movies){
+    public int matchStarsandMovies(String sfid, List<Movie> movies) {
         int index = 0;
-        for(int m = 0; m < movies.size(); m++){
-            if(movies.get(m).getId().compareTo(sfid) == 0){
+        for (int m = 0; m < movies.size(); m++) {
+            if (movies.get(m).getId().compareTo(sfid) == 0) {
                 index = m;
                 break;
             }

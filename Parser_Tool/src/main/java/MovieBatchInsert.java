@@ -1,5 +1,8 @@
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MovieBatchInsert {
@@ -9,18 +12,18 @@ public class MovieBatchInsert {
         Connection conn = null;
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        String jdbcURL="jdbc:mysql://localhost:3306/moviedb";
+        String jdbcURL = "jdbc:mysql://localhost:3306/moviedb";
 
         try {
-            conn = DriverManager.getConnection(jdbcURL,"mytestuser", "mypassword");
+            conn = DriverManager.getConnection(jdbcURL, "mytestuser", "mypassword");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        PreparedStatement psInsertRecord=null;
-        String sqlInsertRecord=null;
+        PreparedStatement psInsertRecord = null;
+        String sqlInsertRecord = null;
 
-        int[] iNoRows=null;
+        int[] iNoRows = null;
 
         //create an instance
         DomMovieParser dpm = new DomMovieParser();
@@ -29,14 +32,14 @@ public class MovieBatchInsert {
         List<Movie> movies = dpm.runMovieParser();
 
         // build a hashMap of movies already in db
-        Map<List<String>, List<String>> dbMovies= new HashMap<List<String>, List<String>>();
+        Map<List<String>, List<String>> dbMovies = new HashMap<List<String>, List<String>>();
 
         String getDBMovies = "select * from movies";
         try {
             PreparedStatement getMovies = conn.prepareStatement(getDBMovies);
             ResultSet rs = getMovies.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 String title = rs.getString("title");
                 String year = rs.getString("year");
                 String director = rs.getString("director");
@@ -53,7 +56,7 @@ public class MovieBatchInsert {
 
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -65,11 +68,11 @@ public class MovieBatchInsert {
             PreparedStatement getId = conn.prepareStatement(getIdQuery);
             ResultSet rs = getId.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 max_id = rs.getString("id");
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -80,11 +83,11 @@ public class MovieBatchInsert {
             PreparedStatement getGId = conn.prepareStatement(getGenreId);
             ResultSet rs = getGId.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 genre_id = rs.getInt("id");
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -95,35 +98,34 @@ public class MovieBatchInsert {
             PreparedStatement getG = conn.prepareStatement(getGenres);
             ResultSet rs = getG.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 genresMap.put(rs.getString("name"), rs.getInt("id"));
             }
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        sqlInsertRecord="insert into movies values(?,?,?,?)";
-        String sqlInsertGenres="insert into genres values(?,?)";
-        String sqlInsertGim="insert into genres_in_movies values(?,?)";
+        sqlInsertRecord = "insert into movies values(?,?,?,?)";
+        String sqlInsertGenres = "insert into genres values(?,?)";
+        String sqlInsertGim = "insert into genres_in_movies values(?,?)";
         try {
             conn.setAutoCommit(false);
 
 
-            psInsertRecord=conn.prepareStatement(sqlInsertRecord);
-            PreparedStatement psInsertGenres=conn.prepareStatement(sqlInsertGenres);
-            PreparedStatement psInsertGim=conn.prepareStatement(sqlInsertGim);
+            psInsertRecord = conn.prepareStatement(sqlInsertRecord);
+            PreparedStatement psInsertGenres = conn.prepareStatement(sqlInsertGenres);
+            PreparedStatement psInsertGim = conn.prepareStatement(sqlInsertGim);
 
-            for(int m = 0; m < movies.size(); m++)
-            {
+            for (int m = 0; m < movies.size(); m++) {
                 List<String> k = new ArrayList<>();
                 k.add(movies.get(m).getTitle());
                 k.add(Integer.toString(movies.get(m).getYear()));
 
-                if (dbMovies.get(k) != null){
+                if (dbMovies.get(k) != null) {
                     //System.out.println(dbMovies.get(movies.get(m).getTitle()));
-                    if(dbMovies.get(k).get(0).compareTo(Integer.toString(movies.get(m).getYear())) == 0 &&
-                            dbMovies.get(k).get(1).compareTo(movies.get(m).getDirector()) == 0){
+                    if (dbMovies.get(k).get(0).compareTo(Integer.toString(movies.get(m).getYear())) == 0 &&
+                            dbMovies.get(k).get(1).compareTo(movies.get(m).getDirector()) == 0) {
                         continue;
                     }
                 }
@@ -133,30 +135,30 @@ public class MovieBatchInsert {
                 String d = movies.get(m).getDirector();
                 String g = movies.get(m).getGenre();
 
-                if(g.compareTo("Null")==0 || g.compareTo("Unknown")==0){
+                if (g.compareTo("Null") == 0 || g.compareTo("Unknown") == 0) {
                     continue;
                 }
 
-                if(genresMap.get(g) == null){
+                if (genresMap.get(g) == null) {
                     genre_id += 1;
                     //System.out.print(genre_id);
                     //System.out.println(" " + g);
                     genresMap.put(g, genre_id);
-                    psInsertGenres.setInt(1,genre_id);
-                    psInsertGenres.setString(2,g);
+                    psInsertGenres.setInt(1, genre_id);
+                    psInsertGenres.setString(2, g);
                     psInsertGenres.addBatch();
                 }
 
-                if(t.compareTo("Null")==0 || y==0 || d.compareTo("Null")==0) {
+                if (t.compareTo("Null") == 0 || y == 0 || d.compareTo("Null") == 0) {
                     continue;
                 }
 
                 // increment id
-                int id_num = Integer.parseInt(max_id.substring(2),10);
-                id_num+=1;
+                int id_num = Integer.parseInt(max_id.substring(2), 10);
+                id_num += 1;
                 String id_s = Integer.toString(id_num);
-                if(id_s.length() < 7){
-                    for(int i = 0; i < (7 - id_s.length()); i++){
+                if (id_s.length() < 7) {
+                    for (int i = 0; i < (7 - id_s.length()); i++) {
                         mid += "0"; // add back prefix 0
                     }
                 }
@@ -178,7 +180,7 @@ public class MovieBatchInsert {
                 mid = "tt";
             }
 
-            iNoRows=psInsertRecord.executeBatch();
+            iNoRows = psInsertRecord.executeBatch();
             psInsertGenres.executeBatch();
             psInsertGim.executeBatch();
             conn.commit();
@@ -188,9 +190,9 @@ public class MovieBatchInsert {
         }
 
         try {
-            if(psInsertRecord!=null) psInsertRecord.close();
-            if(conn!=null) conn.close();
-        } catch(Exception e) {
+            if (psInsertRecord != null) psInsertRecord.close();
+            if (conn != null) conn.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

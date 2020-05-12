@@ -1,14 +1,16 @@
-import java.io.IOException;
-import java.util.*;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class DomMovieParser {
@@ -17,48 +19,48 @@ public class DomMovieParser {
     private HashMap<String, String> genreCode = new HashMap<>();
     private Document dom;
 
-    public void inititalizeGenreCode(){
-        // use to decode genre
-        this.genreCode.put("ctxx","Unknown");
-        this.genreCode.put("actn","Violence");
-        this.genreCode.put("camp","Now-Camp");
-        this.genreCode.put("comd","Comedy");
-        this.genreCode.put("disa","Disaster");
-        this.genreCode.put("epic","Epic");
-        this.genreCode.put("horr","Horror");
-        this.genreCode.put("noir","Black");
-        this.genreCode.put("scfi","Sci-Fi");
-        this.genreCode.put("s.f.","Sci-Fi");
-        this.genreCode.put("biop","Biological Picture");
-        this.genreCode.put("west","Western");
-        this.genreCode.put("advt","Adventure");
-        this.genreCode.put("cart","Animation");
-        this.genreCode.put("docu","Documentary");
-        this.genreCode.put("faml","Family");
-        this.genreCode.put("musc","Music");
-        this.genreCode.put("porn","Pornography");
-        this.genreCode.put("surl","Sureal");
-        this.genreCode.put("avGa","Avant Garde");
-        this.genreCode.put("cnr","Cops and Robbers");
-        this.genreCode.put("dram","Drama");
-        this.genreCode.put("hist","History");
-        this.genreCode.put("myst","Mystery");
-        this.genreCode.put("romt","Romance");
-        this.genreCode.put("susp","Thriller");
-        this.genreCode.put("tv","TV Show");
-        this.genreCode.put("tvs","TV Series");
-        this.genreCode.put("TVm","TV miniseries");
-        this.genreCode.put("biog","Biography");
-        this.genreCode.put("fant","Fantasy");
-    }
-
-    public List<Movie> getMyMovies(){
-        return myMovies;
-    }
-
     public DomMovieParser() {
         //create a list to hold the employee objects
         myMovies = new ArrayList<>();
+    }
+
+    public void inititalizeGenreCode() {
+        // use to decode genre
+        this.genreCode.put("ctxx", "Unknown");
+        this.genreCode.put("actn", "Violence");
+        this.genreCode.put("camp", "Now-Camp");
+        this.genreCode.put("comd", "Comedy");
+        this.genreCode.put("disa", "Disaster");
+        this.genreCode.put("epic", "Epic");
+        this.genreCode.put("horr", "Horror");
+        this.genreCode.put("noir", "Black");
+        this.genreCode.put("scfi", "Sci-Fi");
+        this.genreCode.put("s.f.", "Sci-Fi");
+        this.genreCode.put("biop", "Biological Picture");
+        this.genreCode.put("west", "Western");
+        this.genreCode.put("advt", "Adventure");
+        this.genreCode.put("cart", "Animation");
+        this.genreCode.put("docu", "Documentary");
+        this.genreCode.put("faml", "Family");
+        this.genreCode.put("musc", "Music");
+        this.genreCode.put("porn", "Pornography");
+        this.genreCode.put("surl", "Sureal");
+        this.genreCode.put("avGa", "Avant Garde");
+        this.genreCode.put("cnr", "Cops and Robbers");
+        this.genreCode.put("dram", "Drama");
+        this.genreCode.put("hist", "History");
+        this.genreCode.put("myst", "Mystery");
+        this.genreCode.put("romt", "Romance");
+        this.genreCode.put("susp", "Thriller");
+        this.genreCode.put("tv", "TV Show");
+        this.genreCode.put("tvs", "TV Series");
+        this.genreCode.put("TVm", "TV miniseries");
+        this.genreCode.put("biog", "Biography");
+        this.genreCode.put("fant", "Fantasy");
+    }
+
+    public List<Movie> getMyMovies() {
+        return myMovies;
     }
 
     public List<Movie> runMovieParser() {
@@ -128,28 +130,27 @@ public class DomMovieParser {
     private Movie getMovie(Element movieEl) {
 
         String id = getTextValue(movieEl, "fid");
-        if(id == null){
+        if (id == null) {
             // some movie id is tagged with <filmed> for some reason
             id = getTextValue(movieEl, "filmed");
         }
         String title = getTextValue(movieEl, "t"); // getting title
-        if(title == null){
+        if (title == null) {
             title = "Null";
         }
         int year = getIntValue(movieEl, "year");
         String director = getTextValue(movieEl, "dirn");
 
-        if(director == null || director.toLowerCase().contains("unknown") || director.toLowerCase().contains("unyear")){
+        if (director == null || director.toLowerCase().contains("unknown") || director.toLowerCase().contains("unyear")) {
             director = "Null";
         }
         String cat = getTextValue(movieEl, "cat");
         String genre = "";
-        if(cat == null){
+        if (cat == null) {
             genre = "Null";
-        }
-        else {
+        } else {
             genre = this.genreCode.get(cat.trim().toLowerCase());
-            if(genre == null){
+            if (genre == null) {
                 genre = "Null";
             }
         }
@@ -176,8 +177,7 @@ public class DomMovieParser {
             Element el = (Element) nl.item(0);
             try {
                 textVal = el.getFirstChild().getNodeValue();
-            }
-            catch (NullPointerException npe){
+            } catch (NullPointerException npe) {
                 // no title in XML
                 textVal = "Null";
             }
@@ -197,8 +197,7 @@ public class DomMovieParser {
         int result = 0;
         try {
             result = Integer.parseInt(getTextValue(ele, tagName));
-        }
-        catch(NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             // no release year
             result = 0;
         }

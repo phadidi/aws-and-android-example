@@ -1,16 +1,15 @@
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class DomCastParser {
@@ -18,13 +17,13 @@ public class DomCastParser {
     private List<StarInMovie> myCasts;
     private Document dom;
 
-    public List<StarInMovie> getMyCasts(){
-        return myCasts;
-    }
-
     public DomCastParser() {
         //create a list to hold the employee objects
         myCasts = new ArrayList<>();
+    }
+
+    public List<StarInMovie> getMyCasts() {
+        return myCasts;
     }
 
     public List<StarInMovie> runCastParser() {
@@ -118,8 +117,7 @@ public class DomCastParser {
             Element el = (Element) nl.item(0);
             try {
                 textVal = el.getFirstChild().getNodeValue();
-            }
-            catch (NullPointerException npe){
+            } catch (NullPointerException npe) {
                 textVal = null;
 
             }
@@ -139,8 +137,7 @@ public class DomCastParser {
         int result = 0;
         try {
             result = Integer.parseInt(getTextValue(ele, tagName));
-        }
-        catch(NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             // no birth year, needs to be turned to NULL when inserting
             result = 0;
         }

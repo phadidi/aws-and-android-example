@@ -13,7 +13,7 @@ function handleLoginResult(resultDataString) {
 
     // If login succeeds, it will redirect the employee to _dashboard_main.html
     if (resultDataJson["status"] === "success") {
-        window.location.replace("_dashboard_main.html");
+        window.location.replace("_dashboard_menu.html");
     } else {
         // If login fails, the web page will display
         // error messages on <div> with id "login_error_message"
