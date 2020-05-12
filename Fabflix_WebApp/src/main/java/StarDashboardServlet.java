@@ -59,7 +59,7 @@ public class StarDashboardServlet extends HttpServlet {
                 }
 
                 responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success");
+                responseJsonObject.addProperty("message", "added " + id + " to stars");
                 rs.close();
                 statementId.close();
             } else {
