@@ -37,17 +37,13 @@ function getParameterByName(target) {
  */
 
 function handleResult(resultData) {
-
     console.log("handleResult: entering employee dashboard");
-
-    //let dashboardTableBodyElement = jQuery("#dashboard_table_body");
-
-
-    //dashboardTableBodyElement.append(out.toString());
+    let result_data = jQuery("#result_data");
+    result_data.append(resultData.toString());
 }
 
 /**
- * Once this .js is loaded, following scripts will be executed by the browser\
+ * Once this .js is loaded, following scripts will be executed by the browser
  */
 
 // Makes the HTTP GET request and registers on success callback function handleResult

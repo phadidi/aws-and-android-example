@@ -33,19 +33,20 @@ public class MenuDashboardServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
             DatabaseMetaData databaseMetaData = dbcon.getMetaData();
             ResultSet resultSet = databaseMetaData.getTables(null, null, "%", new String[]{"TABLE"});
+            JsonObject jsonObject = new JsonObject();
 
 
             while (resultSet.next()) {
-                out.println(resultSet.getString("movies"));
-                out.println(resultSet.getString("stars"));
-                out.println(resultSet.getString("stars_in_movies"));
-                out.println(resultSet.getString("genres"));
-                out.println(resultSet.getString("genres_in_movies"));
-                out.println(resultSet.getString("customers"));
-                out.println(resultSet.getString("creditcards"));
-                out.println(resultSet.getString("sales"));
-                out.println(resultSet.getString("ratings"));
-                out.println(resultSet.getString("employees"));
+                out.write(resultSet.getString("movies"));
+                out.write(resultSet.getString("stars"));
+                out.write(resultSet.getString("stars_in_movies"));
+                out.write(resultSet.getString("genres"));
+                out.write(resultSet.getString("genres_in_movies"));
+                out.write(resultSet.getString("customers"));
+                out.write(resultSet.getString("creditcards"));
+                out.write(resultSet.getString("sales"));
+                out.write(resultSet.getString("ratings"));
+                out.write(resultSet.getString("employees"));
             }
 
             String[] tables = {"movies", "stars", "stars_in_movies", "genres", "genres_in_movies", "customers", "creditcards", "sales", "ratings", "employees"};
@@ -62,26 +63,25 @@ public class MenuDashboardServlet extends HttpServlet {
                     String isNullable = columns.getString("IS_NULLABLE");
                     String is_autoIncrment = columns.getString("IS_AUTOINCREMENT");
                     //Printing results
-                    out.println(columnName + "---" + datatype + "---" + columnsize + "---" + decimaldigits + "---" + isNullable + "---" + is_autoIncrment);
+                    out.write(columnName + "---" + datatype + "---" + columnsize + "---" + decimaldigits + "---" + isNullable + "---" + is_autoIncrment);
                 }
 
                 ResultSet PK = databaseMetaData.getPrimaryKeys(null, null, t);
                 out.println("------------PRIMARY KEYS-------------");
                 while (PK.next()) {
-                    out.println(PK.getString("COLUMN_NAME") + "===" + PK.getString("PK_NAME"));
+                    out.write(PK.getString("COLUMN_NAME") + "===" + PK.getString("PK_NAME"));
                 }
 
                 ResultSet FK = databaseMetaData.getImportedKeys(null, null, t);
                 out.println("------------FOREIGN KEYS-------------");
                 while (FK.next()) {
-                    out.println(FK.getString("PKTABLE_NAME") + "---" + FK.getString("PKCOLUMN_NAME") + "===" + FK.getString("FKTABLE_NAME") + "---" + FK.getString("FKCOLUMN_NAME"));
+                    out.write(FK.getString("PKTABLE_NAME") + "---" + FK.getString("PKCOLUMN_NAME") + "===" + FK.getString("FKTABLE_NAME") + "---" + FK.getString("FKCOLUMN_NAME"));
                 }
 
                 FK.close();
                 PK.close();
                 columns.close();
                 JsonObject responseJsonObject = new JsonObject();
-
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
             }
@@ -96,7 +96,6 @@ public class MenuDashboardServlet extends HttpServlet {
             // set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }
-        out.toString();
         out.close();
 
     }
