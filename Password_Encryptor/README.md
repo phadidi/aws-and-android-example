@@ -1,5 +1,4 @@
-# project3 encryption example
-Example of storing encrypted password in database and verifying against encrypted password
+# Password_Encryptor
 
 
 ### To run this example: 
