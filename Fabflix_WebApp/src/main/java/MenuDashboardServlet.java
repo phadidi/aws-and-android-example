@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet(name = "MenuDashboardServlet", urlPatterns = "/api/_dashboard_menu")
 public class MenuDashboardServlet extends HttpServlet {
@@ -28,76 +29,56 @@ public class MenuDashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         try {
-
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
             DatabaseMetaData databaseMetaData = dbcon.getMetaData();
-            ResultSet resultSet = databaseMetaData.getTables(null, null, "%", new String[]{"TABLE"});
+            String output = "";
 
-            while (resultSet.next()) {
-                out.write(resultSet.getString("movies"));
-                out.write(resultSet.getString("stars"));
-                out.write(resultSet.getString("stars_in_movies"));
-                out.write(resultSet.getString("genres"));
-                out.write(resultSet.getString("genres_in_movies"));
-                out.write(resultSet.getString("customers"));
-                out.write(resultSet.getString("creditcards"));
-                out.write(resultSet.getString("sales"));
-                out.write(resultSet.getString("ratings"));
-                out.write(resultSet.getString("employees"));
+            String catalog = null, schemaPattern = null, tableNamePattern = null;
+            String[] types = {"TABLE"};
+
+            ResultSet rsTables = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
+
+
+            while (rsTables.next()) {
+                String tableName = rsTables.getString(3);
+                output += ("\n=== TABLE: " + tableName + "\n");
+
+                String columnNamePattern = null;
+                ResultSet rsColumns = databaseMetaData.getColumns(catalog, schemaPattern, tableName, columnNamePattern);
+
+                ResultSet rsPK = databaseMetaData.getPrimaryKeys(catalog, schemaPattern, tableName);
+
+                while (rsColumns.next()) {
+                    String columnName = rsColumns.getString("COLUMN_NAME");
+                    String columnType = rsColumns.getString("TYPE_NAME");
+                    int columnSize = rsColumns.getInt("COLUMN_SIZE");
+                    output += ("\t" + columnName + " - " + columnType + "(" + columnSize + ")\n");
+                }
+
+                while (rsPK.next()) {
+                    String primaryKeyColumn = rsPK.getString("COLUMN_NAME");
+                    output += ("\tPrimary Key Column: " + primaryKeyColumn + "\n");
+                }
             }
-
-            String[] tables = {"movies", "stars", "stars_in_movies", "genres", "genres_in_movies", "customers", "creditcards", "sales", "ratings", "employees"};
-
-            for (String t: tables) {
-
-                ResultSet columns = databaseMetaData.getColumns(null, null, t, null);
-
-                while (columns.next()) {
-                    String columnName = columns.getString("COLUMN_NAME");
-                    String datatype = columns.getString("DATA_TYPE");
-                    String columnsize = columns.getString("COLUMN_SIZE");
-                    String decimaldigits = columns.getString("DECIMAL_DIGITS");
-                    String isNullable = columns.getString("IS_NULLABLE");
-                    String is_autoIncrment = columns.getString("IS_AUTOINCREMENT");
-                    //Printing results
-                    out.write(columnName + "---" + datatype + "---" + columnsize + "---" + decimaldigits + "---" + isNullable + "---" + is_autoIncrment);
-                }
-
-                ResultSet PK = databaseMetaData.getPrimaryKeys(null, null, t);
-                out.println("------------PRIMARY KEYS-------------");
-                while (PK.next()) {
-                    out.write(PK.getString("COLUMN_NAME") + "===" + PK.getString("PK_NAME"));
-                }
-
-                ResultSet FK = databaseMetaData.getImportedKeys(null, null, t);
-                out.println("------------FOREIGN KEYS-------------");
-                while (FK.next()) {
-                    out.write(FK.getString("PKTABLE_NAME") + "---" + FK.getString("PKCOLUMN_NAME") + "===" + FK.getString("FKTABLE_NAME") + "---" + FK.getString("FKCOLUMN_NAME"));
-                }
-
-                FK.close();
-                PK.close();
-                columns.close();
-                JsonObject responseJsonObject = new JsonObject();
-                responseJsonObject.addProperty("output", out.toString());
-
-                responseJsonObject.addProperty("status", "success");
-                responseJsonObject.addProperty("message", "success");
-                out.write(responseJsonObject.toString());
-            }
-            resultSet.close();
-            dbcon.close();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("output", output);
+            out.write(jsonObject.toString());
+        } catch (SQLException ex) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", ex.getMessage());
+            out.write(jsonObject.toString());
+            // set response status to 500 (Internal Server Error)
+            response.setStatus(500);
+            ex.printStackTrace();
         } catch (Exception e) {
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
-
             // set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }
         out.close();
-
     }
 }
