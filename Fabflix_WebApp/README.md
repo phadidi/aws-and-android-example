@@ -61,9 +61,9 @@ For searching, we simnply used LIKE "%some pattern provided by user%" to match w
 Has multiple classes responsible for parsing movies, actors, and movie-actor relations in respective XML files and inserting them into the database if not existed already. Contains a MainParser class that calls all of these classes and run them in a main(). REMEMBER TO INCLUDE YOUR XML FILES IN YOUR PROJECT FOLDER
 
 #### Inconsistencies Report:
-not all movies have a "<t>" for titles. 
+not all movies have a t tag for titles. 
 Genre value has leading and trailing spaces and mismatching capitalization. 
-Some movie ids are notated with "<filmed>" instead of "<fid>"
+Some movie ids are notated with a filmed tag instead of an fid tag
 
 matched Animation(db) with Cartoon(xml) / 
 matched Sci-Fi(db) with science fiction(xml) / 
