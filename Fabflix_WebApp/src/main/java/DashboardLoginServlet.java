@@ -26,6 +26,26 @@ public class DashboardLoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
+
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+
+        // Verify reCAPTCHA
+        try {
+            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+        } catch (Exception e) {
+            out.println("<html>");
+            out.println("<head><title>Error</title></head>");
+            out.println("<body>");
+            out.println("<p>recaptcha verification error</p>");
+            out.println("<p>" + e.getMessage() + "</p>");
+            out.println("</body>");
+            out.println("</html>");
+
+            out.close();
+            return;
+        }
+
         try {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
