@@ -20,7 +20,7 @@ public class UpdateEmployeePassword {
      * generate wrong values.
      *
      */
-    public static void main(String[] args) throws Exception {
+    public void encryptEmployee() throws Exception {
 
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
