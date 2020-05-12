@@ -136,21 +136,25 @@ public class DomMovieParser {
         }
         String title = getTextValue(movieEl, "t"); // getting title
         if (title == null) {
+            System.out.println("Movie with fid " + id + "has no title");
             title = "Null";
         }
         int year = getIntValue(movieEl, "year");
         String director = getTextValue(movieEl, "dirn");
 
         if (director == null || director.toLowerCase().contains("unknown") || director.toLowerCase().contains("unyear")) {
+            System.out.println("Movie with fid " + id + "has no director or has invalid values like Unknown or UnYear");
             director = "Null";
         }
         String cat = getTextValue(movieEl, "cat");
         String genre = "";
         if (cat == null) {
+            System.out.println("Movie with fid " + id + "has no genre");
             genre = "Null";
         } else {
             genre = this.genreCode.get(cat.trim().toLowerCase());
             if (genre == null) {
+                System.out.println("Movie with fid " + id + "has no valid genre");
                 genre = "Null";
             }
         }

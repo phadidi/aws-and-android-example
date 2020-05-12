@@ -133,3 +133,5 @@ CREATE TABLE `employees`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_general_ci;
+  
+INSERT INTO employees VALUES('classta@email.edu','classta','TA CS122B');
