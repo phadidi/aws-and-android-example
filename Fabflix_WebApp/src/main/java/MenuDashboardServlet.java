@@ -33,16 +33,7 @@ public class MenuDashboardServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
             DatabaseMetaData databaseMetaData = dbcon.getMetaData();
             ResultSet resultSet = databaseMetaData.getTables(null, null, "%", new String[]{"TABLE"});
-            ResultSet movieColumns = databaseMetaData.getColumns(null, null, "movies", null);
-            ResultSet starsColumns = databaseMetaData.getColumns(null, null, "stars", null);
-            databaseMetaData.getColumns(null, null, "stars_in_movies", null);
-            databaseMetaData.getColumns(null, null, "genres", null);
-            databaseMetaData.getColumns(null, null, "genres_in_movies", null);
-            databaseMetaData.getColumns(null, null, "customers", null);
-            databaseMetaData.getColumns(null, null, "creditcards", null);
-            databaseMetaData.getColumns(null, null, "sales", null);
-            databaseMetaData.getColumns(null, null, "ratings", null);
-            databaseMetaData.getColumns(null, null, "employees", null);
+            ResultSet columns = databaseMetaData.getColumns(null, null, "%", null);
 
             while (resultSet.next()) {
                 System.out.println(resultSet.getString("movies"));
@@ -57,37 +48,42 @@ public class MenuDashboardServlet extends HttpServlet {
                 System.out.println(resultSet.getString("employees"));
             }
 
-            while(movieColumns.next())
+            while(columns.next())
             {
-                String columnName = movieColumns.getString("COLUMN_NAME");
-                String datatype = movieColumns.getString("DATA_TYPE");
-                String columnsize = movieColumns.getString("COLUMN_SIZE");
-                String decimaldigits = movieColumns.getString("DECIMAL_DIGITS");
-                String isNullable = movieColumns.getString("IS_NULLABLE");
-                String is_autoIncrment = movieColumns.getString("IS_AUTOINCREMENT");
+                String columnName = columns.getString("COLUMN_NAME");
+                String datatype = columns.getString("DATA_TYPE");
+                String columnsize = columns.getString("COLUMN_SIZE");
+                String decimaldigits = columns.getString("DECIMAL_DIGITS");
+                String isNullable = columns.getString("IS_NULLABLE");
+                String is_autoIncrment = columns.getString("IS_AUTOINCREMENT");
                 //Printing results
                 System.out.println(columnName + "---" + datatype + "---" + columnsize + "---" + decimaldigits + "---" + isNullable + "---" + is_autoIncrment);
             }
 
-            while(starsColumns.next())
+            ResultSet PK = databaseMetaData.getPrimaryKeys(null,null, "%");
+            System.out.println("------------PRIMARY KEYS-------------");
+            while(PK.next())
             {
-                String columnName = starsColumns.getString("COLUMN_NAME");
-                String datatype = starsColumns.getString("DATA_TYPE");
-                String columnsize = starsColumns.getString("COLUMN_SIZE");
-                String decimaldigits = starsColumns.getString("DECIMAL_DIGITS");
-                String isNullable = starsColumns.getString("IS_NULLABLE");
-                String is_autoIncrment = starsColumns.getString("IS_AUTOINCREMENT");
-                //Printing results
-                System.out.println(columnName + "---" + datatype + "---" + columnsize + "---" + decimaldigits + "---" + isNullable + "---" + is_autoIncrment);
+                System.out.println(PK.getString("COLUMN_NAME") + "===" + PK.getString("PK_NAME"));
             }
+
+            ResultSet FK = databaseMetaData.getImportedKeys(null, null, "%");
+            System.out.println("------------FOREIGN KEYS-------------");
+            while(FK.next())
+            {
+                System.out.println(FK.getString("PKTABLE_NAME") + "---" + FK.getString("PKCOLUMN_NAME") + "===" + FK.getString("FKTABLE_NAME") + "---" + FK.getString("FKCOLUMN_NAME"));
+            }
+
 
             JsonObject responseJsonObject = new JsonObject();
 
             responseJsonObject.addProperty("status", "success");
             responseJsonObject.addProperty("message", "success");
-
-            movieColumns.close();
-            starsColumns.close();
+            
+            FK.close();
+            PK.close();
+            columns.close();
+            resultSet.close();
             dbcon.close();
         } catch (Exception e) {
             // write error message JSON object to output

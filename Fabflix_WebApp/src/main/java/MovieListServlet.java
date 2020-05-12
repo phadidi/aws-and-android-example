@@ -92,24 +92,6 @@ public class MovieListServlet extends HttpServlet {
                 }
             }
 
-            //else {
-            //    query = "select m.id, m.title, m.year, m.director,\n" +
-            //            "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
-            //            "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
-            //            "r.rating" +
-            //            "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
-            //            "LEFT JOIN ratings r\n" +
-            //            "ON m.id = r.movieId" +
-            //            "WHERE m.id in \n" +
-            //            "(select distinct movies.Id from movies, genres, genres_in_movies where movies.Id = genres_in_movies.movieId \n" +
-            //            "and genres.id = (select id from genres where name like '" + genreName + "') and genres_in_movies.genreId = genres.id) AND\n" +
-            //            "m.id=gim.movieId AND\n" +
-            //            "gim.genreId = g.Id AND\n" +
-            //            "m.id=sim.movieId AND\n" +
-            //            "sim.starId=s.id\n" +
-            //            "GROUP BY m.title, m.year, m.director\n";
-            //}
-
             query += "GROUP BY m.id\n";
 
             // use having clause to properly print out all genres and star names when selecting for one
