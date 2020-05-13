@@ -51,6 +51,7 @@ public class MovieListServlet extends HttpServlet {
 
         String pageNumber = request.getParameter("page");
         Integer page = (Integer.parseInt(pageNumber) - 1) * limit_num;
+        //TODO: add limit and page number product to each movielist entry number (found in movielist.js)
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
@@ -73,22 +74,23 @@ public class MovieListServlet extends HttpServlet {
                     "m.id=sim.movieId AND\n" +
                     "sim.starId=s.id\n";
 
+            //TODO: identify which searches need to be AND, OR, Negation, etc.
             if (searchTitle != null) {
-                query += "AND m.title like'%" + searchTitle + "%'\n";
+                query += "AND MATCH (m.title) AGAINST('" + searchTitle + "')IN BOOLEAN MODE\n";
             }
 
             if (searchYear != null) {
-                query += "AND m.year=" + searchYear + "\n";
+                query += "AND MATCH (m.year) AGAINST (" + searchYear + ") IN BOOLEAN MODE\n";
             }
             if (searchDirector != null) {
-                query += "AND m.director like'%" + searchDirector + "%'\n";
+                query += "AND MATCH (m.director) AGAINST('" + searchDirector + "') IN BOOLEAN MODE\n";
             }
 
             if (searchLetter != null) {
                 if (searchLetter.equals("non_alphanumeric")) {
                     query += "AND m.title REGEXP '^[^0-9A-Za-z]'";
                 } else {
-                    query += "AND m.title like'" + searchLetter + "%'\n";
+                    query += "AND MATCH (m.title) AGAINST ('" + searchLetter + "') IN BOOLEAN MODE\n";
                 }
             }
 
@@ -96,11 +98,11 @@ public class MovieListServlet extends HttpServlet {
 
             // use having clause to properly print out all genres and star names when selecting for one
             if (genreName != null) {
-                query += "HAVING  genresname like \"%" + genreName + "%\"";
+                query += "AND MATCH (genresname) AGAINST (\"" + genreName + "\") IN BOOLEAN MODE ";
             }
 
             if (searchStar != null) {
-                query += "HAVING  starNamesAndIds like \"%" + searchStar + "%\"";
+                query += "AND MATCH (starNamesAndIds) AGAINST (\"" + searchStar + "\") IN BOOLEAN MODE ";
             }
 
             if (sort.compareTo("title_asc_rating_asc") == 0) {

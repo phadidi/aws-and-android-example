@@ -12,6 +12,9 @@ CREATE TABLE `movies`
     `year`     int          NOT NULL,
     `director` varchar(100) NOT NULL,
     PRIMARY KEY (`id`),
+    FULLTEXT (`title`),
+    FULLTEXT (`year`),
+    FULLTEXT (`director`),
     UNIQUE KEY `id` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
@@ -24,6 +27,7 @@ CREATE TABLE `stars`
     `name`      varchar(100) NOT NULL,
     `birthYear` int DEFAULT NULL,
     PRIMARY KEY (`id`),
+    FULLTEXT (`name`),
     UNIQUE KEY `id` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
@@ -47,7 +51,8 @@ CREATE TABLE `genres`
 (
     `id`   int         NOT NULL AUTO_INCREMENT,
     `name` varchar(32) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    FULLTEXT (`name`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_general_ci;
@@ -133,5 +138,3 @@ CREATE TABLE `employees`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_general_ci;
-  
-INSERT INTO employees VALUES('classta@email.edu','classta','TA CS122B');

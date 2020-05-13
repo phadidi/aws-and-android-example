@@ -38,16 +38,16 @@ function handleGenreResult(resultData) {
         "        <input type=\"hidden\" name=\"sort\" value=\"title_asc_rating_asc\"/>\n" +
         "        <input type=\"hidden\" name=\"limit\" value=\"10\"/>\n" +
         "<label>" +
-        "<input name=\"search_title\" placeholder=\"Enter a title\" type=\"text\">" +
+        "<input name=\"search_title\" placeholder=\"Enter a title\" type=\"text\" autocomplete=\"on\">" +
         "</label>" + "<br>" +
         "<label>" +
-        "<input name=\"search_year\" placeholder=\"Enter a release year\" type=\"text\">" +
+        "<input name=\"search_year\" placeholder=\"Enter a release year\" type=\"text\" autocomplete=\"on\">" +
         "</label>" + "<br>" +
         "<label>" +
-        "<input name=\"search_director\" placeholder=\"Enter a director's name\" type=\"text\">" +
+        "<input name=\"search_director\" placeholder=\"Enter a director's name\" type=\"text\" autocomplete=\"on\">" +
         "</label>" + "<br>" +
         "<label>" +
-        "<input name=\"search_star\" placeholder=\"Enter a star's name\" type=\"text\">" +
+        "<input name=\"search_star\" placeholder=\"Enter a star's name\" type=\"text\" autocomplete=\"on\">" +
         "</label>" + "<br>" +
         "        <p align='center'><input type=\"submit\"/></p>\n" +
         "</form>");

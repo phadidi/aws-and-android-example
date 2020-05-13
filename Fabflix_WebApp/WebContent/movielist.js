@@ -122,7 +122,8 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
-        rowHTML += "<th>" + (i + 1).toString() + "</th>";
+        // TODO: check if page and limit are passed in as String or int, then parse accordingly
+        rowHTML += "<th>" + (i * Integer.parseInt(page) * Integer.parseInt(limit) + 1).toString() + "</th>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
