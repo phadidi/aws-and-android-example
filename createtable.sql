@@ -13,7 +13,6 @@ CREATE TABLE `movies`
     `director` varchar(100) NOT NULL,
     PRIMARY KEY (`id`),
     FULLTEXT (`title`),
-    FULLTEXT (`year`),
     FULLTEXT (`director`),
     UNIQUE KEY `id` (`id`)
 ) ENGINE = InnoDB
