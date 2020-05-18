@@ -16,9 +16,8 @@ public class ListViewActivity extends Activity {
         setContentView(R.layout.listview);
         //this should be retrieved from the database and the backend server
         final ArrayList<Movie> movies = new ArrayList<>();
-        //TODO: get movielist here
-        //movies.add(new Movie("The Terminal", (short) 2004));
-        //movies.add(new Movie("The Final Season", (short) 2007));
+        movies.add(new Movie("The Terminal", (short) 2004));
+        movies.add(new Movie("The Final Season", (short) 2007));
 
         MovieListViewAdapter adapter = new MovieListViewAdapter(movies, this);
 
@@ -29,8 +28,7 @@ public class ListViewActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movie = movies.get(position);
-                //TODO: add necessary attributes to message
-                String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getTitle(), movie.getYear());
+                String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getName(), movie.getYear());
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
