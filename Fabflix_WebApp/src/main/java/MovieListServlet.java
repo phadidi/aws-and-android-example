@@ -92,7 +92,7 @@ public class MovieListServlet extends HttpServlet {
                     query += "AND m.title like'" + searchLetter + "%'\n";
                 }
             }
-            //TODO: identify hoq to implement full-text with star names being concatenated with star ids
+            //TODO: identify how to implement full-text with star names being concatenated with star ids
             query += "GROUP BY m.id\n";
 
             // use having clause to properly print out all genres and star names when selecting for one

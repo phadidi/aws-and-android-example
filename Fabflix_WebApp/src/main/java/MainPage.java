@@ -42,7 +42,6 @@ public class MainPage extends HttpServlet {
 
             // Declare our statement
 
-
             //String query = "select * from genres order by name;";
             PreparedStatement statement = dbcon.prepareStatement("select * from genres order by name;");
             ResultSet rs = statement.executeQuery();
