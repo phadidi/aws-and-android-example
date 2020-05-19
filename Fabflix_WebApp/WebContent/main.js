@@ -31,7 +31,7 @@ function handleGenreResult(resultData) {
 
     letterBody.append(letter_string);
 
-    let searchBody = jQuery("#searchBody");
+    let searchBody = jQuery("#search_body");
 
     //TODO: pass the values put into here as search query for autocomplete
     searchBody.append("<form action=\"movielist.html\" method=\"GET\">\n" +

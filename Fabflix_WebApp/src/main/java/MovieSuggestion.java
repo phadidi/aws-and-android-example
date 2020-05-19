@@ -82,7 +82,7 @@ public class MovieSuggestion extends HttpServlet {
 
             // get the query string from parameter
             String query = request.getParameter("query");
-            String searchBody = request.getParameter("searchBody");
+            //String searchBody = request.getParameter("searchBody");
 
             // return the empty json array if query is null or empty
             if (query == null || query.trim().isEmpty()) {
