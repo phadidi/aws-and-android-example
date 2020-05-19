@@ -129,6 +129,7 @@ public class MovieListServlet extends HttpServlet {
             }
 
             System.out.println(query);
+            request.setAttribute("query", query);
 
             // Perform the query
             PreparedStatement statement = dbcon.prepareStatement(query);

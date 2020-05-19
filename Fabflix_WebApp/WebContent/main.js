@@ -31,8 +31,9 @@ function handleGenreResult(resultData) {
 
     letterBody.append(letter_string);
 
-    let searchBody = jQuery("#search_body");
+    let searchBody = jQuery("#searchBody");
 
+    //TODO: pass the values put into here as search query for autocomplete
     searchBody.append("<form action=\"movielist.html\" method=\"GET\">\n" +
         "        <input type=\"hidden\" name=\"page\" value=\"1\"/>\n" +
         "        <input type=\"hidden\" name=\"sort\" value=\"title_asc_rating_asc\"/>\n" +
@@ -80,12 +81,12 @@ function handleLookup(query, doneCallback) {
         "method": "GET",
         // generate the request url from the query.
         // escape the query string to avoid errors caused by special characters
-        "url": "api/main",
-        "success": function(data) {
+        "url": "/movie-suggestion",
+        "success": function (data) {
             // pass the data, query, and doneCallback function into the success handler
             handleLookupAjaxSuccess(data, query, doneCallback)
         },
-        "error": function(errorData) {
+        "error": function (errorData) {
             console.log("lookup ajax error")
             console.log(errorData)
         }
