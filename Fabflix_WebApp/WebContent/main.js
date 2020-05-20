@@ -1,6 +1,19 @@
 function handleGenreResult(resultData) {
     console.log("handleGenreResult: populating genre table from resultData");
 
+    let searchBar = jQuery("#search_bar");
+
+    //TODO: pass the values put into here as search query for autocomplete
+    searchBar.append("<form action=\"movielist.html\" method=\"GET\">\n" +
+        "        <input type=\"hidden\" name=\"page\" value=\"1\"/>\n" +
+        "        <input type=\"hidden\" name=\"sort\" value=\"title_asc_rating_asc\"/>\n" +
+        "        <input type=\"hidden\" name=\"limit\" value=\"10\"/>\n" +
+        "<label>" +
+        "<input class=\"autocomplete-searchbox form-control\" name=\"search_title\" placeholder=\"Search Movie\" type=\"search_text\" id='autocomplete'>" +
+        "</label>" +
+        "<p><input value='Search' type=\"submit\"/></p>\n" +
+        "</form>");
+
     let genreBody = jQuery("#genre_body");
 
     let rowHTML = "";
@@ -39,22 +52,22 @@ function handleGenreResult(resultData) {
         "        <input type=\"hidden\" name=\"sort\" value=\"title_asc_rating_asc\"/>\n" +
         "        <input type=\"hidden\" name=\"limit\" value=\"10\"/>\n" +
         "<label>" +
-        "<input name=\"search_title\" placeholder=\"Enter a title\" type=\"text\" autocomplete=\"on\">" +
+        "<input name=\"search_title\" placeholder=\"Enter a title\" type=\"text\">" +
         "</label>" + "<br>" +
         "<label>" +
-        "<input name=\"search_year\" placeholder=\"Enter a release year\" type=\"text\" autocomplete=\"on\">" +
+        "<input name=\"search_year\" placeholder=\"Enter a release year\" type=\"text\">" +
         "</label>" + "<br>" +
         "<label>" +
-        "<input name=\"search_director\" placeholder=\"Enter a director's name\" type=\"text\" autocomplete=\"on\">" +
+        "<input name=\"search_director\" placeholder=\"Enter a director's name\" type=\"text\">" +
         "</label>" + "<br>" +
         "<label>" +
-        "<input name=\"search_star\" placeholder=\"Enter a star's name\" type=\"text\" autocomplete=\"on\">" +
+        "<input name=\"search_star\" placeholder=\"Enter a star's name\" type=\"text\">" +
         "</label>" + "<br>" +
         "        <p align='center'><input type=\"submit\"/></p>\n" +
         "</form>");
 }
 
-$('#search_body').autocomplete({
+$('#search_bar').autocomplete({
     // documentation of the lookup function can be found under the "Custom lookup function" section
     lookup: function (query, doneCallback) {
         handleLookup(query, doneCallback)

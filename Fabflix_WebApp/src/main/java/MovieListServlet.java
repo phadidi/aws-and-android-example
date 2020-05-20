@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 
@@ -37,7 +38,7 @@ public class MovieListServlet extends HttpServlet {
 
         String searchLetter = request.getParameter("letter");
 
-        String searchTitle = request.getParameter("search_title");
+        String searchTitle = splitSearchString(request.getParameter("search_title"));
         String searchYear = request.getParameter("search_year");
         String searchDirector = request.getParameter("search_director");
         String searchStar = request.getParameter("search_star");
@@ -75,7 +76,7 @@ public class MovieListServlet extends HttpServlet {
 
             //TODO: implement boolean mode into MATCH AGAINST queries
             if (searchTitle != null) {
-                query += "AND MATCH (m.title) AGAINST('" + searchTitle + "')\n";
+                query += "AND MATCH (m.title) AGAINST('" + searchTitle + "' in boolean mode)\n";
             }
 
             if (searchYear != null) {
@@ -205,5 +206,20 @@ public class MovieListServlet extends HttpServlet {
         responseJsonObject.addProperty("status", "success");
         responseJsonObject.addProperty("message", "success");
         response.getWriter().write(responseJsonObject.toString());
+    }
+    public String splitSearchString(String q){
+        if(q != null) {
+            String split[] = q.split(" ");
+
+            ArrayList<String> result = new ArrayList<String>();
+
+            for (String temp : split) {
+                temp = "+" + temp + "*";
+                result.add(temp);
+            }
+            String resultString = String.join(" ", result);
+            return resultString;
+        }
+        return null;
     }
 }

@@ -49,12 +49,40 @@
         box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
         border-bottom: none;
     }
+
+    input[type=search_text] {
+        width: 500px;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: white;
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        padding: 12px 20px 12px;
+    }
+
+    .button {
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
 </style>
 <body>
 <div style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;">
     <h1>Fabflix</h1>
     <h2>Main Page</h2>
 </div>
+
+<div id="search_bar" style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>
 
 <p align="center"><strong>Browse by genre:</strong></p>
 <div id="genre_body" style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>
