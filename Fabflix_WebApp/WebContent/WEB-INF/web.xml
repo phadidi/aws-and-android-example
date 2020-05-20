@@ -8,7 +8,7 @@
         <welcome-file>main.html</welcome-file>
     </welcome-file-list>
 
-    
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>HTTPSOnly</web-resource-name>

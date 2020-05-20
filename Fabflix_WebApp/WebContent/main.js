@@ -80,11 +80,11 @@ function handleLookup(query, doneCallback) {
         // generate the request url from the query.
         // escape the query string to avoid errors caused by special characters
         "url": "movie-suggestion?query=" + escape(query),
-        "success": function(data) {
+        "success": function (data) {
             // pass the data, query, and doneCallback function into the success handler
             handleLookupAjaxSuccess(data, query, doneCallback)
         },
-        "error": function(errorData) {
+        "error": function (errorData) {
             console.log("lookup ajax error")
             console.log(errorData)
         }
@@ -111,7 +111,7 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
     //   the "Response Format" section in documentation
-    doneCallback( { suggestions: jsonData } );
+    doneCallback({suggestions: jsonData});
 }
 
 
@@ -143,7 +143,7 @@ $('#autocomplete').autocomplete({
     lookup: function (query, doneCallback) {
         handleLookup(query, doneCallback)
     },
-    onSelect: function(suggestion) {
+    onSelect: function (suggestion) {
         handleSelectSuggestion(suggestion)
     },
     // set delay time
@@ -162,7 +162,7 @@ function handleNormalSearch(query) {
 }
 
 // bind pressing enter key to a handler function
-$('#autocomplete').keypress(function(event) {
+$('#autocomplete').keypress(function (event) {
     // keyCode 13 is the enter key
     if (event.keyCode == 13) {
         // pass the value of the input box to the handler function

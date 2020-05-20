@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
-    private EditText username;
+    private EditText email;
     private EditText password;
     private TextView message;
     private Button loginButton;
@@ -34,7 +34,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // upon creation, inflate and initialize the layout
         setContentView(R.layout.login);
-        username = findViewById(R.id.username);
+        email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         message = findViewById(R.id.message);
         loginButton = findViewById(R.id.login);
@@ -42,7 +42,7 @@ public class Login extends AppCompatActivity {
          * In Android, localhost is the address of the device or the emulator.
          * To connect to your machine, you need to use the below IP address
          * **/
-        url = "http://10.0.2.2:8080/cs122b-team-13/api/";
+        url = "https://10.0.2.2:8443/cs122b-spring20-team-13/api/";
 
         //assign a listener to call a function to handle the user request when clicking a button
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +81,7 @@ public class Login extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 // Post request form data
                 final Map<String, String> params = new HashMap<>();
-                params.put("username", username.getText().toString());
+                params.put("email", email.getText().toString());
                 params.put("password", password.getText().toString());
 
                 return params;
