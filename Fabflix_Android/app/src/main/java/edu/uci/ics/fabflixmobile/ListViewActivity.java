@@ -7,17 +7,39 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ListViewActivity extends Activity {
+    @Resource(name = "jdbc/moviedb")
+    private DataSource dataSource;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview);
         //this should be retrieved from the database and the backend server
         final ArrayList<Movie> movies = new ArrayList<>();
-        movies.add(new Movie("The Terminal", (short) 2004));
-        movies.add(new Movie("The Final Season", (short) 2007));
+
+        try {
+            Connection dbcon = dataSource.getConnection();
+            PreparedStatement statementId = dbcon.prepareStatement("select * from movies limit 5;");
+            ResultSet rs = statementId.executeQuery();
+            while (rs.next()) {
+                movies.add(
+                        new Movie(rs.getString("id"), rs.getString("title"),
+                                rs.getInt("year"), rs.getString("director")));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
 
         MovieListViewAdapter adapter = new MovieListViewAdapter(movies, this);
 
@@ -28,7 +50,7 @@ public class ListViewActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movie = movies.get(position);
-                String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getName(), movie.getYear());
+                String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getTitle(), movie.getYear());
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
         });
