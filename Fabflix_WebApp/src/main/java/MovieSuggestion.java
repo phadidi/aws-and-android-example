@@ -1,45 +1,26 @@
 package main.java;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.util.HashMap;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.HashMap;
 
 // server endpoint URL
 @WebServlet("/movie-suggestion")
 public class MovieSuggestion extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
-    @Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
-    /*
-     * populate the Super hero hash map.
-     * Key is hero ID. Value is hero name.
-     */
-    public static HashMap<String, String> movieMap = new HashMap<>();
 
     static {
 //        superHeroMap.put(1, "Blade");
@@ -64,8 +45,37 @@ public class MovieSuggestion extends HttpServlet {
 //        superHeroMap.put(20, "Spider-Man");
     }
 
+    /*
+     * populate the Super hero hash map.
+     * Key is hero ID. Value is hero name.
+     */
+    public static HashMap<String, String> movieMap = new HashMap<>();
+
+    @Resource(name = "jdbc/moviedb")
+    private DataSource dataSource;
+
     public MovieSuggestion() {
         super();
+    }
+
+    /*
+     * Generate the JSON Object from hero to be like this format:
+     * {
+     *   "value": "Iron Man",
+     *   "data": { "movieId": 11 }
+     * }
+     *
+     */
+    private static JsonObject generateJsonObject(String movieID, String movieTitle) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("value", movieTitle);
+
+        JsonObject additionalDataJsonObject = new JsonObject();
+        System.out.println(movieID);
+        additionalDataJsonObject.addProperty("movieID", movieID);
+
+        jsonObject.add("data", additionalDataJsonObject);
+        return jsonObject;
     }
 
     /*
@@ -136,29 +146,9 @@ public class MovieSuggestion extends HttpServlet {
         }
     }
 
-    /*
-     * Generate the JSON Object from hero to be like this format:
-     * {
-     *   "value": "Iron Man",
-     *   "data": { "movieId": 11 }
-     * }
-     *
-     */
-    private static JsonObject generateJsonObject(String movieID, String movieTitle) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("value", movieTitle);
-
-        JsonObject additionalDataJsonObject = new JsonObject();
-        System.out.println(movieID);
-        additionalDataJsonObject.addProperty("movieID", movieID);
-
-        jsonObject.add("data", additionalDataJsonObject);
-        return jsonObject;
-    }
-
     public String splitSearchString(String q){
         if(q != null) {
-            String split[] = q.split(" ");
+            String[] split = q.split(" ");
 
             ArrayList<String> result = new ArrayList<String>();
 

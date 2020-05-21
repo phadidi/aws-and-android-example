@@ -65,7 +65,7 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     if (condition) {
         conditionURL += "&genre=" + condition;
     }
-    if(limit && page && sort) {
+    if (limit && page && sort) {
         conditionURL += "&limit=" + limit + "&page=" + page + "&sort=" + sort;
     }
 
@@ -96,12 +96,11 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     movieInfo.append("<p>Price: " + resultData[0]["price"] + "</p>");
 
     let returnLink = jQuery("#return_link");
-    if(conditionURL.localeCompare("") == 0){
+    if (conditionURL.localeCompare("") == 0) {
         console.log(conditionURL);
         console.log("condition worked");
         returnLink.append("<p align=\"center\"><a href=\"main.html\"><strong>Return to Main Page</strong></a></p>");
-    }
-    else {
+    } else {
         console.log(conditionURL);
         console.log("condition not worked");
         returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");

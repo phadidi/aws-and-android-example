@@ -124,9 +124,9 @@ public class MovieListServlet extends HttpServlet {
             }
 
             if (limit.compareTo("10") == 0) {
-                query += "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
+                query += "LIMIT 10 OFFSET " + page + ";";
             } else {
-                query += "LIMIT " + limit + " OFFSET " + Integer.toString(page) + ";";
+                query += "LIMIT " + limit + " OFFSET " + page + ";";
             }
 
             System.out.println(query);
@@ -207,9 +207,10 @@ public class MovieListServlet extends HttpServlet {
         responseJsonObject.addProperty("message", "success");
         response.getWriter().write(responseJsonObject.toString());
     }
-    public String splitSearchString(String q){
-        if(q != null) {
-            String split[] = q.split(" ");
+
+    public String splitSearchString(String q) {
+        if (q != null) {
+            String[] split = q.split(" ");
 
             ArrayList<String> result = new ArrayList<String>();
 
