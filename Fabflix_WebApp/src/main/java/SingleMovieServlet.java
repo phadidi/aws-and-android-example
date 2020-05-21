@@ -85,7 +85,6 @@ public class SingleMovieServlet extends HttpServlet {
 
             // With one movie id, we are expecting to get up to one movie
             while (rs.next()) {
-
                 movieId = rs.getString("id");
                 movieTitle = rs.getString("title");
                 movieYear = rs.getString("year");
