@@ -65,7 +65,9 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
     if (condition) {
         conditionURL += "&genre=" + condition;
     }
-    conditionURL += "&limit=" + limit + "&page=" + page + "&sort=" + sort;
+    if(limit && page && sort) {
+        conditionURL += "&limit=" + limit + "&page=" + page + "&sort=" + sort;
+    }
 
     // populate the star info h3
     // find the empty h3 body by id "movie_info"
@@ -91,10 +93,19 @@ function handleResult(resultData, condition, page, limit, sort, searchTitle, sea
             movieInfo.append(", ");
     }
     movieInfo.append("</p>" + "<p>Rating: " + resultData[0]["rating"] + "</p>");
-    movieInfo.append("<p>Price: " + resultData[0]["price"] + "</p>")
+    movieInfo.append("<p>Price: " + resultData[0]["price"] + "</p>");
 
     let returnLink = jQuery("#return_link");
-    returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");
+    if(conditionURL.localeCompare("") == 0){
+        console.log(conditionURL);
+        console.log("condition worked");
+        returnLink.append("<p align=\"center\"><a href=\"main.html\"><strong>Return to Main Page</strong></a></p>");
+    }
+    else {
+        console.log(conditionURL);
+        console.log("condition not worked");
+        returnLink.append("<p align=\"center\"><a href=\"movielist.html?" + conditionURL + "\"><strong>Return to Movie List</strong></a></p>");
+    }
 }
 
 /**
@@ -160,7 +171,7 @@ if (searchStar) {
 jQuery.ajax({
     dataType: "json",  // Setting return data type
     method: "GET",// Setting request method
-    url: "api/single-movie?id=" + movieId, // Setting request url, which is mapped by StarsServlet in Stars.java
+    url: url_string, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
 

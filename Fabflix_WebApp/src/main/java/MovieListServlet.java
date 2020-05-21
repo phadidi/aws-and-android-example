@@ -207,9 +207,8 @@ public class MovieListServlet extends HttpServlet {
         responseJsonObject.addProperty("message", "success");
         response.getWriter().write(responseJsonObject.toString());
     }
-
-    public String splitSearchString(String q) {
-        if (q != null) {
+    public String splitSearchString(String q){
+        if(q != null) {
             String split[] = q.split(" ");
 
             ArrayList<String> result = new ArrayList<String>();

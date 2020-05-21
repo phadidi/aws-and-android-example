@@ -22,8 +22,10 @@
     <!-- Bootstrap for CSS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="autocomplete_style.css">
 
     <title>Main Page | Fabflix</title>
 </head>
@@ -86,7 +88,14 @@
     <h2>Main Page</h2>
 </div>
 
-<div id="search_bar" style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>
+<!-- <div id="search_bar" style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>-->
+<div id='search_bar' class="container">
+    <input type="text" name="search_title" id="autocomplete"
+           class="autocomplete-searchbox form-control"
+           placeholder="Search Movies"/>
+</div>
+
+<script src="autocomplete.js"></script>
 
 <p align="center"><strong>Browse by genre:</strong></p>
 <div id="genre_body" style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>
@@ -98,7 +107,7 @@
 
 <hr>
 
-<p align="center"><strong>Advanced Search: </strong></p>
+<p align="center"><strong>Search Movie: </strong></p>
 <div id="search_body" style="text-align: center; width: 1000px; overflow: auto; padding: 20px; margin: 0 auto;"></div>
 
 <button class="btn" onclick="window.location.href='cart.html'" style="position: fixed; right: 2rem; bottom: 2rem;">Check
