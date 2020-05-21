@@ -57,13 +57,19 @@ public class SingleMovieServlet extends HttpServlet {
                     "and m.id = '" + thisId + "';";*/
 
             // Declare our statement
-            PreparedStatement statement = dbcon.prepareStatement("select m.id, m.title as title, m.year as year, m.director, \n" +
-                    "group_concat(distinct g.name ORDER BY g.name separator ', ') as genrenames, \n" +
-                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds \n" +
-                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim \n" +
-                    "where s.id = sim.starId and m.id = sim.movieId \n" +
-                    "and g.id = gim.genreId and m.id = gim.movieId \n" +
-                    "and m.id = ?;");
+            PreparedStatement statement = dbcon.prepareStatement("select m.id, m.title, m.year, m.director,\n" +
+                    "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
+                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds,\n" +
+                    "r.rating\n" +
+                    "FROM (movies m, genres g, stars s, stars_in_movies sim, genres_in_movies gim)\n" +
+                    "LEFT JOIN ratings r\n" +
+                    "ON m.id = r.movieId\n" +
+                    "WHERE m.id=gim.movieId AND\n" +
+                    "gim.genreId = g.Id AND\n" +
+                    "m.id=sim.movieId AND\n" +
+                    "sim.starId=s.id\n" +
+                    "AND m.id = ? \n" +
+                    "GROUP BY m.id");
             statement.setString(1, thisId);
 
             // Set the parameter represented by "?" in the query to the id we get from url,
@@ -75,59 +81,40 @@ public class SingleMovieServlet extends HttpServlet {
 
             JsonArray jsonArray = new JsonArray();
 
-            String movieId = "";
-            String movieTitle = "";
-            String movieYear = "";
-            String movieDirector = "";
-            String movieGenres = "";
-            String movieStars = "";
-            String price = "10.99";
-
             // With one movie id, we are expecting to get up to one movie
             while (rs.next()) {
-
-                movieId = rs.getString("id");
-                movieTitle = rs.getString("title");
-                movieYear = rs.getString("year");
-                movieDirector = rs.getString("director");
-                movieGenres = rs.getString("genrenames");
-                movieStars = rs.getString("starNamesAndIds");
-            }
-
-            // Create a JsonObject based on the data we retrieve from rs
-
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("id", movieId);
-            jsonObject.addProperty("title", movieTitle);
-            jsonObject.addProperty("year", movieYear);
-            jsonObject.addProperty("director", movieDirector);
-            jsonObject.addProperty("genres", movieGenres);
-            jsonObject.addProperty("stars", movieStars);
-
-            //query = "select rating from ratings where movieId = '" + thisId + "';";
-            PreparedStatement statementRatings = dbcon.prepareStatement("select rating from ratings where movieId = ?;");
-            statementRatings.setString(1, thisId);
-            ResultSet rsRatings = statementRatings.executeQuery();
-            String movieRating = "N/A";
-            while (rsRatings.next()) {
+                String movie_id = rs.getString("id");
+                String movie_title = rs.getString("title");
+                String movie_year = rs.getString("year");
+                String movie_director = rs.getString("director");
+                String movie_genres = rs.getString("genresname");
+                String movie_starNamesAndIds = rs.getString("starNamesAndIds");
+                String movieRating = "N/A";
                 String tempRating = rs.getString("rating");
-                if (tempRating != null)
-                    if (!tempRating.isEmpty())
-                        movieRating = tempRating;
-            }
-            jsonObject.addProperty("rating", movieRating);
-            jsonObject.addProperty("price", price);
+                String price = "10.99";
+                if (tempRating != null) {
+                    movieRating = tempRating;
+                }
 
-            jsonArray.add(jsonObject);
+                // Create a JsonObject based on the data we retrieve from rs
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id", movie_id);
+                jsonObject.addProperty("title", movie_title);
+                jsonObject.addProperty("year", movie_year);
+                jsonObject.addProperty("director", movie_director);
+                jsonObject.addProperty("genres", movie_genres);
+                jsonObject.addProperty("stars", movie_starNamesAndIds);
+                jsonObject.addProperty("rating", movieRating);
+                jsonObject.addProperty("price", price);
+                jsonArray.add(jsonObject);
+            }
 
 
             // write JSON string to output
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
             response.setStatus(200);
-            rsRatings.close();
             rs.close();
-            statementRatings.close();
             statement.close();
             dbcon.close();
         } catch (Exception e) {
