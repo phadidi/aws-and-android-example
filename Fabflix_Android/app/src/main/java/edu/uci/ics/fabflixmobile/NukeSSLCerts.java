@@ -1,13 +1,8 @@
 package edu.uci.ics.fabflixmobile;
 
+import javax.net.ssl.*;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 class NukeSSLCerts {
     // Need to be called once in the entire application to disable self-signed SSL checks.

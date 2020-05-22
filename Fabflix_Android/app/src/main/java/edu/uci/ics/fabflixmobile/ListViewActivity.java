@@ -9,10 +9,7 @@ import android.widget.Toast;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class ListViewActivity extends Activity {
@@ -28,7 +25,8 @@ public class ListViewActivity extends Activity {
         final ArrayList<Movie> movies = new ArrayList<>();
 
         try {
-            Connection dbcon = dataSource.getConnection();
+            //TODO: correctly implement a mysql connection for future movielist queries
+            Connection dbcon = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", "mytestuser", "mypassword");
             PreparedStatement statementId = dbcon.prepareStatement("select * from movies limit 5;");
             ResultSet rs = statementId.executeQuery();
             while (rs.next()) {

@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
 public class MovieListViewAdapter extends ArrayAdapter<Movie> {
-    private ArrayList<Movie> movies;
+    private final ArrayList<Movie> movies;
 
     public MovieListViewAdapter(ArrayList<Movie> movies, Context context) {
         super(context, R.layout.row, movies);

@@ -30,8 +30,7 @@ function handleLookup(query, doneCallback) {
         console.log("using FRONT END cached look up");
         console.log(myStorage.length);
         handleLookupAjaxSuccess(myStorage.getItem(query), query, doneCallback);
-    }
-    else {
+    } else {
         // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
         // with the query data
         jQuery.ajax({
@@ -68,14 +67,14 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 
     console.log(jsonData);
     // TODO: if you want to cache the result into a global variable you can do it here
-    if(myStorage.length == 80){ // removes first item in myStorage if size is already 100
+    if (myStorage.length == 80) { // removes first item in myStorage if size is already 100
         myStorage.removeItem(myStorage.key(0));
     }
     myStorage.setItem(query, data);
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
     //   the "Response Format" section in documentation
-    doneCallback( { suggestions: jsonData } );
+    doneCallback({suggestions: jsonData});
 }
 
 
@@ -108,7 +107,7 @@ $('#autocomplete').autocomplete({
     lookup: function (query, doneCallback) {
         handleLookup(query, doneCallback)
     },
-    onSelect: function(suggestion) {
+    onSelect: function (suggestion) {
         handleSelectSuggestion(suggestion)
     },
     // set delay time
@@ -125,11 +124,11 @@ $('#autocomplete').autocomplete({
 function handleNormalSearch(query) {
     console.log("doing normal search with query: " + query);
     // TODO: you should do normal search here
-    window.location.replace("movielist.html?page=1&sort=title_asc_rating_asc&limit=10&search_title="+escape(query));
+    window.location.replace("movielist.html?page=1&sort=title_asc_rating_asc&limit=10&search_title=" + escape(query));
 }
 
 // bind pressing enter key to a handler function
-$('#autocomplete').keypress(function(event) {
+$('#autocomplete').keypress(function (event) {
     // keyCode 13 is the enter key
     if (event.keyCode == 13) {
         // pass the value of the input box to the handler function
@@ -138,7 +137,7 @@ $('#autocomplete').keypress(function(event) {
 })
 
 
-$('#search_button').click(function(){
+$('#search_button').click(function () {
     handleNormalSearch($('#autocomplete').val())
 })
 // TODO: if you have a "search" button, you may want to bind the onClick event as well of that button
