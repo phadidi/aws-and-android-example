@@ -18,28 +18,38 @@
  * The doneCallback is a callback function provided by the library, after you get the
  *   suggestion list from AJAX, you need to call this function to let the library know.
  */
+
+let myStorage = window.sessionStorage;
+
 function handleLookup(query, doneCallback) {
     console.log("autocomplete initiated")
     console.log("sending AJAX request to backend Java Servlet")
 
     // TODO: if you want to check past query results first, you can do it here
-
-    // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
-    // with the query data
-    jQuery.ajax({
-        "method": "GET",
-        // generate the request url from the query.
-        // escape the query string to avoid errors caused by special characters
-        "url": "movie-suggestion?query=" + escape(query),
-        "success": function(data) {
-            // pass the data, query, and doneCallback function into the success handler
-            handleLookupAjaxSuccess(data, query, doneCallback)
-        },
-        "error": function(errorData) {
-            console.log("lookup ajax error")
-            console.log(errorData)
-        }
-    })
+    if (myStorage.hasOwnProperty(query)) {
+        console.log("using FRONT END cached look up");
+        console.log(myStorage.length);
+        handleLookupAjaxSuccess(myStorage.getItem(query), query, doneCallback);
+    }
+    else {
+        // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
+        // with the query data
+        jQuery.ajax({
+            "method": "GET",
+            // generate the request url from the query.
+            // escape the query string to avoid errors caused by special characters
+            "url": "movie-suggestion?query=" + escape(query),
+            "success": function (data) {
+                // pass the data, query, and doneCallback function into the success handler
+                console.log("using BACK END look up");
+                handleLookupAjaxSuccess(data, query, doneCallback)
+            },
+            "error": function (errorData) {
+                console.log("lookup ajax error")
+                console.log(errorData)
+            }
+        })
+    }
 }
 
 
@@ -55,10 +65,13 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 
     // parse the string into JSON
     var jsonData = JSON.parse(data);
-    console.log(jsonData)
 
+    console.log(jsonData);
     // TODO: if you want to cache the result into a global variable you can do it here
-
+    if(myStorage.length == 80){ // removes first item in myStorage if size is already 100
+        myStorage.removeItem(myStorage.key(0));
+    }
+    myStorage.setItem(query, data);
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
     //   the "Response Format" section in documentation
@@ -102,6 +115,7 @@ $('#autocomplete').autocomplete({
     deferRequestBy: 300,
     // there are some other parameters that you might want to use to satisfy all the requirements
     // TODO: add other parameters, such as minimum characters
+    minChars: 3
 });
 
 
@@ -111,6 +125,7 @@ $('#autocomplete').autocomplete({
 function handleNormalSearch(query) {
     console.log("doing normal search with query: " + query);
     // TODO: you should do normal search here
+    window.location.replace("movielist.html?page=1&sort=title_asc_rating_asc&limit=10&search_title="+escape(query));
 }
 
 // bind pressing enter key to a handler function
@@ -122,6 +137,9 @@ $('#autocomplete').keypress(function(event) {
     }
 })
 
-// TODO: if you have a "search" button, you may want to bind the onClick event as well of that button
 
+$('#search_button').click(function(){
+    handleNormalSearch($('#autocomplete').val())
+})
+// TODO: if you have a "search" button, you may want to bind the onClick event as well of that button
 
