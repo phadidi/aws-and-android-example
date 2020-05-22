@@ -31,7 +31,7 @@ public class Login extends AppCompatActivity {
     private TextView message;
     private Button loginButton;
     private String url;
-    private String SITE_KEY = "6LeKvPAUAAAAABY_fGoGUY8FVwSafDXBozZJvk4I";
+    //private String SITE_KEY = "6LeKvPAUAAAAABY_fGoGUY8FVwSafDXBozZJvk4I";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class Login extends AppCompatActivity {
          * In Android, localhost is the address of the device or the emulator.
          * To connect to your machine, you need to use the below IP address
          * **/
-        url = "https://10.2.2.2:8443/cs122b-spring20-team-13/api/login";
+        url = "https://10.0.2.2:8443/cs122b-spring20-team-13/api/login";
 
         //assign a listener to call a function to handle the user request when clicking a button
         loginButton.setOnClickListener(view -> login());
