@@ -46,66 +46,28 @@ public class Login extends AppCompatActivity {
          * In Android, localhost is the address of the device or the emulator.
          * To connect to your machine, you need to use the below IP address
          * **/
-        url = "https://localhost:8443/cs122b-spring20-team-13/";
+        url = "https://10.2.2.2:8443/cs122b-spring20-team-13/api/login";
 
         //assign a listener to call a function to handle the user request when clicking a button
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                login();
-            }
-        });
+        loginButton.setOnClickListener(view -> login());
     }
 
     public void login() {
-        //TODO: Identify what causes crash even when reCAPTCHA appears verified
-        SafetyNet.getClient(this).verifyWithRecaptcha(SITE_KEY)
-                .addOnSuccessListener(this,
-                        response -> {
-                            // Indicates communication with reCAPTCHA service was
-                            // successful.
-                            String userResponseToken = response.getTokenResult();
-                            if (!userResponseToken.isEmpty()) {
-                                // Validate the user response token using the
-                                // reCAPTCHA siteverify API.
-                            }
-                        })
-                .addOnFailureListener(this, e -> {
-                    if (e instanceof ApiException) {
-                        // An error occurred when communicating with the
-                        // reCAPTCHA service. Refer to the status code to
-                        // handle the error appropriately.
-                        ApiException apiException = (ApiException) e;
-                        int statusCode = apiException.getStatusCode();
-                        Log.d("Login", "Error: " + CommonStatusCodes
-                                .getStatusCodeString(statusCode));
-                    } else {
-                        // A different, unknown type of error occurred.
-                        Log.d("Login", "Error: " + e.getMessage());
-
-                    }
-                });
         message.setText("Trying to login");
         // Use the same network queue across our application
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-        //request type is POST
-        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url + "login", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                //TODO should parse the json response to redirect to appropriate functions.
-                Log.d("login.success", response);
-                //initialize the activity(page)/destination
-                Intent listPage = new Intent(Login.this, ListViewActivity.class);
-                //without starting the activity/page, nothing would happen
-                startActivity(listPage);
-            }
+        // request type is POST
+        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url, response -> {
+            //TODO should parse the json response to redirect to appropriate functions.
+            Log.d("login.success", response);
+            // initialize the activity(page)/destination
+            Intent listPage = new Intent(Login.this, ListViewActivity.class);
+            // without starting the activity/page, nothing would happen
+            startActivity(listPage);
         },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("login.error", error.toString());
-                    }
+                error -> {
+                    // error
+                    Log.d("login.error", error.toString());
                 }) {
             @Override
             protected Map<String, String> getParams() {
@@ -113,13 +75,10 @@ public class Login extends AppCompatActivity {
                 final Map<String, String> params = new HashMap<>();
                 params.put("email", email.getText().toString());
                 params.put("password", password.getText().toString());
-
                 return params;
             }
         };
-
         // !important: queue.add is where the login request is actually sent
         queue.add(loginRequest);
-
     }
 }

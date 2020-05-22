@@ -30,19 +30,21 @@ public class LoginServlet extends HttpServlet {
         System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
 
         // Verify reCAPTCHA
-        try {
-            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
-        } catch (Exception e) {
-            out.println("<html>");
-            out.println("<head><title>Error</title></head>");
-            out.println("<body>");
-            out.println("<p>recaptcha verification error</p>");
-            out.println("<p>" + e.getMessage() + "</p>");
-            out.println("</body>");
-            out.println("</html>");
+        if (!request.getHeader("User-Agent").toLowerCase().contains("android")) {
+            try {
+                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+            } catch (Exception e) {
+                out.println("<html>");
+                out.println("<head><title>Error</title></head>");
+                out.println("<body>");
+                out.println("<p>recaptcha verification error</p>");
+                out.println("<p>" + e.getMessage() + "</p>");
+                out.println("</body>");
+                out.println("</html>");
 
-            out.close();
-            return;
+                out.close();
+                return;
+            }
         }
 
         try {
