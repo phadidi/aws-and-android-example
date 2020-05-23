@@ -1,17 +1,10 @@
 package edu.uci.ics.fabflixmobile;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,8 +12,6 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class SingleMovieActivity extends Activity {
     private String url;
@@ -80,7 +71,7 @@ public class SingleMovieActivity extends Activity {
                 myear.setText("Year: " + year);
                 mdirector.setText("Director: " + director);
                 mstars.setText("Starring: " + stars);
-                mgenres.setText("Genre: " + genre);
+                mgenres.setText("Genre(s): " + genre);
             }
             catch(final JSONException e){
                 Log.e("Json parsing error", e.toString());

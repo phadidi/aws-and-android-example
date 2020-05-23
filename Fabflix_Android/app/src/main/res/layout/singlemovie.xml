@@ -6,7 +6,7 @@
 
     <TextView
             android:text=""
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/movieTitle"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp"
@@ -16,7 +16,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
     <TextView
             android:text=""
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/movieYear"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@+id/movieTitle" android:layout_marginTop="48dp"
@@ -26,7 +26,7 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.077"/>
     <TextView
             android:text=""
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/movieStars"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@+id/movieYear" android:layout_marginTop="20dp"
@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.077"/>
     <TextView
             android:text=""
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/movieDirector"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@+id/movieStars" android:layout_marginTop="40dp"
@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.077"/>
     <TextView
             android:text=""
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/movieGenres"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@+id/movieDirector" android:layout_marginTop="20dp"
