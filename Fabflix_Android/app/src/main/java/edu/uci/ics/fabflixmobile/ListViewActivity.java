@@ -102,7 +102,6 @@ public class ListViewActivity extends Activity {
                     directorView.setText("Director: " + movie.getYear());
                     TextView genresView = findViewById(R.id.movieGenres);
                     genresView.setText("Genres: " + movie.getGenre());
-
                     startActivity(singleMoviePage);
                 },
                         error -> {
