@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
@@ -92,16 +91,6 @@ public class ListViewActivity extends Activity {
                     // initialize the activity(page)/destination
                     Intent singleMoviePage = new Intent(ListViewActivity.this, SingleMovieActivity.class);
                     // without starting the activity/page, nothing would happen
-                    TextView titleView = findViewById(R.id.movieTitle);
-                    titleView.setText(movie.getTitle());
-                    TextView starsView = findViewById(R.id.movieStars);
-                    starsView.setText("Stars: " + movie.getStars());
-                    TextView yearView = findViewById(R.id.movieYear);
-                    yearView.setText("Year: " + movie.getYear());
-                    TextView directorView = findViewById(R.id.movieDirector);
-                    directorView.setText("Director: " + movie.getYear());
-                    TextView genresView = findViewById(R.id.movieGenres);
-                    genresView.setText("Genres: " + movie.getGenre());
                     startActivity(singleMoviePage);
                 },
                         error -> {
