@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListViewActivity extends Activity {
     private String url;
@@ -38,16 +40,16 @@ public class ListViewActivity extends Activity {
 
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
-        final StringRequest loginRequest = new StringRequest(Request.Method.GET, url + "movielist?page=1&sort=title_asc_rating_asc&limit=10&search_title=" + query, response -> {
+        final StringRequest listRequest = new StringRequest(Request.Method.GET, url + "movielist?page=1&sort=title_asc_rating_asc&limit=10&search_title=" + query, response -> {
             //TODO should parse the json response to redirect to appropriate functions.
             Log.d("list.success", response);
             //System.out.println(response.getClass().getName());
 
-            try{
+            try {
                 JSONArray jsonArray = new JSONArray(response);
 
                 // Getting JSON Array node
-                for(int i = 0; i < jsonArray.length(); i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     final JSONObject m = jsonArray.getJSONObject(i);
                     String id = m.getString("id");
                     String title = m.getString("title");
@@ -77,71 +79,37 @@ public class ListViewActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO: from here, redirect to Single Movie Page
                 Movie movie = movies.get(position);
                 String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getTitle(), movie.getYear());
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                // request type is GET
+                final StringRequest singleMovieRequest = new StringRequest(Request.Method.GET, url + "single-movie", response -> {
+                    //TODO should parse the json response to redirect to appropriate functions.
+                    Log.d("singlemovie.success", response);
+                    System.out.println(response);
+                    // initialize the activity(page)/destination
+                    Intent mainPage = new Intent(ListViewActivity.this, SingleMovieActivity.class);
+                    // without starting the activity/page, nothing would happen
+                    startActivity(mainPage);
+                },
+                        error -> {
+                            // error
+                            Log.d("singlemovie.error", error.toString());
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        // GET request needs movie id
+                        final Map<String, String> params = new HashMap<>();
+                        params.put("id", movie.getId());
+                        return params;
+                    }
+                };
+                // !important: queue.add is where the singlemovie request is actually sent
+                queue.add(singleMovieRequest);
             }
         });
 
-        queue.add(loginRequest);
+        queue.add(listRequest);
     }
 }
-
-
-
-//package edu.uci.ics.fabflixmobile;
-//
-//import android.app.Activity;
-//import android.os.Bundle;
-//import android.view.View;
-//import android.widget.AdapterView;
-//import android.widget.ListView;
-//import android.widget.Toast;
-//
-//import javax.annotation.Resource;
-//import javax.sql.DataSource;
-//import java.sql.*;
-//import java.util.ArrayList;
-//
-//public class ListViewActivity extends Activity {
-//    @Resource(name = "jdbc/moviedb")
-//    private DataSource dataSource;
-//
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.listview);
-//        //this should be retrieved from the database and the backend server
-//        final ArrayList<Movie> movies = new ArrayList<>();
-//
-//        try {
-//            //TODO: correctly implement a mysql connection for future movielist queries
-//            Connection dbcon = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", "mytestuser", "mypassword");
-//            PreparedStatement statementId = dbcon.prepareStatement("select * from movies limit 5;");
-//            ResultSet rs = statementId.executeQuery();
-//            while (rs.next()) {
-//                movies.add(
-//                        new Movie(rs.getString("id"), rs.getString("title"),
-//                                rs.getInt("year"), rs.getString("director")));
-//            }
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//
-//
-//        MovieListViewAdapter adapter = new MovieListViewAdapter(movies, this);
-//
-//        ListView listView = findViewById(R.id.list);
-//        listView.setAdapter(adapter);
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Movie movie = movies.get(position);
-//                String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getTitle(), movie.getYear());
-//                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//}
