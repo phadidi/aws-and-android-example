@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
@@ -18,8 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListViewActivity extends Activity {
     private String url;
@@ -84,27 +83,32 @@ public class ListViewActivity extends Activity {
                 String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getTitle(), movie.getYear());
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 // request type is GET
-                final StringRequest singleMovieRequest = new StringRequest(Request.Method.GET, url + "single-movie", response -> {
+                final StringRequest singleMovieRequest = new StringRequest(Request.Method.GET, url + "single-movie?id=" + movie.getId(), response -> {
                     //TODO should parse the json response to redirect to appropriate functions.
+
                     Log.d("singlemovie.success", response);
                     System.out.println(response);
+
                     // initialize the activity(page)/destination
-                    Intent mainPage = new Intent(ListViewActivity.this, SingleMovieActivity.class);
+                    Intent singleMoviePage = new Intent(ListViewActivity.this, SingleMovieActivity.class);
                     // without starting the activity/page, nothing would happen
-                    startActivity(mainPage);
+                    TextView titleView = findViewById(R.id.movieTitle);
+                    titleView.setText(movie.getTitle());
+                    TextView starsView = findViewById(R.id.movieStars);
+                    starsView.setText("Stars: " + movie.getStars());
+                    TextView yearView = findViewById(R.id.movieYear);
+                    yearView.setText("Year: " + movie.getYear());
+                    TextView directorView = findViewById(R.id.movieDirector);
+                    directorView.setText("Director: " + movie.getYear());
+                    TextView genresView = findViewById(R.id.movieGenres);
+                    genresView.setText("Genres: " + movie.getGenre());
+
+                    startActivity(singleMoviePage);
                 },
                         error -> {
                             // error
                             Log.d("singlemovie.error", error.toString());
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        // GET request needs movie id
-                        final Map<String, String> params = new HashMap<>();
-                        params.put("id", movie.getId());
-                        return params;
-                    }
-                };
+                        });
                 // !important: queue.add is where the singlemovie request is actually sent
                 queue.add(singleMovieRequest);
             }
