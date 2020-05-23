@@ -38,7 +38,7 @@ public class Login extends AppCompatActivity {
          * In Android, localhost is the address of the device or the emulator.
          * To connect to your machine, you need to use the below IP address
          * **/
-        url = "https://10.0.2.2:8443/cs122b-spring20-team-13/api/login";
+        url = "https://10.0.2.2:8443/cs122b-spring20-team-13/api/";
 
         //assign a listener to call a function to handle the user request when clicking a button
         loginButton.setOnClickListener(view -> login());
@@ -49,9 +49,10 @@ public class Login extends AppCompatActivity {
         // Use the same network queue across our application
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
         // request type is POST
-        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url, response -> {
+        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url + "login", response -> {
             //TODO should parse the json response to redirect to appropriate functions.
             Log.d("login.success", response);
+            System.out.println(response);
             // initialize the activity(page)/destination
             Intent listPage = new Intent(Login.this, ListViewActivity.class);
             // without starting the activity/page, nothing would happen
