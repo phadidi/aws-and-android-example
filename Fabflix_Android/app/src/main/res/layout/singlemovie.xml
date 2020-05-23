@@ -10,6 +10,8 @@
             android:layout_height="wrap_content" android:id="@+id/movieTitle"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="parent" android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toRightOf="parent" android:layout_marginRight="16dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
     <TextView
@@ -17,31 +19,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/movieYear"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintTop_toBottomOf="@+id/movieTitle" android:layout_marginTop="52dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/movieTitle" android:layout_marginTop="48dp"
+            app:layout_constraintLeft_toLeftOf="parent" android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toRightOf="parent" android:layout_marginRight="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.077"/>
     <TextView
             android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/movieStars"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@+id/movieYear" android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"/>
+            app:layout_constraintLeft_toLeftOf="parent" android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toRightOf="parent" android:layout_marginRight="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.077"/>
     <TextView
             android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/movieDirector"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintTop_toBottomOf="@+id/movieStars" android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/movieStars" android:layout_marginTop="40dp"
+            app:layout_constraintLeft_toLeftOf="parent" android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toRightOf="parent" android:layout_marginRight="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.077"/>
     <TextView
             android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/movieGenres"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintTop_toBottomOf="@+id/movieDirector" android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"/>
+            app:layout_constraintLeft_toLeftOf="parent" android:layout_marginLeft="16dp"
+            app:layout_constraintLeft_toRightOf="parent" android:layout_marginRight="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.077"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
