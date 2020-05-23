@@ -30,38 +30,36 @@ public class Main extends Activity {
 
         query = findViewById(R.id.search_bar);
         searchButton = findViewById(R.id.search_button);
+        message = findViewById(R.id.message);
 
         url = "https://10.0.2.2:8443/cs122b-spring20-team-13/api/";
 
         searchButton.setOnClickListener(view -> search());
-
     }
 
-    public void search(){
-        message.setText("Searching...");
-        final RequestQueue queue = NetworkManager.sharedManager(this).queue;
+    public void search() {
 
-        final StringRequest mainRequest = new StringRequest(Request.Method.GET, url + "main", response -> {
-            //TODO should parse the json response to redirect to appropriate functions.
-            Log.d("main.success", response);
-            // initialize the activity(page)/destination
-            Intent listView = new Intent(Main.this, ListViewActivity.class);
-            // without starting the activity/page, nothing would happen
-            startActivity(listView);
-        },
-                error -> {
-                    // error
-                    Log.d("main.error", error.toString());
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                // Post request form data
-                final Map<String, String> params = new HashMap<>();
-                params.put("query", query.getText().toString());
-                return params;
-            }
-        };
-        queue.add(mainRequest);
+        if (query.getText().toString().matches("")) {
+            Toast.makeText(this, "Please enter your search query", Toast.LENGTH_SHORT).show();
+        } else {
+            message.setText("Searching...");
+            final RequestQueue queue = NetworkManager.sharedManager(this).queue;
+
+            final StringRequest mainRequest = new StringRequest(Request.Method.GET, url + "main", response -> {
+                //TODO should parse the json response to redirect to appropriate functions.
+                Log.d("main.success", response);
+                // initialize the activity(page)/destination
+                Intent listView = new Intent(Main.this, ListViewActivity.class);
+                listView.putExtra("query", query.getText().toString());
+                // without starting the activity/page, nothing would happen
+                startActivity(listView);
+            },
+                    error -> {
+                        // error
+                        Log.d("main.error", error.toString());
+                    });
+            queue.add(mainRequest);
+        }
     }
 }
 
