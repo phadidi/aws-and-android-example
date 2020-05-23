@@ -54,9 +54,9 @@ public class Login extends AppCompatActivity {
             Log.d("login.success", response);
             System.out.println(response);
             // initialize the activity(page)/destination
-            Intent listPage = new Intent(Login.this, ListViewActivity.class);
+            Intent mainPage = new Intent(Login.this, Main.class);
             // without starting the activity/page, nothing would happen
-            startActivity(listPage);
+            startActivity(mainPage);
         },
                 error -> {
                     // error
