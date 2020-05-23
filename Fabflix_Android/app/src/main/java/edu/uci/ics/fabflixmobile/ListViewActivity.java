@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
@@ -55,7 +56,6 @@ public class ListViewActivity extends Activity {
                     String director = m.getString("director");
                     String genre = m.getString("genres");
                     String stars = m.getString("starNamesAndIds");
-                    System.out.println(stars);
                     movies.add(new Movie(id, title, Integer.parseInt(year), director, genre, stars));
                 }
             }
@@ -77,28 +77,14 @@ public class ListViewActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO: from here, redirect to Single Movie Page
                 Movie movie = movies.get(position);
+
+                Intent singleMovie = new Intent(ListViewActivity.this, SingleMovieActivity.class);
+                singleMovie.putExtra("id", movie.getId());
+                // without starting the activity/page, nothing would happen
                 String message = String.format("Clicked on position: %d, name: %s, %d", position, movie.getTitle(), movie.getYear());
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                // request type is GET
-                final StringRequest singleMovieRequest = new StringRequest(Request.Method.GET, url + "single-movie?id=" + movie.getId(), response -> {
-                    //TODO should parse the json response to redirect to appropriate functions.
-
-                    Log.d("singlemovie.success", response);
-                    System.out.println(response);
-
-                    // initialize the activity(page)/destination
-                    Intent singleMoviePage = new Intent(ListViewActivity.this, SingleMovieActivity.class);
-                    // without starting the activity/page, nothing would happen
-                    startActivity(singleMoviePage);
-                },
-                        error -> {
-                            // error
-                            Log.d("singlemovie.error", error.toString());
-                        });
-                // !important: queue.add is where the singlemovie request is actually sent
-                queue.add(singleMovieRequest);
+                startActivity(singleMovie);
             }
         });
 
