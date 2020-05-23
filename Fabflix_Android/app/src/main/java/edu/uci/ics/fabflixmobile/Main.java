@@ -20,7 +20,6 @@ import java.util.Map;
 public class Main extends Activity {
     private String url;
     private EditText query;
-    private TextView message;
     private Button searchButton;
 
     @Override
@@ -30,7 +29,6 @@ public class Main extends Activity {
 
         query = findViewById(R.id.search_bar);
         searchButton = findViewById(R.id.search_button);
-        message = findViewById(R.id.message);
 
         url = "https://10.0.2.2:8443/cs122b-spring20-team-13/api/";
 
@@ -42,7 +40,7 @@ public class Main extends Activity {
         if (query.getText().toString().matches("")) {
             Toast.makeText(this, "Please enter your search query", Toast.LENGTH_SHORT).show();
         } else {
-            message.setText("Searching...");
+            Toast.makeText(this, "Fetching search results", Toast.LENGTH_SHORT).show();
             final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
             final StringRequest mainRequest = new StringRequest(Request.Method.GET, url + "main", response -> {

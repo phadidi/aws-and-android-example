@@ -1,6 +1,7 @@
 package edu.uci.ics.fabflixmobile;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 
 public class Movie {
     private final String id;
@@ -8,11 +9,12 @@ public class Movie {
     private final String title;
     private final int year;
     private final String director;
-    //private final String genre; //TODO: reintegrate stars and genres into this later
+    private final String genre;
+    private final String stars;
     //@Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
 
-    public Movie(String id, String movieTitle, int movieYear, String movieDirector/*, String genre*/) {
+    public Movie(String id, String movieTitle, int movieYear, String movieDirector, String genre, String stars) {
 //        String idQuery = "SELECT CONCAT('tt', LPAD(substring((select max(id) from movies), 3) + 1, 7, '0')) as movieId;";
 //        Connection dbcon = dataSource.getConnection();
 //        PreparedStatement statementId = dbcon.prepareStatement(idQuery);
@@ -30,7 +32,14 @@ public class Movie {
         this.title = movieTitle;
         this.year = movieYear;
         this.director = movieDirector;
-        //this.genre = genre;
+        this.genre = genre;
+        String names = "";
+        String[] starsSplit = stars.split(",");
+        for(int i = 0; i < 3; i++){
+            String[] star = starsSplit[i].split("_");
+            names += star[0] + ", ";
+        }
+        this.stars = names.substring(0, names.length() - 2);
         //rs.close();
         //statementId.close();
         //dbcon.close();
@@ -48,9 +57,13 @@ public class Movie {
         return this.id;
     }
 
-    /*public String getGenre() {
+    public String getGenre() {
         return this.genre;
-    }*/
+    }
+
+    public String getStars(){
+        return this.stars;
+    }
 
     public String getTitle() {
         return this.title;

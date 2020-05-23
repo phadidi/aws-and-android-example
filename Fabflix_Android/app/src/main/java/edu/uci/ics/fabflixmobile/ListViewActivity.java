@@ -41,7 +41,7 @@ public class ListViewActivity extends Activity {
         final StringRequest loginRequest = new StringRequest(Request.Method.GET, url + "movielist?page=1&sort=title_asc_rating_asc&limit=10&search_title=" + query, response -> {
             //TODO should parse the json response to redirect to appropriate functions.
             Log.d("list.success", response);
-            System.out.println(response.getClass().getName());
+            //System.out.println(response.getClass().getName());
 
             try{
                 JSONArray jsonArray = new JSONArray(response);
@@ -53,7 +53,10 @@ public class ListViewActivity extends Activity {
                     String title = m.getString("title");
                     String year = m.getString("year");
                     String director = m.getString("director");
-                    movies.add(new Movie(id, title, Integer.parseInt(year), director));
+                    String genre = m.getString("genres");
+                    String stars = m.getString("starNamesAndIds");
+                    System.out.println(stars);
+                    movies.add(new Movie(id, title, Integer.parseInt(year), director, genre, stars));
                 }
             }
             catch(final JSONException e){

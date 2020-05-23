@@ -38,13 +38,5 @@
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="168dp"
             android:layout_marginEnd="28dp" android:layout_marginRight="28dp"/>
 
-    <TextView
-            android:text=""
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/message"
-            android:layout_below="@+id/login"
-            android:layout_centerHorizontal="true"
-            android:textSize="25dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
