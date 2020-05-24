@@ -35,7 +35,6 @@ public class MovieListViewAdapter extends ArrayAdapter<Movie> {
         subtitleView.setText("Director: " + movie.getDirector() + " | Genre(s): " + movie.getGenre());
         subtitle2View.setText("Starring: " + movie.getStars());
 
-
         return view;
     }
 }

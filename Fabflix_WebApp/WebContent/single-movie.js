@@ -9,7 +9,6 @@
  *      3. Populate the data to correct html elements.
  */
 
-
 /**
  * Retrieve parameter from request URL, matching by parameter name
  * @param target String
@@ -121,7 +120,6 @@ function redirectToCart(resultDataString) {
 
 function submitAddToCart(formSubmitEvent) {
     console.log("add '" + movieId + "' to cart");
-    //alert("you have added this to cart");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
@@ -137,8 +135,6 @@ function submitAddToCart(formSubmitEvent) {
             success: alert("Successfully added to Cart")
         }
     );
-    // test if redirect works here
-    // window.location.replace("cart.html");
 }
 
 let genreName = getParameterByName('genre');

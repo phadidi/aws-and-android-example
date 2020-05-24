@@ -5,40 +5,29 @@ function getParameterByName(target) {
     let url = window.location.href;
     // Encode target parameter name to url encoding
     target = target.replace(/[\[\]]/g, "\\$&");
-
     // Ues regular expression to find matched parameter value
     let regex = new RegExp("[?&]" + target + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
-
     // Return the decoded parameter value
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 function handleSessionData(resultData) {
-    //console.log("handle session response");
-    //console.log(resultDataJson);
-    //console.log(resultDataJson["sessionID"]);
-
-    // show the session information
-    //$("#sessionID").text("Session ID: " + resultDataJson["sessionID"]);
-    //$("#lastAccessTime").text("Last access time: " + resultDataJson["lastAccessTime"]);
-
     console.log("submit cart form");
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
      * event handler when the event is triggered.
      */
-
         // Populate the movielist table
         // Find the empty table body by id "movielist_table_body"
     let cartTableBodyElement = jQuery("#cart_table_body");
 
     // Iterate through resultData, no more than 10 entries
     for (let i = 0; i < resultData.length; i++) {
-        //console.log(resultData.length);
+
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";

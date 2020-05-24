@@ -1,31 +1,8 @@
-/*
- * CS 122B Project 4. Autocomplete Example.
- *
- * This Javascript code uses this library: https://github.com/devbridge/jQuery-Autocomplete
- *
- * This example implements the basic features of the autocomplete search, features that are
- *   not implemented are mostly marked as "TODO" in the codebase as a suggestion of how to implement them.
- *
- * To read this code, start from the line "$('#autocomplete').autocomplete" and follow the callback functions.
- *
- */
-
-
-/*
- * This function is called by the library when it needs to lookup a query.
- *
- * The parameter query is the query string.
- * The doneCallback is a callback function provided by the library, after you get the
- *   suggestion list from AJAX, you need to call this function to let the library know.
- */
-
 let myStorage = window.sessionStorage;
 
 function handleLookup(query, doneCallback) {
     console.log("autocomplete initiated")
     console.log("sending AJAX request to backend Java Servlet")
-
-    // TODO: if you want to check past query results first, you can do it here
     if (myStorage.hasOwnProperty(query)) {
         console.log("using FRONT END cached look up");
         console.log(myStorage.length);
@@ -51,7 +28,6 @@ function handleLookup(query, doneCallback) {
     }
 }
 
-
 /*
  * This function is used to handle the ajax success callback function.
  * It is called by our own code upon the success of the AJAX request
@@ -66,7 +42,6 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
     var jsonData = JSON.parse(data);
 
     console.log(jsonData);
-    // TODO: if you want to cache the result into a global variable you can do it here
     if (myStorage.length == 80) { // removes first item in myStorage if size is already 100
         myStorage.removeItem(myStorage.key(0));
     }
@@ -77,7 +52,6 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
     doneCallback({suggestions: jsonData});
 }
 
-
 /*
  * This function is the select suggestion handler function.
  * When a suggestion is selected, this function is called by the library.
@@ -85,12 +59,9 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
  * You can redirect to the page you want using the suggestion data.
  */
 function handleSelectSuggestion(suggestion) {
-    // TODO: jump to the specific result page based on the selected suggestion
-
     window.location.replace("single-movie.html?id=" + suggestion["data"]["movieID"]);
     console.log("you select " + suggestion["value"] + " with ID " + suggestion["data"]["movieID"]);
 }
-
 
 /*
  * This statement binds the autocomplete library with the input box element and
@@ -101,7 +72,6 @@ function handleSelectSuggestion(suggestion) {
  *   https://www.devbridge.com/sourcery/components/jquery-autocomplete/
  *
  */
-// $('#autocomplete') is to find element by the ID "autocomplete"
 $('#autocomplete').autocomplete({
     // documentation of the lookup function can be found under the "Custom lookup function" section
     lookup: function (query, doneCallback) {
@@ -112,18 +82,15 @@ $('#autocomplete').autocomplete({
     },
     // set delay time
     deferRequestBy: 300,
-    // there are some other parameters that you might want to use to satisfy all the requirements
-    // TODO: add other parameters, such as minimum characters
+    // set minimum characters
     minChars: 3
 });
-
 
 /*
  * do normal full text search if no suggestion is selected
  */
 function handleNormalSearch(query) {
     console.log("doing normal search with query: " + query);
-    // TODO: you should do normal search here
     window.location.replace("movielist.html?page=1&sort=title_asc_rating_asc&limit=10&search_title=" + escape(query));
 }
 
@@ -136,9 +103,7 @@ $('#autocomplete').keypress(function (event) {
     }
 })
 
-
 $('#search_button').click(function () {
     handleNormalSearch($('#autocomplete').val())
 })
-// TODO: if you have a "search" button, you may want to bind the onClick event as well of that button
 

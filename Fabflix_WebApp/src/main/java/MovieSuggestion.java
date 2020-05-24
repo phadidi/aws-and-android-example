@@ -28,26 +28,6 @@ public class MovieSuggestion extends HttpServlet {
     public static HashMap<String, String> movieMap = new HashMap<>();
 
     static {
-//        superHeroMap.put(1, "Blade");
-//        superHeroMap.put(2, "Ghost Rider");
-//        superHeroMap.put(3, "Luke Cage");
-//        superHeroMap.put(4, "Silver Surfer");
-//        superHeroMap.put(5, "Beast");
-//        superHeroMap.put(6, "Thing");
-//        superHeroMap.put(7, "Black Panther");
-//        superHeroMap.put(8, "Invisible Woman");
-//        superHeroMap.put(9, "Nick Fury");
-//        superHeroMap.put(10, "Storm");
-//        superHeroMap.put(11, "Iron Man");
-//        superHeroMap.put(12, "Professor X");
-//        superHeroMap.put(13, "Hulk");
-//        superHeroMap.put(14, "Cyclops");
-//        superHeroMap.put(15, "Thor");
-//        superHeroMap.put(16, "Jean Grey");
-//        superHeroMap.put(17, "Wolverine");
-//        superHeroMap.put(18, "Daredevil");
-//        superHeroMap.put(19, "Captain America");
-//        superHeroMap.put(20, "Spider-Man");
     }
 
     @Resource(name = "jdbc/moviedb")
@@ -57,14 +37,6 @@ public class MovieSuggestion extends HttpServlet {
         super();
     }
 
-    /*
-     * Generate the JSON Object from hero to be like this format:
-     * {
-     *   "value": "Iron Man",
-     *   "data": { "movieId": 11 }
-     * }
-     *
-     */
     private static JsonObject generateJsonObject(String movieID, String movieTitle) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("value", movieTitle);
@@ -77,26 +49,6 @@ public class MovieSuggestion extends HttpServlet {
         return jsonObject;
     }
 
-    /*
-     *
-     * Match the query against superheroes and return a JSON response.
-     *
-     * For example, if the query is "super":
-     * The JSON response look like this:
-     * [
-     * 	{ "value": "Superman", "data": { "heroID": 101 } },
-     * 	{ "value": "Supergirl", "data": { "heroID": 113 } }
-     * ]
-     *
-     * The format is like this because it can be directly used by the
-     *   JSON auto complete library this example is using. So that you don't have to convert the format.
-     *
-     * The response contains a list of suggestions.
-     * In each suggestion object, the "value" is the item string shown in the dropdown list,
-     *   the "data" object can contain any additional information.
-     *
-     *
-     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             // setup the response json array
@@ -111,9 +63,6 @@ public class MovieSuggestion extends HttpServlet {
                 return;
             }
 
-            // search on superheroes and add the results to JSON Array
-            // this example only does a substring match
-            // TODO: in project 4, you should do full text search with MySQL to find the matches on movies and stars
             Connection dbcon = dataSource.getConnection();
 
             String stringForFullTextSearch = splitSearchString(query);
@@ -133,7 +82,6 @@ public class MovieSuggestion extends HttpServlet {
             while (rs.next()) {
                 id = rs.getString("id");
                 title = rs.getString("title");
-                //System.out.println(id);
                 jsonArray.add(generateJsonObject(id, title));
             }
 

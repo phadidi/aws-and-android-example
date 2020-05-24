@@ -23,12 +23,10 @@ public class RecaptchaVerifyUtils {
         // Open Connection to URL
         HttpsURLConnection conn = (HttpsURLConnection) verifyUrl.openConnection();
 
-
         // Add Request Header
         conn.setRequestMethod("POST");
         conn.setRequestProperty("User-Agent", "Mozilla/5.0");
         conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
 
         // Data will be sent to the server.
         String postParams = "secret=" + RecaptchaConstants.SECRET_KEY + "&response=" + gRecaptchaResponse;
@@ -48,7 +46,6 @@ public class RecaptchaVerifyUtils {
         int responseCode = conn.getResponseCode();
         System.out.println("responseCode=" + responseCode);
 
-
         // Get the InputStream from Connection to read data sent from the server.
         InputStream inputStream = conn.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -65,7 +62,5 @@ public class RecaptchaVerifyUtils {
         }
 
         throw new Exception("recaptcha verification failed: response is " + jsonObject.toString());
-// 
     }
-
 }

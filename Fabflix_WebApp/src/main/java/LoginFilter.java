@@ -66,10 +66,6 @@ public class LoginFilter implements Filter {
         allowedURIs.add("_dashboard.html");
         allowedURIs.add("_dashboard.js");
         allowedURIs.add("/api/_dashboard");
-        // links below are allowed but also checked for a valid employee
-        /*allowedURIs.add("_dashboard_main.html");
-        allowedURIs.add("_dashboard_main.js");
-        allowedURIs.add("/api/main_dashboard");*/
     }
 
     public void destroy() {

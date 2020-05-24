@@ -30,12 +30,7 @@ public class PaymentServlet extends HttpServlet {
         String sessionId = session.getId();
         PrintWriter out = response.getWriter();
         long lastAccessTime = session.getLastAccessedTime();
-
-        /*JsonObject responseJsonObject = new JsonObject();
-        responseJsonObject.addProperty("sessionID", sessionId);
-        responseJsonObject.addProperty("lastAccessTime", new Date(lastAccessTime).toString());
-        // write all the data into the jsonObject
-        response.getWriter().write(responseJsonObject.toString());*/
+        log("sessionId: " + sessionId + ", lastAccessTime: " + lastAccessTime + "\n");
 
         // added some functionalities found in POST so cart loads without having to click add
         Map<String, Integer> previousItems = (Map<String, Integer>) session.getAttribute("previousItems");
@@ -53,22 +48,14 @@ public class PaymentServlet extends HttpServlet {
 
         try {
             Connection dbcon = dataSource.getConnection();
-
-            // Construct a query to retrieve every movie whose id is in currentUser.cart
-
-
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 
             for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
-                // for debugging purposes
-                System.out.println(val.getKey() + ": " + val.getValue());
-
+                // Construct a query to retrieve every movie whose id is in currentUser.cart
                 String query = "select id, title from movies where id = '" + val.getKey() + "'";
-                PreparedStatement statement = dbcon.prepareStatement(query);
-                //System.out.println(query);
-
                 // Declare Statement
+                PreparedStatement statement = dbcon.prepareStatement(query);
                 rs = statement.executeQuery();
 
                 String movieId = "";
@@ -93,11 +80,8 @@ public class PaymentServlet extends HttpServlet {
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
             response.setStatus(200);
-
-
             dbcon.close();
         } catch (Exception e) {
-
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
@@ -113,23 +97,17 @@ public class PaymentServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             String first_name = request.getParameter("fname");
-            log(first_name);
+            log("first_name: " + first_name + "\n");
             String last_name = request.getParameter("lname");
-            log(last_name);
+            log("last_name:  " + last_name + "\n");
             String ccnumber = request.getParameter("ccnumber");
-            log(ccnumber);
+            log("ccnumber: " + ccnumber + "\n");
             String exp_date = request.getParameter("exp_date");
-            log(exp_date);
+            log("exp_date: " + exp_date + "\n");
 
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
 
-        /* This example only allows username/password to be test/test
-        /  in the real project, you should talk to the database to verify username/password
-        */
-            //String resultEmail = "";
-            //String resultPassword = "";
-            //int resultId = (int) (Math.random() * 1000000);
             String resultFirstname = "";
             String resultLastname = "";
             String resultCreditCard = "";
@@ -143,9 +121,6 @@ public class PaymentServlet extends HttpServlet {
             statement.setString(4, exp_date);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                //resultEmail = rs.getString("email");
-                //resultPassword = rs.getString("password");
-                //resultId = rs.getInt("id");
                 resultFirstname = rs.getString("firstName");
                 resultLastname = rs.getString("lastName");
                 resultCreditCard = rs.getString("id");
@@ -166,19 +141,6 @@ public class PaymentServlet extends HttpServlet {
             } else {
                 // Card declined
                 responseJsonObject.addProperty("status", "fail");
-
-                // Error messages to check if an account exists or not if the username and/or password is incorrect
-//                query = "select * from customers where email = '" + email + "';";
-//                rs = statement.executeQuery(query);
-//                String existingEmail = "";
-//                while (rs.next()) {
-//                    existingEmail = rs.getString("email");
-//                }
-//                if (!existingEmail.equals("")) {
-//                    responseJsonObject.addProperty("message", "user " + email + " doesn't exist");
-//                } else {
-//                    responseJsonObject.addProperty("message", "incorrect password");
-//                }
                 responseJsonObject.addProperty("message", "Card information is incorrect");
             }
             response.getWriter().write(responseJsonObject.toString());
@@ -186,15 +148,13 @@ public class PaymentServlet extends HttpServlet {
             statement.close();
             dbcon.close();
         } catch (Exception e) {
-
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
 
-            // set reponse status to 500 (Internal Server Error)
+            // set response status to 500 (Internal Server Error)
             response.setStatus(500);
-
         }
         out.close();
     }

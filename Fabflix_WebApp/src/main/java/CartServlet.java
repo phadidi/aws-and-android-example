@@ -39,11 +39,8 @@ public class CartServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         long lastAccessTime = session.getLastAccessedTime();
 
-        /*JsonObject responseJsonObject = new JsonObject();
-        responseJsonObject.addProperty("sessionID", sessionId);
-        responseJsonObject.addProperty("lastAccessTime", new Date(lastAccessTime).toString());
-        // write all the data into the jsonObject
-        response.getWriter().write(responseJsonObject.toString());*/
+        // log sessionId and lastAccessTime
+        log("sessionId: " + sessionId + ", lastAccessTime: " + lastAccessTime + "\n");
 
         // added some functionalities found in POST so cart loads without having to click add
         Map<String, Integer> previousItems = (Map<String, Integer>) session.getAttribute("previousItems");
@@ -61,17 +58,11 @@ public class CartServlet extends HttpServlet {
 
         try {
             Connection dbcon = dataSource.getConnection();
-
-            // Construct a query to retrieve every movie whose id is in currentUser.cart
-
-            //Statement statement = dbcon.createStatement();
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 
             for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
-                // for debugging purposes
-                // System.out.println(val.getKey() + ": " + val.getValue());
-
+                // Construct a query to retrieve every movie whose id is in currentUser.cart
                 String query = "select id, title from movies where id = ?";
                 System.out.println(query);
 
@@ -113,7 +104,6 @@ public class CartServlet extends HttpServlet {
 
             dbcon.close();
         } catch (Exception e) {
-
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());

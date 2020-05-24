@@ -30,7 +30,6 @@ public class Main extends Activity {
     }
 
     public void search() {
-
         if (query.getText().toString().matches("")) {
             Toast.makeText(this, "Please enter your search query", Toast.LENGTH_SHORT).show();
         } else {

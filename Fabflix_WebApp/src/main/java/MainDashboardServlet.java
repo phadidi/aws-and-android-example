@@ -34,8 +34,6 @@ public class MainDashboardServlet extends HttpServlet {
 
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
-
-
             String resultTitle = "";
             String resultDirector = "";
             String resultYear = "";

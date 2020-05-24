@@ -35,29 +35,25 @@ public class StarDashboardServlet extends HttpServlet {
 
             JsonObject responseJsonObject = new JsonObject();
             if (name != null || !name.equals("")) {
-
                 String idQuery = "SELECT CONCAT('nm', (select LPAD(substring((select max(id) from stars), 3) + 1, 7, '0'))) as starId;";
                 PreparedStatement statementId = dbcon.prepareStatement(idQuery);
                 ResultSet rs = statementId.executeQuery();
                 while (rs.next()) {
                     id = rs.getString("starId");
                 }
-
+                PreparedStatement statementAdd;
                 if (birthYear != null && !birthYear.equals("")) {
-                    PreparedStatement statementAdd = dbcon.prepareStatement("INSERT INTO stars (id, name, birthYear) VALUES(?,?,?);");
+                    statementAdd = dbcon.prepareStatement("INSERT INTO stars (id, name, birthYear) VALUES(?,?,?);");
                     statementAdd.setString(1, id);
                     statementAdd.setString(2, name);
                     statementAdd.setInt(3, Integer.parseInt(birthYear));
-                    statementAdd.executeUpdate();
-                    statementAdd.close();
                 } else {
-                    PreparedStatement statementAdd = dbcon.prepareStatement("INSERT INTO stars (id, name) VALUES(?,?);");
+                    statementAdd = dbcon.prepareStatement("INSERT INTO stars (id, name) VALUES(?,?);");
                     statementAdd.setString(1, id);
                     statementAdd.setString(2, name);
-                    statementAdd.executeUpdate();
-                    statementAdd.close();
                 }
-
+                statementAdd.executeUpdate();
+                statementAdd.close();
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "added " + id + " to stars");
                 rs.close();
@@ -68,7 +64,6 @@ public class StarDashboardServlet extends HttpServlet {
                 // Error message if a star name is left blank
                 responseJsonObject.addProperty("message", "star name cannot be blank");
             }
-
             response.getWriter().write(responseJsonObject.toString());
             dbcon.close();
         } catch (Exception e) {
@@ -76,7 +71,6 @@ public class StarDashboardServlet extends HttpServlet {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
-
             // set response status to 500 (Internal Server Error)
             response.setStatus(500);
         }

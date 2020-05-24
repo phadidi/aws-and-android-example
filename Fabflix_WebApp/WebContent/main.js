@@ -51,9 +51,7 @@ function handleGenreResult(resultData) {
         "</label>" + "<br>" +
         "        <p align='center'><input type=\"submit\"/></p>\n" +
         "</form>");
-
 }
-
 
 /**
  * Once this .js is loaded, following scripts will be executed by the browser

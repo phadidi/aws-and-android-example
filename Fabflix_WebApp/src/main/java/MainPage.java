@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
 // Declaring a WebServlet called StarsServlet, which maps to url "/api/main"
 @WebServlet(name = "MainPage", urlPatterns = "/api/main")
 public class MainPage extends HttpServlet {
@@ -30,19 +29,14 @@ public class MainPage extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         response.setContentType("application/json"); // Response mime type
-
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
         try {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
-
             // Declare our statement
-
-            //String query = "select * from genres order by name;";
             PreparedStatement statement = dbcon.prepareStatement("select * from genres order by name;");
             ResultSet rs = statement.executeQuery();
 
@@ -70,7 +64,6 @@ public class MainPage extends HttpServlet {
             statement.close();
             dbcon.close();
         } catch (Exception e) {
-
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
@@ -78,9 +71,7 @@ public class MainPage extends HttpServlet {
 
             // set response status to 500 (Internal Server Error)
             response.setStatus(500);
-
         }
         out.close();
-
     }
 }

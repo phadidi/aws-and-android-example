@@ -92,7 +92,6 @@ public class ConfirmationServlet extends HttpServlet {
                 getLatest.close();
             }
 
-
             Statement statement1 = dbcon.createStatement();
             ResultSet rs1;
             JsonArray jsonArray = new JsonArray();
@@ -140,7 +139,6 @@ public class ConfirmationServlet extends HttpServlet {
             statement1.close();
             dbcon.close();
         } catch (Exception e) {
-
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());

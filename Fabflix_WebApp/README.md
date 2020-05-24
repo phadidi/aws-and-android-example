@@ -6,8 +6,8 @@ This is a submission for Project 4 with Java Servlet, Javascript, and HTML pages
 ## Getting Started
 Make sure to initialize a MySQL database with the included createtable.sql and populate it accordingly. This requires a list of movies, stars, genres, customers, customer ratings, creditcards, and the necessary relationships between them.
 
-### Installing and Starting Project 3
-For AWS, Project 1 has been tested to run on Ubuntu 16.04.6 LTS using an Apache Tomcat 8.5.53 server instance with Maven capabilities. For the UCI Grader, the link http://ec2-52-55-11-244.compute-1.amazonaws.com:8080/cs122b-spring20-team-13/ should be open based on the security group IP requirements. The finalized Project 2 build should be found in the master branch with this file.
+### Installing and Starting Project 4
+For AWS, Project 4 has been tested to run on Ubuntu 16.04.6 LTS using an Apache Tomcat 8.5.53 server instance with Maven capabilities. For the UCI Grader, the link http://ec2-52-55-11-244.compute-1.amazonaws.com:8080/cs122b-spring20-team-13/ should be open based on the security group IP requirements. The finalized Project 2 build should be found in the master branch with this file.
 
 If you want to run from your own AWS instance machine, make sure to clone the project with the following command:
 
@@ -30,7 +30,7 @@ Then to prepare your war file, run the following commands:
 
 Make sure you have Tomcat running. Then, go to your Tomcat manager page. You should see a newly deployed war file named "cs122b-spring20-team-13." Click on the name to open the Fabflix Movie List page.
 
-## Project 3 Structure
+## Project 4 Structure
 
 ### PreparedStatements
 For Webapps: MovieListServlet, PaymentServlet, MainDashboardServlet, StarDashboardServlet, LoginServlet
@@ -51,6 +51,7 @@ The Cart page loads and displays the cart attribute of the currently logged in C
 The Payment page takes a Customer's first and last names with a credit card number to check out the cart.
 ### Confirmation Servlet
 The Confirmation page is redirected to after Payment Servlet to confirm a purchase to a customer before deciding to complete it or not.
+### Movie Suggestion
 ### pom.xml
 The pom.xml file contains a list of artifacts to use, including mysql-connector-java and javax.servlet, along with directions to handle the Maven war packaging and the necessary maven-compiler-plugin and maven-war-plugin.
 ### Our Substring Design
@@ -85,9 +86,9 @@ Another Java program that has 2 classes: 1 for encrypting employees password in 
 
 ## Contributions
 Parsa Hadidi:
-- reCaptcha implementation, created Dashboard and metadata, implemented stored procedure and error messages.
+- Importing autocomplete format from example into project
 
 Duy Nguyen: 
-- Password encryption, Parsed XML files and insert into DB, ensured stored procedure checked for existing or new stars and genres before inserting.
+- Autocomplete search implementation in webapp
 
 Both worked on debugging and finalizing every java class and HTML/Javascript page.

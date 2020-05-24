@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-
 // Declaring a WebServlet called MovieListServlet, which maps to url "/api/movielist"
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
 public class MovieListServlet extends HttpServlet {
@@ -59,8 +58,6 @@ public class MovieListServlet extends HttpServlet {
         try {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
-
-            // Declare our statement
 
             String query = "select m.id, m.title, m.year, m.director,\n" +
                     "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
@@ -152,7 +149,6 @@ public class MovieListServlet extends HttpServlet {
                 if (tempRating != null) {
                     movieRating = tempRating;
                 }
-
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("id", movie_id);
@@ -175,7 +171,6 @@ public class MovieListServlet extends HttpServlet {
             statement.close();
             dbcon.close();
         } catch (Exception e) {
-
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
@@ -183,18 +178,15 @@ public class MovieListServlet extends HttpServlet {
 
             // set response status to 500 (Internal Server Error)
             response.setStatus(500);
-
         }
         out.close();
 
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
         Enumeration<String> myParameters = request.getParameterNames();
-        //System.out.println(myParameters.toString());
         String movieId = myParameters.nextElement();
-        //System.out.println(movieId);
 
         log("adding '" + movieId + "' to cart\n");
         response.setContentType("application/json");

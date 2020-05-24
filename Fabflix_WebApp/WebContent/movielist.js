@@ -8,7 +8,6 @@
  *      2. Populate the data to correct html elements.
  */
 
-
 /**
  * Handles the data returned by the API, read the jsonObject and populate data into html elements
  * @param resultData jsonObject
@@ -229,14 +228,11 @@ function redirectToCart(resultDataString) {
 
 function submitAddToCart(id) {
     console.log("add '" + id + "' to cart");
-    //alert("you have added this to cart");
-    //add_to_cart.movieId = id;
     /**
      * When users click the submit button, the browser will not direct
      * users to the url defined in HTML form. Instead, it will call this
      * event handler when the event is triggered.
      */
-    //formSubmitEvent.preventDefault();
 
     $.ajax(
         "api/movielist", {
@@ -246,10 +242,7 @@ function submitAddToCart(id) {
             success: alert("Successfully added to Cart")
         }
     );
-    // test if redirect works here
-    // window.location.replace("cart.html");
 }
-
 
 // Makes the HTTP GET request and registers on success callback function handleListResult
 jQuery.ajax({
@@ -258,5 +251,3 @@ jQuery.ajax({
     url: url_string,
     success: (resultData) => handleListResult(resultData, genreName, pageNumber, limit, sort, searchTitle, searchYear, searchDirector, searchStar, searchLetter) // Setting callback function to handle data returned successfully by the MovieListServlet
 });
-
-//add_to_cart.submit(submitAddToCart)

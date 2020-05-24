@@ -43,7 +43,7 @@ public class ListViewActivity extends Activity {
 
         page = getIntent().getIntExtra("page", 1);
 
-        if(page != 1){
+        if (page != 1) {
             previous.setOnClickListener(view -> previous());
         }
 
@@ -77,8 +77,7 @@ public class ListViewActivity extends Activity {
                     movies.add(new Movie(id, title, Integer.parseInt(year), director, genre, stars));
                 }
                 Log.d("Json parsed", response);
-            }
-            catch(final JSONException e){
+            } catch (final JSONException e) {
                 Log.e("Json parsing error", e.toString());
             }
         },
@@ -110,18 +109,19 @@ public class ListViewActivity extends Activity {
         queue.add(listRequest);
     }
 
-    public void next(){
+    public void next() {
         Intent nextView = getIntent();
         nextView.putExtra("query", query);
-        page+=1;
+        page += 1;
         nextView.putExtra("page", page);
         finish();
         startActivity(nextView);
     }
-    public void previous(){
+
+    public void previous() {
         Intent previousView = getIntent();
         previousView.putExtra("query", query);
-        page-=1;
+        page -= 1;
         previousView.putExtra("page", page);
         finish();
         startActivity(previousView);

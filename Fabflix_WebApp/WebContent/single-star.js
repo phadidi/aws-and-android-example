@@ -9,7 +9,6 @@
  *      3. Populate the data to correct html elements.
  */
 
-
 /**
  * Retrieve parameter from request URL, matching by parameter name
  * @param target String

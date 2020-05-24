@@ -46,16 +46,6 @@ public class SingleMovieServlet extends HttpServlet {
         try {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
-
-            // Construct a query with parameter represented by "?"
-            /*String query = "select m.id, m.title as title, m.year as year, m.director, \n" +
-                    "group_concat(distinct g.name ORDER BY g.name separator ', ') as genrenames, \n" +
-                    "group_concat(distinct concat(s.name, '_', s.id) order by (select count(sim.starId) as moviesIn from stars_in_movies sim where s.id = sim.starId group by sim.starID) DESC, s.name ASC SEPARATOR ',') AS starNamesAndIds\n" +
-                    "from stars s, genres g, movies m, stars_in_movies sim, genres_in_movies gim \n" +
-                    "where s.id = sim.starId and m.id = sim.movieId \n" +
-                    "and g.id = gim.genreId and m.id = gim.movieId \n" +
-                    "and m.id = '" + thisId + "';";*/
-
             // Declare our statement
             PreparedStatement statement = dbcon.prepareStatement("select m.id, m.title, m.year, m.director,\n" +
                     "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
@@ -71,16 +61,9 @@ public class SingleMovieServlet extends HttpServlet {
                     "AND m.id = ? \n" +
                     "GROUP BY m.id");
             statement.setString(1, thisId);
-
-            // Set the parameter represented by "?" in the query to the id we get from url,
-            // num 1 indicates the first "?" in the query
-            //statement.setString(1, id);
-
             // Perform the query
             ResultSet rs = statement.executeQuery();
-
             JsonArray jsonArray = new JsonArray();
-
             // With one movie id, we are expecting to get up to one movie
             while (rs.next()) {
                 String movie_id = rs.getString("id");
@@ -92,6 +75,7 @@ public class SingleMovieServlet extends HttpServlet {
                 String movieRating = "N/A";
                 String tempRating = rs.getString("rating");
                 String price = "10.99";
+
                 if (tempRating != null) {
                     movieRating = tempRating;
                 }
@@ -108,7 +92,6 @@ public class SingleMovieServlet extends HttpServlet {
                 jsonObject.addProperty("price", price);
                 jsonArray.add(jsonObject);
             }
-
 
             // write JSON string to output
             out.write(jsonArray.toString());
@@ -130,7 +113,7 @@ public class SingleMovieServlet extends HttpServlet {
 
     }
 
-    //doPost will be used to add movie to cart
+    // doPost will be used to add movie to cart
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //String movieId = request.getParameter("id");
@@ -146,6 +129,4 @@ public class SingleMovieServlet extends HttpServlet {
         responseJsonObject.addProperty("message", "success");
         response.getWriter().write(responseJsonObject.toString());
     }
-
-
 }

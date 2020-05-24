@@ -53,10 +53,6 @@ public class LoginServlet extends HttpServlet {
 
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
-
-        /* This example only allows username/password to be test/test
-        /  in the real project, you should talk to the database to verify username/password
-        */
             String resultEmail = "";
             String resultPassword = "";
             int resultId = (int) (Math.random() * 1000000);

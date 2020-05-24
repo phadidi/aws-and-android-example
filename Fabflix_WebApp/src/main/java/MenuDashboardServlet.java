@@ -39,7 +39,6 @@ public class MenuDashboardServlet extends HttpServlet {
 
             ResultSet rsTables = databaseMetaData.getTables(catalog, schemaPattern, tableNamePattern, types);
 
-
             while (rsTables.next()) {
                 String tableName = rsTables.getString(3);
                 output += ("<p>\n=== TABLE: " + tableName + "\n");
