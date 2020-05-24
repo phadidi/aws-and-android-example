@@ -1,13 +1,15 @@
 package edu.uci.ics.fabflixmobile;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ListViewActivity extends Activity {
     private String url;
@@ -30,6 +31,7 @@ public class ListViewActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //if (findViewById(android.R.id.content) != findViewById(R.layout.listview))
         setContentView(R.layout.listview);
         //this should be retrieved from the database and the backend server
 
@@ -50,7 +52,7 @@ public class ListViewActivity extends Activity {
 
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
-        final StringRequest listRequest = new StringRequest(Request.Method.GET, url + "movielist?page=" + Integer.toString(page) + "&sort=title_asc_rating_asc&limit=20&search_title=" + query, response -> {
+        final StringRequest listRequest = new StringRequest(Request.Method.GET, url + "movielist?page=" + page + "&sort=title_asc_rating_asc&limit=20&search_title=" + query, response -> {
 
             Log.d("list.success", response);
 
@@ -109,19 +111,19 @@ public class ListViewActivity extends Activity {
     }
 
     public void next(){
-        Intent nextView = new Intent(ListViewActivity.this, ListViewActivity.class);
+        Intent nextView = getIntent();
         nextView.putExtra("query", query);
         page+=1;
         nextView.putExtra("page", page);
-
+        finish();
         startActivity(nextView);
     }
     public void previous(){
-        Intent previousView = new Intent(ListViewActivity.this, ListViewActivity.class);
+        Intent previousView = getIntent();
         previousView.putExtra("query", query);
         page-=1;
         previousView.putExtra("page", page);
-
+        finish();
         startActivity(previousView);
     }
 }

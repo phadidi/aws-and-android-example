@@ -122,7 +122,7 @@ function handleListResult(resultData, condition, page, limit, sort, searchTitle,
         // Concatenate the html tags with resultData jsonObject
         let rowHTML = "";
         rowHTML += "<tr>";
-        rowHTML += "<th>" + (i + 1).toString() + "</th>";
+        rowHTML += "<th>" + ((i + 1) * (parseInt(page) - 1)).toString() + "</th>";
         rowHTML +=
             "<th>" +
             // Add a link to single-movie.html with id passed with GET url parameter
