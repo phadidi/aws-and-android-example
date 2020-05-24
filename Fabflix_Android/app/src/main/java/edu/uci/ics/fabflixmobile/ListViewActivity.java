@@ -1,15 +1,13 @@
 package edu.uci.ics.fabflixmobile;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.annotation.RequiresApi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,9 +17,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListViewActivity extends Activity {
     private String url;
+    private Button next;
+    private Button previous;
+    private String query;
+    private int page;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -33,19 +36,32 @@ public class ListViewActivity extends Activity {
         final ArrayList<Movie> movies = new ArrayList<>();
 
         url = "https://10.0.2.2:8443/cs122b-spring20-team-13/api/";
+        next = findViewById(R.id.next);
+        previous = findViewById(R.id.previous);
 
-        String query = getIntent().getStringExtra("query");
+        page = getIntent().getIntExtra("page", 1);
+
+        if(page != 1){
+            previous.setOnClickListener(view -> previous());
+        }
+
+        query = getIntent().getStringExtra("query");
         query = String.join("%20", query.split(" "));
 
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
-        final StringRequest listRequest = new StringRequest(Request.Method.GET, url + "movielist?page=1&sort=title_asc_rating_asc&limit=10&search_title=" + query, response -> {
-            //TODO should parse the json response to redirect to appropriate functions.
+        final StringRequest listRequest = new StringRequest(Request.Method.GET, url + "movielist?page=" + Integer.toString(page) + "&sort=title_asc_rating_asc&limit=20&search_title=" + query, response -> {
+
             Log.d("list.success", response);
-            //System.out.println(response.getClass().getName());
 
             try {
                 JSONArray jsonArray = new JSONArray(response);
+
+                System.out.println(jsonArray.length());
+
+                //if(jsonArray.length() < 20){
+                next.setOnClickListener(view -> next());
+                //}
 
                 // Getting JSON Array node
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -58,6 +74,7 @@ public class ListViewActivity extends Activity {
                     String stars = m.getString("starNamesAndIds");
                     movies.add(new Movie(id, title, Integer.parseInt(year), director, genre, stars));
                 }
+                Log.d("Json parsed", response);
             }
             catch(final JSONException e){
                 Log.e("Json parsing error", e.toString());
@@ -89,5 +106,22 @@ public class ListViewActivity extends Activity {
         });
 
         queue.add(listRequest);
+    }
+
+    public void next(){
+        Intent nextView = new Intent(ListViewActivity.this, ListViewActivity.class);
+        nextView.putExtra("query", query);
+        page+=1;
+        nextView.putExtra("page", page);
+
+        startActivity(nextView);
+    }
+    public void previous(){
+        Intent previousView = new Intent(ListViewActivity.this, ListViewActivity.class);
+        previousView.putExtra("query", query);
+        page-=1;
+        previousView.putExtra("page", page);
+
+        startActivity(previousView);
     }
 }
