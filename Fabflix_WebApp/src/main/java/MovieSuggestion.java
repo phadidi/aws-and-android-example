@@ -21,14 +21,6 @@ import java.util.HashMap;
 @WebServlet("/movie-suggestion")
 public class MovieSuggestion extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    /*
-     * populate the Super hero hash map.
-     * Key is hero ID. Value is hero name.
-     */
-    public static HashMap<String, String> movieMap = new HashMap<>();
-
-    static {
-    }
 
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
@@ -97,7 +89,7 @@ public class MovieSuggestion extends HttpServlet {
         if (q != null) {
             String split[] = q.split(" ");
 
-            ArrayList<String> result = new ArrayList<String>();
+            ArrayList<String> result = new ArrayList<>();
 
             for (String temp : split) {
                 temp = "+" + temp + "*";

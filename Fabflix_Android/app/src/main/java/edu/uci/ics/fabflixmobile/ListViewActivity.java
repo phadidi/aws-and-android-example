@@ -110,7 +110,7 @@ public class ListViewActivity extends Activity {
     }
 
     public void next() {
-        Intent nextView = getIntent();
+        Intent nextView = new Intent(ListViewActivity.this, ListViewActivity.class);
         nextView.putExtra("query", query);
         page += 1;
         nextView.putExtra("page", page);
@@ -119,7 +119,7 @@ public class ListViewActivity extends Activity {
     }
 
     public void previous() {
-        Intent previousView = getIntent();
+        Intent previousView = new Intent(ListViewActivity.this, ListViewActivity.class);
         previousView.putExtra("query", query);
         page -= 1;
         previousView.putExtra("page", page);

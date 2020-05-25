@@ -71,7 +71,6 @@ public class MovieListServlet extends HttpServlet {
                     "m.id=sim.movieId AND\n" +
                     "sim.starId=s.id\n";
 
-            //TODO: implement boolean mode into MATCH AGAINST queries
             if (searchTitle != null) {
                 query += "AND MATCH (m.title) AGAINST('" + searchTitle + "' in boolean mode)\n";
             }
@@ -90,16 +89,18 @@ public class MovieListServlet extends HttpServlet {
                     query += "AND m.title like'" + searchLetter + "%'\n";
                 }
             }
-            //TODO: identify how to implement full-text with star names being concatenated with star ids
+
             query += "GROUP BY m.id\n";
 
             // use having clause to properly print out all genres and star names when selecting for one
             if (genreName != null) {
-                query += "HAVING  genresname like \"%" + genreName + "%\"";
+                query += "HAVING genresname like \"%" + genreName + "%\"\n";
             }
 
             if (searchStar != null) {
-                query += "HAVING  starNamesAndIds like \"%" + searchStar + "%\"";
+                query += "HAVING starNamesAndIds like \"%" + searchStar + "%\"\n";
+                //TODO: implement this and other aspects of Fuzzy Search
+                //OR SIMILAR TO('" + searchStar + "', starNamesAndIds, 2)
             }
 
             if (sort.compareTo("title_asc_rating_asc") == 0) {
