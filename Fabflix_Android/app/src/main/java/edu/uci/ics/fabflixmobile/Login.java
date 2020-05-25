@@ -13,7 +13,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //Converted ActionBarActivity to AppCompatActivity due to deprecation
@@ -61,7 +60,10 @@ public class Login extends AppCompatActivity {
                 // initialize the activity(page)/destination
                 Intent mainPage = new Intent(Login.this, Main.class);
                 // without starting the activity/page, nothing would happen
-                startActivity(mainPage);
+                if (response.contains("success"))
+                    startActivity(mainPage);
+                else
+                    message.setText("Incorrect email and/or password");
             },
                     error -> {
                         // error
