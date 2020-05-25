@@ -13,14 +13,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+//Converted ActionBarActivity to AppCompatActivity due to deprecation
+
 public class Login extends AppCompatActivity {
+
     private EditText email;
     private EditText password;
     private TextView message;
     private Button loginButton;
     private String url;
+    //private String SITE_KEY = "6LeKvPAUAAAAABY_fGoGUY8FVwSafDXBozZJvk4I";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

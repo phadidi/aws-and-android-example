@@ -60,7 +60,7 @@ public class SingleMovieActivity extends Activity {
                 // parsing stars to remove ids
                 String names = "";
                 String[] starsSplit = stars.split(",");
-                for (int i = 0; i < starsSplit.length; i++) {
+                for(int i = 0; i < starsSplit.length; i++){
                     String[] star = starsSplit[i].split("_");
                     names += star[0] + ", ";
                 }
@@ -72,7 +72,8 @@ public class SingleMovieActivity extends Activity {
                 mdirector.setText("Director: " + director);
                 mstars.setText("Starring: " + stars);
                 mgenres.setText("Genre(s): " + genre);
-            } catch (final JSONException e) {
+            }
+            catch(final JSONException e){
                 Log.e("Json parsing error", e.toString());
             }
         },
