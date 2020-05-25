@@ -32,6 +32,10 @@ Make sure you have Tomcat running. Then, go to your Tomcat manager page. You sho
 
 ## Project 4 Structure
 
+### *NEW SEARCH IMPLEMENTATIONs* ###
+Now support FULLTEXT search for movie titles
+New main search bar - supports autocomplete suggestions
+
 ### PreparedStatements
 For Webapps: MovieListServlet, PaymentServlet, MainDashboardServlet, StarDashboardServlet, LoginServlet
 For Parser: MovieBatchInsert, StarBatchInsert
@@ -68,7 +72,7 @@ Front end login page that communicates to webapp backend
 ### Autocomplete Search
 Front end autocomplete search that communicates to webapp backend
 ### Movielist
-Front end search results that are retrieved from webapp backend
+Front end search results that are retrieved from webapp backend - can cycle betweeb pages using next/prev button
 ### Single Movie
 Front end single movie page that is retrieved from webapp backend
 
@@ -97,9 +101,9 @@ Another Java program that has 2 classes: 1 for encrypting employees password in 
 
 ## Contributions
 Parsa Hadidi:
-- Importing autocomplete format from example into project, created Android app layout
+- Importing autocomplete format from example into project, created Android app layout and log in
 
 Duy Nguyen: 
-- Autocomplete search implementation in webapp and Android app
+- Autocomplete search implementations in webapp and Android app features/pages
 
 Both worked on debugging and finalizing every java class and HTML/Javascript page.

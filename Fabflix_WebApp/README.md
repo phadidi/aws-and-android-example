@@ -32,6 +32,10 @@ Make sure you have Tomcat running. Then, go to your Tomcat manager page. You sho
 
 ## Project 4 Structure
 
+### *NEW SEARCH IMPLEMENTATIONs* ###
+Now support FULLTEXT search for movie titles
+New main search bar - supports autocomplete suggestions
+
 ### PreparedStatements
 For Webapps: MovieListServlet, PaymentServlet, MainDashboardServlet, StarDashboardServlet, LoginServlet
 For Parser: MovieBatchInsert, StarBatchInsert
@@ -61,6 +65,17 @@ For searching, we simnply used LIKE "%some pattern provided by user%" to match w
 ### Parser_Tool
 Has multiple classes responsible for parsing movies, actors, and movie-actor relations in respective XML files and inserting them into the database if not existed already. Contains a MainParser class that calls all of these classes and run them in a main(). REMEMBER TO INCLUDE YOUR XML FILES IN YOUR PROJECT FOLDER
 
+## Android App Structure
+
+### Login
+Front end login page that communicates to webapp backend
+### Autocomplete Search
+Front end autocomplete search that communicates to webapp backend
+### Movielist
+Front end search results that are retrieved from webapp backend - can cycle betweeb pages using next/prev button
+### Single Movie
+Front end single movie page that is retrieved from webapp backend
+
 #### Inconsistencies Report:
 not all movies have a t tag for titles. 
 Genre value has leading and trailing spaces and mismatching capitalization. 
@@ -86,9 +101,9 @@ Another Java program that has 2 classes: 1 for encrypting employees password in 
 
 ## Contributions
 Parsa Hadidi:
-- Importing autocomplete format from example into project
+- Importing autocomplete format from example into project, created Android app layout and log in
 
 Duy Nguyen: 
-- Autocomplete search implementation in webapp
+- Autocomplete search implementations in webapp and Android app features/pages
 
 Both worked on debugging and finalizing every java class and HTML/Javascript page.

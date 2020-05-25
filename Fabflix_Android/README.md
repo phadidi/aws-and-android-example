@@ -1,12 +1,16 @@
 # Project 4 Android App
 
-This is an example Android project to demonstrate how to:
+## Android App Structure
 
-- Change between Android Activities
-- Make RESTful HTTPS requests
-- Maintain cookies
-- Use ListView with custom row layout
-- HTTP is supported by checking /app/src/main/AndroidManifest.xml
+### Login
+Front end login page that communicates to webapp backend
+### Autocomplete Search
+Front end autocomplete search that communicates to webapp backend
+### Movielist
+Front end search results that are retrieved from webapp backend - can cycle betweeb pages using next/prev button
+### Single Movie
+Front end single movie page that is retrieved from webapp backend
+
 
 ## Running this project
 
