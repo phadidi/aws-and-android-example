@@ -1,7 +1,7 @@
 # cs122b-spring20-team-13 Project 4
 This is a submission for Project 4 with Java Servlet, Javascript, and HTML pages for a Fabflix website where a customer can log in, search with autocomplete from a list of movies by title, stars, year, genres, and other criteria, add a selection of movies to a shopping cart, and checkout a cart with a credit card payment, in a desktop browser and for Android. There is also a createtable.sql file included for providing the format of the 'moviedb' database so that it can be populated for the webpages' use.
 
-- Demo Video: https://www.youtube.com/watch?v=3EP_6TjkiXo&feature=youtu.be
+- Demo Video: https://youtu.be/8nN0Wq2npdI
 
 ## Getting Started
 Make sure to initialize a MySQL database with the included createtable.sql and populate it accordingly. This requires a list of movies, stars, genres, customers, customer ratings, creditcards, and the necessary relationships between them.
