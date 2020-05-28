@@ -11,5 +11,5 @@
               maxWaitMillis="10000"
               username="mytestuser"
               password="mypassword"
-              url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;useSSL=false"/>
+              url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;useSSL=false;cachePrepStmts=true"/>
 </Context>
