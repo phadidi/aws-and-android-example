@@ -3,7 +3,8 @@ package main.java;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,9 +25,14 @@ import java.util.Enumeration;
 public class MovieListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    public String getServletInfo() {
+        return "Movie List Servlet takes in a set of parameters to build a SQL query, executes that query, and loads the results. " +
+                " Each loaded movie can also be added to the customer's cart.";
+    }
+
     // Create a dataSource which registered in web.xml
-    @Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+    //@Resource(name = "jdbc/moviedb")
+    //private DataSource dataSource;
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,8 +62,32 @@ public class MovieListServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
+            // the following few lines are for connection pooling
+            // Obtain our environment naming context
+
+            Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+            // the following commented lines are direct connections without pooling
+            //Class.forName("org.gjt.mm.mysql.Driver");
+            //Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
+
             // Get a connection from dataSource
-            Connection dbcon = dataSource.getConnection();
+            //Connection dbcon = dataSource.getConnection();
 
             String query = "select m.id, m.title, m.year, m.director,\n" +
                     "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
@@ -122,9 +152,9 @@ public class MovieListServlet extends HttpServlet {
             }
 
             if (limit.compareTo("10") == 0) {
-                query += "LIMIT 10 OFFSET " + Integer.toString(page) + ";";
+                query += "LIMIT 10 OFFSET " + page + ";";
             } else {
-                query += "LIMIT " + limit + " OFFSET " + Integer.toString(page) + ";";
+                query += "LIMIT " + limit + " OFFSET " + page + ";";
             }
 
             System.out.println(query);
@@ -203,7 +233,7 @@ public class MovieListServlet extends HttpServlet {
 
     public String splitSearchString(String q) {
         if (q != null) {
-            String split[] = q.split(" ");
+            String[] split = q.split(" ");
 
             ArrayList<String> result = new ArrayList<String>();
 

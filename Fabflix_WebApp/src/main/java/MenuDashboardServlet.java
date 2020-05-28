@@ -2,7 +2,8 @@ package main.java;
 
 import com.google.gson.JsonObject;
 
-import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,18 +20,45 @@ import java.sql.SQLException;
 @WebServlet(name = "MenuDashboardServlet", urlPatterns = "/api/_dashboard_menu")
 public class MenuDashboardServlet extends HttpServlet {
 
+    public String getServletInfo() {
+        return "Menu Dashboard Servlet loads for an employee after logging in with the option to add a new movie or star to the database";
+    }
+
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
 
-    @Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
-
+    //@Resource(name = "jdbc/moviedb")
+    //private DataSource dataSource;
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         try {
+            // the following few lines are for connection pooling
+            // Obtain our environment naming context
+
+            Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+            // the following commented lines are direct connections without pooling
+            //Class.forName("org.gjt.mm.mysql.Driver");
+            //Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
+
             // Get a connection from dataSource
-            Connection dbcon = dataSource.getConnection();
+            //Connection dbcon = dataSource.getConnection();
             DatabaseMetaData databaseMetaData = dbcon.getMetaData();
             String output = "";
 

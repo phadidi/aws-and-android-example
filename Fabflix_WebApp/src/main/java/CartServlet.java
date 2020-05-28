@@ -3,7 +3,8 @@ package main.java;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,15 +24,19 @@ import java.util.Map;
  */
 @WebServlet(name = "CartServlet", urlPatterns = "/api/cart")
 public class CartServlet extends HttpServlet {
+    // Create a dataSource which registered in web.xml
+    //@Resource(name = "jdbc/moviedb")
+    //private DataSource dataSource;
+    private String newQuantity;
+
     /**
      * handles GET requests to store session information
      */
     private static final long serialVersionUID = 1L;
 
-    // Create a dataSource which registered in web.xml
-    @Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
-    private String newQuantity;
+    public String getServletInfo() {
+        return "Cart Servlet handles a customer's shopping cart, including the ability to change item quantities";
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
@@ -57,7 +62,32 @@ public class CartServlet extends HttpServlet {
         }
 
         try {
-            Connection dbcon = dataSource.getConnection();
+            // the following few lines are for connection pooling
+            // Obtain our environment naming context
+
+            Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+            // the following commented lines are direct connections without pooling
+            //Class.forName("org.gjt.mm.mysql.Driver");
+            //Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
+
+
+            //Connection dbcon = dataSource.getConnection();
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 

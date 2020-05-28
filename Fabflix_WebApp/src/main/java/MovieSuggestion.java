@@ -3,7 +3,8 @@ package main.java;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,19 +12,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 // server endpoint URL
 @WebServlet("/movie-suggestion")
 public class MovieSuggestion extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    @Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+    public String getServletInfo() {
+        return "Movie Suggestion Servlet handles autocomplete searches on the Main Page";
+    }
+
+    //@Resource(name = "jdbc/moviedb")
+    //private DataSource dataSource;
 
     public MovieSuggestion() {
         super();
@@ -42,7 +47,32 @@ public class MovieSuggestion extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
         try {
+            // the following few lines are for connection pooling
+            // Obtain our environment naming context
+
+            Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+            // the following commented lines are direct connections without pooling
+            //Class.forName("org.gjt.mm.mysql.Driver");
+            //Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
+
             // setup the response json array
             JsonArray jsonArray = new JsonArray();
 
@@ -51,11 +81,11 @@ public class MovieSuggestion extends HttpServlet {
 
             // return the empty json array if query is null or empty
             if (query == null || query.trim().isEmpty()) {
-                response.getWriter().write(jsonArray.toString());
+                out.write(jsonArray.toString());
                 return;
             }
 
-            Connection dbcon = dataSource.getConnection();
+            //Connection dbcon = dataSource.getConnection();
 
             String stringForFullTextSearch = splitSearchString(query);
 
@@ -77,7 +107,7 @@ public class MovieSuggestion extends HttpServlet {
                 jsonArray.add(generateJsonObject(id, title));
             }
 
-            response.getWriter().write(jsonArray.toString());
+            out.write(jsonArray.toString());
             return;
         } catch (Exception e) {
             System.out.println(e);
@@ -87,7 +117,7 @@ public class MovieSuggestion extends HttpServlet {
 
     public String splitSearchString(String q) {
         if (q != null) {
-            String split[] = q.split(" ");
+            String[] split = q.split(" ");
 
             ArrayList<String> result = new ArrayList<>();
 

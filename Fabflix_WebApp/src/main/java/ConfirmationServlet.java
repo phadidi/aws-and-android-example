@@ -3,7 +3,8 @@ package main.java;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +24,13 @@ import java.util.Map;
 public class ConfirmationServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    public String getServletInfo() {
+        return "Confirmation Servlet handles the purchase confirmation process after successfully entering payment info";
+    }
+
     // Create a dataSource which registered in web.xml
-    @Resource(name = "jdbc/moviedb")
-    private DataSource dataSource;
+    //@Resource(name = "jdbc/moviedb")
+    //private DataSource dataSource;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
@@ -44,7 +49,31 @@ public class ConfirmationServlet extends HttpServlet {
         }
 
         try {
-            Connection dbcon = dataSource.getConnection();
+            // the following few lines are for connection pooling
+            // Obtain our environment naming context
+
+            Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            // Look up our data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+            // the following commented lines are direct connections without pooling
+            //Class.forName("org.gjt.mm.mysql.Driver");
+            //Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
+
+            //Connection dbcon = dataSource.getConnection();
 
             // Construct a query to retrieve every movie whose id is in currentUser.cart
 
@@ -73,8 +102,8 @@ public class ConfirmationServlet extends HttpServlet {
             }
             for (Map.Entry<String, Integer> val : previousItems.entrySet()) {
 
-                String query = "INSERT INTO sales(customerId, movieId, saleDate, quantity) VALUES(" + Integer.toString(customerId)
-                        + ", '" + val.getKey() + "'," + "CURDATE()" + "," + Integer.toString(val.getValue())
+                String query = "INSERT INTO sales(customerId, movieId, saleDate, quantity) VALUES(" + customerId
+                        + ", '" + val.getKey() + "'," + "CURDATE()" + "," + val.getValue()
                         + ");";
 
                 PreparedStatement statement = dbcon.prepareStatement(query);
@@ -101,7 +130,7 @@ public class ConfirmationServlet extends HttpServlet {
 
             String query1 = "select s.idsales, m.title, s.saleDate, s.quantity\n" +
                     "from sales s, movies m\n" +
-                    "where s.movieId = m.id and s.customerId =" + Integer.toString(customerId)
+                    "where s.movieId = m.id and s.customerId =" + customerId
                     + " and s.idsales in (" + salesIds_string + ");";
             System.out.println(query1);
 

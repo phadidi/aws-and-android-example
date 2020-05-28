@@ -18,6 +18,10 @@ import java.util.Date;
 @WebServlet(name = "IndexServlet", urlPatterns = "/api/index")
 public class IndexServlet extends HttpServlet {
 
+    public String getServletInfo() {
+        return "Index Servlet handles the storing of a list in the session, such as shopping cart";
+    }
+
     /**
      * handles GET requests to store session information
      */
