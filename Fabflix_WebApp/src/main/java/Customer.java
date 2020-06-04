@@ -1,6 +1,6 @@
 package main.java;
 
-import javax.annotation.Resource;
+//import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class Customer {
 
     private final String email;
-    @Resource(name = "jdbc/moviedb")
+//    @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
     private int id;
     private String password;
@@ -32,15 +32,15 @@ public class Customer {
         this.cart = new HashMap<String, Integer>();
     }
 
-    public void addCustomerToTable() throws SQLException {
-        Connection dbcon = dataSource.getConnection();
-        String query = "Insert into customers VALUES(" + Integer.toString(this.id) + ", '" + this.firstName + "', '" + this.lastName
-                + "', '" + this.creditCardId + "', '" + this.address + "', '" + this.email + "', '" + this.password + "');";
-        PreparedStatement statement = dbcon.prepareStatement(query);
-        statement.executeUpdate();
-        statement.close();
-        dbcon.close();
-    }
+//    public void addCustomerToTable() throws SQLException {
+//        Connection dbcon = dataSource.getConnection();
+//        String query = "Insert into customers VALUES(" + Integer.toString(this.id) + ", '" + this.firstName + "', '" + this.lastName
+//                + "', '" + this.creditCardId + "', '" + this.address + "', '" + this.email + "', '" + this.password + "');";
+//        PreparedStatement statement = dbcon.prepareStatement(query);
+//        statement.executeUpdate();
+//        statement.close();
+//        dbcon.close();
+//    }
 
     public int getId() {
         return id;
