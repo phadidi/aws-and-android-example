@@ -226,22 +226,31 @@ public class MovieListServlet extends HttpServlet {
         long endTime = System.nanoTime();
         long tj = endTime - JDBCstartTime;
         long ts = endTime - startTime; // elapsed time in nano seconds. Note: print the values in nano seconds
+
         String contextPath = getServletContext().getRealPath("/");
+        String txtFilePath = contextPath + "\\time_log.txt";
 
-        String xmlFilePath = contextPath + "\\test";
+        try {
+            File myfile = new File(txtFilePath);
+            if (myfile.createNewFile()) {
+                System.out.println("File created: " + myfile.getName());
+            } else {
+                System.out.println("File already exists.");
+            }
 
-        System.out.println(xmlFilePath);
+            log("total time for JDBC in doGet: " + tj);
+            log("total time for doGet: " + ts);
 
-        File myfile = new File(xmlFilePath);
+            // write to time_log.txt
+            myfile.setWritable(true);
+            FileWriter w = new FileWriter(myfile, true);
+            w.write("{tj: " + Long.toString(tj) + ", ts: " + Long.toString(ts) + "}\n");
+            w.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
 
-        myfile.createNewFile();
-
-        log("total time for JDBC in doGet: " + tj);
-        myfile.setWritable(true);
-        FileWriter w = new FileWriter(myfile);
-        w.write("total time for JDBC in doGet: " + tj);
-        log("total time for doGet: " + ts);
-        w.write("total time for doGet: " + ts);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
