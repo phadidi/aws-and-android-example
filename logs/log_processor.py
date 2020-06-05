@@ -4,7 +4,7 @@ Created on Fri Jun  5 03:41:45 2020
 
 @author: duy19
 """
-
+import sys
 import json
 
 
@@ -13,7 +13,7 @@ def main():
     TS = 0
     TJ = 0
     counter = 0
-    with open('time_log.txt') as f:
+    with open(sys.argv[1]) as f:
         for line in f:
             counter += 1
             TS += json.loads(line)["ts"]
