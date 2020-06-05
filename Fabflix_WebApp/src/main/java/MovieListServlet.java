@@ -234,7 +234,7 @@ public class MovieListServlet extends HttpServlet {
 
         File myfile = new File(xmlFilePath);
 
-        if (!myfile.isFile())
+        if (!myfile.exists())
             myfile.createNewFile();
 
         log("total time for JDBC in doGet: " + tj);
