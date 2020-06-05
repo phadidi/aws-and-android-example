@@ -3,6 +3,7 @@ package main.java;
 import com.google.gson.JsonObject;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
+import javax.annotation.Resource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.annotation.WebServlet;
@@ -27,8 +28,8 @@ public class DashboardLoginServlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
 
-    //@Resource(name = "jdbc/moviedb")
-    //private DataSource dataSource;
+    @Resource(name = "jdbc/moviedb")
+    private DataSource dataSource;
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
 
@@ -55,32 +56,32 @@ public class DashboardLoginServlet extends HttpServlet {
             // the following few lines are for connection pooling
             // Obtain our environment naming context
 
-            Context initCtx = new InitialContext();
+            //Context initCtx = new InitialContext();
 
-            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            if (envCtx == null)
-                out.println("envCtx is NULL");
+            //Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            //if (envCtx == null)
+                //out.println("envCtx is NULL");
 
             // Look up our data source
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+            //DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
 
             // the following commented lines are direct connections without pooling
             //Class.forName("org.gjt.mm.mysql.Driver");
             //Class.forName("com.mysql.jdbc.Driver").newInstance();
             //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 
-            if (ds == null)
-                out.println("ds is null.");
+            //if (ds == null)
+                //out.println("ds is null.");
 
-            Connection dbcon = ds.getConnection();
-            if (dbcon == null)
-                out.println("dbcon is null.");
+            //Connection dbcon = ds.getConnection();
+            //if (dbcon == null)
+                //out.println("dbcon is null.");
 
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
             // Get a connection from dataSource
-            //Connection dbcon = dataSource.getConnection();
+            Connection dbcon = dataSource.getConnection();
 
         /* This example only allows username/password to be test/test
         /  in the real project, you should talk to the database to verify username/password

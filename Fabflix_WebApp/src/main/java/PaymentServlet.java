@@ -3,6 +3,7 @@ package main.java;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import javax.annotation.Resource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.annotation.WebServlet;
@@ -27,8 +28,8 @@ public class PaymentServlet extends HttpServlet {
     }
 
     // Create a dataSource which registered in web.xml
-    //@Resource(name = "jdbc/moviedb")
-    //private DataSource dataSource;
+    @Resource(name = "jdbc/moviedb")
+    private DataSource dataSource;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
@@ -55,28 +56,28 @@ public class PaymentServlet extends HttpServlet {
             // the following few lines are for connection pooling
             // Obtain our environment naming context
 
-            Context initCtx = new InitialContext();
+            //Context initCtx = new InitialContext();
 
-            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            if (envCtx == null)
-                out.println("envCtx is NULL");
+            //Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            //if (envCtx == null)
+                //out.println("envCtx is NULL");
 
             // Look up our data source
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+            //DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
 
             // the following commented lines are direct connections without pooling
             //Class.forName("org.gjt.mm.mysql.Driver");
             //Class.forName("com.mysql.jdbc.Driver").newInstance();
             //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 
-            if (ds == null)
-                out.println("ds is null.");
+            //if (ds == null)
+                //out.println("ds is null.");
 
-            Connection dbcon = ds.getConnection();
-            if (dbcon == null)
-                out.println("dbcon is null.");
+            //Connection dbcon = ds.getConnection();
+            //if (dbcon == null)
+                //out.println("dbcon is null.");
 
-            //Connection dbcon = dataSource.getConnection();
+            Connection dbcon = dataSource.getConnection();
             ResultSet rs;
             JsonArray jsonArray = new JsonArray();
 
@@ -128,26 +129,26 @@ public class PaymentServlet extends HttpServlet {
             // the following few lines are for connection pooling
             // Obtain our environment naming context
 
-            Context initCtx = new InitialContext();
+            //Context initCtx = new InitialContext();
 
-            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            if (envCtx == null)
-                out.println("envCtx is NULL");
+            //Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            //if (envCtx == null)
+                //out.println("envCtx is NULL");
 
             // Look up our data source
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+            //DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
 
             // the following commented lines are direct connections without pooling
             //Class.forName("org.gjt.mm.mysql.Driver");
             //Class.forName("com.mysql.jdbc.Driver").newInstance();
             //Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 
-            if (ds == null)
-                out.println("ds is null.");
+            //if (ds == null)
+                //out.println("ds is null.");
 
-            Connection dbcon = ds.getConnection();
-            if (dbcon == null)
-                out.println("dbcon is null.");
+            //Connection dbcon = ds.getConnection();
+            //if (dbcon == null)
+                //out.println("dbcon is null.");
 
             String first_name = request.getParameter("fname");
             log("first_name: " + first_name + "\n");
@@ -159,7 +160,7 @@ public class PaymentServlet extends HttpServlet {
             log("exp_date: " + exp_date + "\n");
 
             // Get a connection from dataSource
-            //Connection dbcon = dataSource.getConnection();
+            Connection dbcon = dataSource.getConnection();
 
             String resultFirstname = "";
             String resultLastname = "";
