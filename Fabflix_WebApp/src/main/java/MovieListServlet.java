@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -224,9 +226,22 @@ public class MovieListServlet extends HttpServlet {
         long endTime = System.nanoTime();
         long tj = endTime - JDBCstartTime;
         long ts = endTime - startTime; // elapsed time in nano seconds. Note: print the values in nano seconds
-        log("total time for JDBC in doGet: " + tj);
-        log("total time for doGet: " + ts);
+        String contextPath = getServletContext().getRealPath("/");
 
+        String xmlFilePath = contextPath + "\\test";
+
+        System.out.println(xmlFilePath);
+
+        File myfile = new File(xmlFilePath);
+
+        myfile.createNewFile();
+
+        log("total time for JDBC in doGet: " + tj);
+        myfile.setWritable(true);
+        FileWriter w = new FileWriter(myfile);
+        w.write("total time for JDBC in doGet: " + tj);
+        log("total time for doGet: " + ts);
+        w.write("total time for doGet: " + ts);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
