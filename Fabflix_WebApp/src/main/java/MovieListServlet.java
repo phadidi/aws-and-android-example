@@ -38,6 +38,11 @@ public class MovieListServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Time an event in a program to nanosecond precision
+        long startTime = System.nanoTime();
+        /////////////////////////////////
+        /// ** part to be measured ** ///
+        /////////////////////////////////
 
         response.setContentType("application/json"); // Response mime type
 
@@ -60,7 +65,11 @@ public class MovieListServlet extends HttpServlet {
 
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
-
+        // Time an event in a program to nanosecond precision
+        long JDBCstartTime = System.nanoTime();
+        /////////////////////////////////
+        /// ** part to be measured ** ///
+        /////////////////////////////////
         try {
             // the following few lines are for connection pooling
             // Obtain our environment naming context
@@ -88,6 +97,7 @@ public class MovieListServlet extends HttpServlet {
 
             // Get a connection from dataSource
             //Connection dbcon = dataSource.getConnection();
+
 
             String query = "select m.id, m.title, m.year, m.director,\n" +
                     "group_concat(distinct g.name ORDER BY g.name SEPARATOR ', ') AS genresname,\n" +
@@ -211,6 +221,11 @@ public class MovieListServlet extends HttpServlet {
             response.setStatus(500);
         }
         out.close();
+        long endTime = System.nanoTime();
+        long tj = endTime - JDBCstartTime;
+        long ts = endTime - startTime; // elapsed time in nano seconds. Note: print the values in nano seconds
+        log("total time for JDBC in doGet: " + tj);
+        log("total time for doGet: " + ts);
 
     }
 
