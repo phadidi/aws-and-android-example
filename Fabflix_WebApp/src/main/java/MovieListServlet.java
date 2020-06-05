@@ -244,7 +244,7 @@ public class MovieListServlet extends HttpServlet {
             // write to time_log.txt
             myfile.setWritable(true);
             FileWriter w = new FileWriter(myfile, true);
-            w.write("{tj: " + Long.toString(tj) + ", ts: " + Long.toString(ts) + "}\n");
+            w.write("{\"tj\": " + Long.toString(tj) + ", \"ts\": " + Long.toString(ts) + "}\n");
             w.close();
         } catch (IOException e) {
             System.out.println("An error occurred.");
