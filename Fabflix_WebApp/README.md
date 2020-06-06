@@ -29,46 +29,46 @@ Then to prepare your war file, run the following commands:
 Make sure you have Tomcat running. Then, go to your Tomcat manager page. You should see a newly deployed war file named "cs122b-spring20-team-13." Click on the name to open the Fabflix Movie List page.
 
 
-- # General
-    - #### Team#: 13
+- #### General
+    - ##### Team#: 13
     
-    - #### Names: Parsa Hadidi, Duy Nguyen
+    - ##### Names: Parsa Hadidi, Duy Nguyen
     
-    - #### Project 5 Video Demo Link:
+    - ##### Project 5 Video Demo Link:
 
-    - #### Instruction of deployment: same as other projects but LoginFilter is disabled
+    - ##### Instruction of deployment: same as other projects but LoginFilter is disabled
 
-    - #### Collaborations and Work Distribution:
+    - ##### Collaborations and Work Distribution:
     Duy Nguyen: Set up AWS for master, slave, load balancer, GCP, JMeter test, parser script
     Parsa Hadidi: Added Connection Pooling, timer code and write file
 
 
-- # Connection Pooling
-    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+- #### Connection Pooling
+    - ##### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
     Cart Servlet, Confirmation Servlet, Dashboard Login Servlet, Form ReCaptcha, Login Servlet, Main Dashboard Servlet, Main Page, Menu Dashboard Servlet, Movie Suggestion, Payment Servlet, Single Movie Servlet, Single Star Servlet, Star Dashboard Servlet    
-    - #### Explain how Connection Pooling is utilized in the Fabflix code.
+    - ##### Explain how Connection Pooling is utilized in the Fabflix code.
     An initial context is established each time one of the servlets is called. Then a check is performed if a context already exists, if so the current context is used instead. The context stores the data source connection so it can be reused multiple times for one client.
-    - #### Explain how Connection Pooling works with two backend SQL.
+    - ##### Explain how Connection Pooling works with two backend SQL.
     Connection Pooling is enabled within the WebApp Project, which is deployed on both Master and Slave instances
 
-- # Master/Slave
-    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+- #### Master/Slave
+    - ##### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
     Added new db resource named masterdb to context.xml in META-INF | 
     Changed datasource to masterdb in ConfirmationServlet, MainDashboardServlet, and StarDashboardServlet since they make write requests to SQL
 
-    - #### How read/write requests were routed to Master/Slave SQL?
+    - ##### How read/write requests were routed to Master/Slave SQL?
     In order to ensure all write requests were routed to master instead of slave, we hard coded every servlets that does an executeUpdate() to the MySQL to look at the datasource with the Master's public IP
     All read requests can go to either Master or Slave.
     
 
-- # JMeter TS/TJ Time Logs
-    - #### Instructions of how to use the `log_processing.py` script to process the JMeter logs.
+- #### JMeter TS/TJ Time Logs
+    - ##### Instructions of how to use the `log_processing.py` script to process the JMeter logs.
     log_processing.py is located in the logs/ folder
     To run log_processing.py, go to this folder from terminal and use command "python log_processing.py file_name.txt"
     Replace "filename" with the name of the log files you want to parse
     Here are the names of the log files (single-http-1-thread.txt, single-http-10-thread.txt, single-https-10-thread.txt, single-http-10-thread-noCP.txt, scaled-http-1-thread.txt, scaled-http-10-thread.txt, scaled-http-10-thread-noCP.txt)
 
-- # JMeter TS/TJ Time Measurement Report
+- #### JMeter TS/TJ Time Measurement Report
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
@@ -82,7 +82,6 @@ Make sure you have Tomcat running. Then, go to your Tomcat manager page. You sho
 | Case 1: HTTP/1 thread                          | (img/scaled-http-1-thread.png)   | 81                     | 1.8507945480696443852               | 1.8075041650264951354     | Has the fastest TS and TJ compared to the other test cases. Avg. Query time is also very short.           |
 | Case 2: HTTP/10 threads                        | (img/scaled-http-10-thread.png)   | 100                   | 2.3360979882664647533               | 2.3080447146101441547     | TS and TJ are slightly higher than scaled 1 thread. Avg. Query time sees an increase from 81 to 100.           |
 | Case 3: HTTP/10 threads/No connection pooling  | (img/scaled-http-10-thread-noCP.png)   | 112              | 2.3611917891748670506               | 2.3383591339894023164     | With no connection pooling, TS, TJ and Avg. Query Time sees longer runtime as expected.           |
-
 
 
 ## Project Structure
@@ -111,6 +110,7 @@ The Payment page takes a Customer's first and last names with a credit card numb
 ### Confirmation Servlet
 The Confirmation page is redirected to after Payment Servlet to confirm a purchase to a customer before deciding to complete it or not.
 ### Movie Suggestion
+The Movie Suggestion servlet uses sql queries to perform autocomplete searches whose results are visible on the main page.
 ### pom.xml
 The pom.xml file contains a list of artifacts to use, including mysql-connector-java and javax.servlet, along with directions to handle the Maven war packaging and the necessary maven-compiler-plugin and maven-war-plugin.
 ### Our Substring Design
@@ -156,9 +156,9 @@ Another Java program that has 2 classes: 1 for encrypting employees password in 
 
 ## Contributions
 Parsa Hadidi:
-- Importing autocomplete format from example into project, created Android app layout and log in
+- Added Connection Pooling, timer code and write file
 
 Duy Nguyen: 
-- Autocomplete search implementations in webapp and Android app features/pages
+- Set up AWS for master, slave, load balancer, GCP, JMeter test, parser script
 
 Both worked on debugging and finalizing every java class and HTML/Javascript page.
