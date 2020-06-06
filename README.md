@@ -1,4 +1,4 @@
-# cs122b-spring20-team-13 Project 4
+# cs122b-spring20-team-13 Project 5
 This is a submission for Project 4 with Java Servlet, Javascript, and HTML pages for a Fabflix website where a customer can log in, search with autocomplete from a list of movies by title, stars, year, genres, and other criteria, add a selection of movies to a shopping cart, and checkout a cart with a credit card payment, in a desktop browser and for Android. There is also a createtable.sql file included for providing the format of the 'moviedb' database so that it can be populated for the webpages' use.
 
 - Demo Video: https://youtu.be/8nN0Wq2npdI
@@ -30,7 +30,7 @@ Then to prepare your war file, run the following commands:
 
 Make sure you have Tomcat running. Then, go to your Tomcat manager page. You should see a newly deployed war file named "cs122b-spring20-team-13." Click on the name to open the Fabflix Movie List page.
 
-## Project 4 Structure
+## Project 5 Structure
 
 ### *NEW SEARCH IMPLEMENTATIONs* ###
 Now support FULLTEXT search for movie titles
@@ -56,10 +56,58 @@ The Payment page takes a Customer's first and last names with a credit card numb
 ### Confirmation Servlet
 The Confirmation page is redirected to after Payment Servlet to confirm a purchase to a customer before deciding to complete it or not.
 ### Movie Suggestion
+The Movie Suggestion servlet uses sql queries to perform autocomplete searches whose results are visible on the main page.
 ### pom.xml
 The pom.xml file contains a list of artifacts to use, including mysql-connector-java and javax.servlet, along with directions to handle the Maven war packaging and the necessary maven-compiler-plugin and maven-war-plugin.
 ### Our Substring Design
 For searching, we simnply used LIKE "%some pattern provided by user%" to match with any value that has that pattern somewhere in the string value. For example, "%vid m%" would match the field "David Mirkin." Similarly, for matching beginning letters like 'A', we used LIKE "A%". This pattern will match anything with A as the first letter in the string value.
+
+### Project 5 Connection Pooling
+
+- #### General
+    - ##### Team#: 13
+    
+    - ##### Names: Parsa Hadidi, Duy Nguyen
+    
+    - ##### Project 5 Video Demo Link:
+
+    - ##### Instruction of deployment:
+
+    - ##### Collaborations and Work Distribution:
+
+
+- #### Connection Pooling
+    - ##### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+    Cart Servlet, Confirmation Servlet, Dashboard Login Servlet, Form ReCaptcha, Login Servlet, Main Dashboard Servlet, Main Page, Menu Dashboard Servlet, Movie Suggestion, Payment Servlet, Single Movie Servlet, Single Star Servlet, Star Dashboard Servlet    
+    - ##### Explain how Connection Pooling is utilized in the Fabflix code.
+    An initial context is established each time one of the servlets is called. Then a check is performed if a context already exists, if so the current context is used instead. The context stores the data source connection so it can be reused multiple times for one client.
+    - ##### Explain how Connection Pooling works with two backend SQL.
+    
+
+- #### Master/Slave
+    - ##### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+
+    - ##### How read/write requests were routed to Master/Slave SQL?
+    
+
+- #### JMeter TS/TJ Time Logs
+    - ##### Instructions of how to use the `log_processing.*` script to process the JMeter logs.
+
+
+- #### JMeter TS/TJ Time Measurement Report
+
+| **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTPS/10 threads                       | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
 
 
 ### Parser_Tool

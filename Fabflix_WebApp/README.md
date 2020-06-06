@@ -6,8 +6,8 @@ This is a submission for Project 5 with Connection Pooling, MySQL Master-Slave I
 ## Getting Started
 Make sure to initialize a MySQL database with the included createtable.sql and populate it accordingly. This requires a list of movies, stars, genres, customers, customer ratings, creditcards, and the necessary relationships between them.
 
-### Installing and Starting Project 4
-For AWS, Project 4 has been tested to run on Ubuntu 16.04.6 LTS using an Apache Tomcat 8.5.53 server instance with Maven capabilities. For the UCI Grader, the link http://ec2-52-55-11-244.compute-1.amazonaws.com:8080/cs122b-spring20-team-13/ should be open based on the security group IP requirements. The finalized Project 2 build should be found in the master branch with this file.
+### Installing and Starting Project 5
+For AWS, Project 5 has been tested to run on Ubuntu 16.04.6 LTS using an Apache Tomcat 8.5.53 server instance with Maven capabilities. For the UCI Grader, the link http://ec2-52-55-11-244.compute-1.amazonaws.com:8080/cs122b-spring20-team-13/ should be open based on the security group IP requirements. The finalized Project 2 build should be found in the master branch with this file.
 
 If you want to run from your own AWS instance machine, make sure to clone the project with the following command:
 
@@ -56,44 +56,45 @@ The Payment page takes a Customer's first and last names with a credit card numb
 ### Confirmation Servlet
 The Confirmation page is redirected to after Payment Servlet to confirm a purchase to a customer before deciding to complete it or not.
 ### Movie Suggestion
+The Movie Suggestion servlet uses sql queries to perform autocomplete searches whose results are visible on the main page.
 ### pom.xml
 The pom.xml file contains a list of artifacts to use, including mysql-connector-java and javax.servlet, along with directions to handle the Maven war packaging and the necessary maven-compiler-plugin and maven-war-plugin.
 ### Our Substring Design
 For searching, we simnply used LIKE "%some pattern provided by user%" to match with any value that has that pattern somewhere in the string value. For example, "%vid m%" would match the field "David Mirkin." Similarly, for matching beginning letters like 'A', we used LIKE "A%". This pattern will match anything with A as the first letter in the string value.
 
-###Connection Pooling
+### Project 5 Connection Pooling
 
-- # General
-    - #### Team#: 13
+- #### General
+    - ##### Team#: 13
     
-    - #### Names: Parsa Hadidi, Duy Nguyen
+    - ##### Names: Parsa Hadidi, Duy Nguyen
     
-    - #### Project 5 Video Demo Link:
+    - ##### Project 5 Video Demo Link:
 
-    - #### Instruction of deployment:
+    - ##### Instruction of deployment:
 
-    - #### Collaborations and Work Distribution:
+    - ##### Collaborations and Work Distribution:
 
 
-- # Connection Pooling
-    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+- #### Connection Pooling
+    - ##### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
     Cart Servlet, Confirmation Servlet, Dashboard Login Servlet, Form ReCaptcha, Login Servlet, Main Dashboard Servlet, Main Page, Menu Dashboard Servlet, Movie Suggestion, Payment Servlet, Single Movie Servlet, Single Star Servlet, Star Dashboard Servlet    
-    - #### Explain how Connection Pooling is utilized in the Fabflix code.
-    
-    - #### Explain how Connection Pooling works with two backend SQL.
-    
-
-- # Master/Slave
-    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
-
-    - #### How read/write requests were routed to Master/Slave SQL?
+    - ##### Explain how Connection Pooling is utilized in the Fabflix code.
+    An initial context is established each time one of the servlets is called. Then a check is performed if a context already exists, if so the current context is used instead. The context stores the data source connection so it can be reused multiple times for one client.
+    - ##### Explain how Connection Pooling works with two backend SQL.
     
 
-- # JMeter TS/TJ Time Logs
-    - #### Instructions of how to use the `log_processing.*` script to process the JMeter logs.
+- #### Master/Slave
+    - ##### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+
+    - ##### How read/write requests were routed to Master/Slave SQL?
+    
+
+- #### JMeter TS/TJ Time Logs
+    - ##### Instructions of how to use the `log_processing.*` script to process the JMeter logs.
 
 
-- # JMeter TS/TJ Time Measurement Report
+- #### JMeter TS/TJ Time Measurement Report
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
