@@ -1,13 +1,11 @@
-# cs122b-spring20-team-13 Project 4
-This is a submission for Project 4 with Java Servlet, Javascript, and HTML pages for a Fabflix website where a customer can log in, search with autocomplete from a list of movies by title, stars, year, genres, and other criteria, add a selection of movies to a shopping cart, and checkout a cart with a credit card payment, in a desktop browser and for Android. There is also a createtable.sql file included for providing the format of the 'moviedb' database so that it can be populated for the webpages' use.
-
-- Demo Video: https://youtu.be/8nN0Wq2npdI
+# cs122b-spring20-team-13 Project 5
+This is a submission for Project 5 with Connection Pooling, MySQL Master-Slave Instances, Load Balancing, and Search Performance Measurements.
 
 ## Getting Started
 Make sure to initialize a MySQL database with the included createtable.sql and populate it accordingly. This requires a list of movies, stars, genres, customers, customer ratings, creditcards, and the necessary relationships between them.
 
-### Installing and Starting Project 4
-For AWS, Project 4 has been tested to run on Ubuntu 16.04.6 LTS using an Apache Tomcat 8.5.53 server instance with Maven capabilities. For the UCI Grader, the link http://ec2-52-55-11-244.compute-1.amazonaws.com:8080/cs122b-spring20-team-13/ should be open based on the security group IP requirements. The finalized Project 2 build should be found in the master branch with this file.
+### Installing and Starting Project 5
+For AWS, Project 5 has been tested to run on Ubuntu 16.04.6 LTS using an Apache Tomcat 8.5.53 server instance with Maven capabilities.
 
 If you want to run from your own AWS instance machine, make sure to clone the project with the following command:
 
@@ -30,7 +28,64 @@ Then to prepare your war file, run the following commands:
 
 Make sure you have Tomcat running. Then, go to your Tomcat manager page. You should see a newly deployed war file named "cs122b-spring20-team-13." Click on the name to open the Fabflix Movie List page.
 
-## Project 4 Structure
+
+- # General
+    - #### Team#: 13
+    
+    - #### Names: Parsa Hadidi, Duy Nguyen
+    
+    - #### Project 5 Video Demo Link:
+
+    - #### Instruction of deployment: same as other projects but LoginFilter is disabled
+
+    - #### Collaborations and Work Distribution:
+    Duy Nguyen: Set up AWS for master, slave, load balancer, GCP, JMeter test, parser script
+    Parsa Hadidi: Added Connection Pooling, timer code and write file
+
+
+- # Connection Pooling
+    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+    Cart Servlet, Confirmation Servlet, Dashboard Login Servlet, Form ReCaptcha, Login Servlet, Main Dashboard Servlet, Main Page, Menu Dashboard Servlet, Movie Suggestion, Payment Servlet, Single Movie Servlet, Single Star Servlet, Star Dashboard Servlet    
+    - #### Explain how Connection Pooling is utilized in the Fabflix code.
+    An initial context is established each time one of the servlets is called. Then a check is performed if a context already exists, if so the current context is used instead. The context stores the data source connection so it can be reused multiple times for one client.
+    - #### Explain how Connection Pooling works with two backend SQL.
+    Connection Pooling is enabled within the WebApp Project, which is deployed on both Master and Slave instances
+
+- # Master/Slave
+    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+    Added new db resource named masterdb to context.xml in META-INF | 
+    Changed datasource to masterdb in ConfirmationServlet, MainDashboardServlet, and StarDashboardServlet since they make write requests to SQL
+
+    - #### How read/write requests were routed to Master/Slave SQL?
+    In order to ensure all write requests were routed to master instead of slave, we hard coded every servlets that does an executeUpdate() to the MySQL to look at the datasource with the Master's public IP
+    All read requests can go to either Master or Slave.
+    
+
+- # JMeter TS/TJ Time Logs
+    - #### Instructions of how to use the `log_processing.py` script to process the JMeter logs.
+    log_processing.py is located in the logs/ folder
+    To run log_processing.py, go to this folder from terminal and use command "python log_processing.py file_name.txt"
+    Replace "filename" with the name of the log files you want to parse
+    Here are the names of the log files (single-http-1-thread.txt, single-http-10-thread.txt, single-https-10-thread.txt, single-http-10-thread-noCP.txt, scaled-http-1-thread.txt, scaled-http-10-thread.txt, scaled-http-10-thread-noCP.txt)
+
+- # JMeter TS/TJ Time Measurement Report
+
+| **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | (img/single-http-1-thread.png)   | 80                     | 2.4301980389856168152               | 2.3689721355034065731     | Interestingly, lower Avg. Query Time than in Scaled 1 thread case. TS and TJ are higher than ones see int Scaled 1 thread though.           |
+| Case 2: HTTP/10 threads                        | (img/single-http-10-thread.png)   | 120                   | 2.3183667638152916091               | 2.2919555378501139664     | TS and TJ are faster, but Avg. Query Time is higher.           |
+| Case 3: HTTPS/10 threads                       | (img/single-https-10-thread.png)   | 339                  | 2.2634320087055264104               | 2.2394041945495839485     | TS and TJ are faster, but not by any significance (could be caused by any factor). However, Avg. Query Time is longer. I think it has to do with the security aspect of HTTPS, which can cause longer initial connection time.           |
+| Case 4: HTTP/10 threads/No connection pooling  | (img/single-http-10-thread-noCP.png)   | 250              | 2.1876663951551855725               | 2.1673469939439820031     | Interestingly, TS and TJ are faster without connection pooling; however, Avg. Query Time takes longer.          |
+
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | (img/scaled-http-1-thread.png)   | 81                     | 1.8507945480696443852               | 1.8075041650264951354     | Has the fastest TS and TJ compared to the other test cases. Avg. Query time is also very short.           |
+| Case 2: HTTP/10 threads                        | (img/scaled-http-10-thread.png)   | 100                   | 2.3360979882664647533               | 2.3080447146101441547     | TS and TJ are slightly higher than scaled 1 thread. Avg. Query time sees an increase from 81 to 100.           |
+| Case 3: HTTP/10 threads/No connection pooling  | (img/scaled-http-10-thread-noCP.png)   | 112              | 2.3611917891748670506               | 2.3383591339894023164     | With no connection pooling, TS, TJ and Avg. Query Time sees longer runtime as expected.           |
+
+
+
+## Project Structure
 
 ### *NEW SEARCH IMPLEMENTATIONs* ###
 Now support FULLTEXT search for movie titles
