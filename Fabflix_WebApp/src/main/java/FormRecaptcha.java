@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -77,10 +78,10 @@ public class FormRecaptcha extends HttpServlet {
             //if (dbcon == null)
                 //out.println("dbcon is null.");
 
-            //Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
 
             // Create a new connection to database
-            Connection dbCon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 
             // Retrieve parameter "name" from request, which refers to the value of <input name="name"> in index.html
             String name = request.getParameter("name");

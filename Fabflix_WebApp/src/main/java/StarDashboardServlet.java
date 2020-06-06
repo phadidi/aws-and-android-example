@@ -51,7 +51,7 @@ public class StarDashboardServlet extends HttpServlet {
             //if (ds == null)
                 //out.println("ds is null.");
 
-            Connection dbcon = ds.getConnection();
+            //Connection dbcon = ds.getConnection();
             //if (dbcon == null)
                 //out.println("dbcon is null.");
 
