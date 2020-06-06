@@ -34,7 +34,7 @@ Make sure you have Tomcat running. Then, go to your Tomcat manager page. You sho
     
     - ##### Names: Parsa Hadidi, Duy Nguyen
     
-    - ##### Project 5 Video Demo Link:
+    - ##### Project 5 Video Demo Link: https://youtu.be/bBNyrIYkMK8
 
     - ##### Instruction of deployment: same as other projects but LoginFilter is disabled
 
@@ -68,14 +68,14 @@ Make sure you have Tomcat running. Then, go to your Tomcat manager page. You sho
     Replace "filename" with the name of the log files you want to parse
     Here are the names of the log files (single-http-1-thread.txt, single-http-10-thread.txt, single-https-10-thread.txt, single-http-10-thread-noCP.txt, scaled-http-1-thread.txt, scaled-http-10-thread.txt, scaled-http-10-thread-noCP.txt)
 
-- #### JMeter TS/TJ Time Measurement Report
+- #### JMeter TS/TJ Time Measurement Report (screenshots are found in the path stated in the table)
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
 | Case 1: HTTP/1 thread                          | (img/single-http-1-thread.png)   | 80                     | 2.4301980389856168152               | 2.3689721355034065731     | Interestingly, lower Avg. Query Time than in Scaled 1 thread case. TS and TJ are higher than ones see int Scaled 1 thread though.           |
 | Case 2: HTTP/10 threads                        | (img/single-http-10-thread.png)   | 120                   | 2.3183667638152916091               | 2.2919555378501139664     | TS and TJ are faster, but Avg. Query Time is higher.           |
 | Case 3: HTTPS/10 threads                       | (img/single-https-10-thread.png)   | 339                  | 2.2634320087055264104               | 2.2394041945495839485     | TS and TJ are faster, but not by any significance (could be caused by any factor). However, Avg. Query Time is longer. I think it has to do with the security aspect of HTTPS, which can cause longer initial connection time.           |
-| Case 4: HTTP/10 threads/No connection pooling  | (img/single-http-10-thread-noCP.png)   | 250              | 2.1876663951551855725               | 2.1673469939439820031     | Interestingly, TS and TJ are faster without connection pooling; however, Avg. Query Time takes longer.          |
+| Case 4: HTTP/10 threads/No connection pooling  | (img/single-http-10-thread-noCP.png)   | 250              | 2.1876663951551855725               | 2.1673469939439820031     | Interestingly, TS and TJ are faster without connection pooling; however, Avg. Query Time takes longer than one in HTTP 10 thread.          |
 
 | **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|

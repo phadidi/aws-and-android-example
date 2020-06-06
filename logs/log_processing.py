@@ -22,8 +22,8 @@ def main():
     TS = TS / counter
     TJ = TJ / counter
     
-    print("TS:", TS)
-    print("TJ:", TJ)
+    print("TS:", TS * 0.000001, "ms")
+    print("TJ:", TJ * 0.000001, "ms")
     
 if __name__ == "__main__":
     main()
