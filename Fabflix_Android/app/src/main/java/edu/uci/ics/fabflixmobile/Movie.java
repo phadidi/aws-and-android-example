@@ -36,10 +36,10 @@ public class Movie {
         String names = "";
         String[] starsSplit = stars.split(",");
         int size = starsSplit.length;
-        if(size > 3){
+        if (size > 3) {
             size = 3;
         }
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             String[] star = starsSplit[i].split("_");
             names += star[0] + ", ";
         }
@@ -65,7 +65,7 @@ public class Movie {
         return this.genre;
     }
 
-    public String getStars(){
+    public String getStars() {
         return this.stars;
     }
 

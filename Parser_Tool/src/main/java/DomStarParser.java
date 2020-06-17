@@ -139,7 +139,7 @@ public class DomStarParser {
             result = Integer.parseInt(getTextValue(ele, tagName));
         } catch (NumberFormatException nfe) {
             // no birth year, needs to be turned to NULL when inserting
-            System.out.println("Invalid value: "+ getTextValue(ele, tagName));
+            System.out.println("Invalid value: " + getTextValue(ele, tagName));
             result = 0;
         }
 

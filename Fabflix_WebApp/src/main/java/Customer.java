@@ -1,6 +1,7 @@
 package main.java;
 
 //import javax.annotation.Resource;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +12,7 @@ import java.util.Map;
 public class Customer {
 
     private final String email;
-//    @Resource(name = "jdbc/moviedb")
+    //    @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
     private int id;
     private String password;

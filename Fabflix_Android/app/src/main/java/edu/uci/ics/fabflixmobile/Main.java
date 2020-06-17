@@ -38,7 +38,6 @@ public class Main extends Activity {
             final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
             final StringRequest mainRequest = new StringRequest(Request.Method.GET, url + "main", response -> {
-                //TODO should parse the json response to redirect to appropriate functions.
                 Log.d("main.success", response);
                 // initialize the activity(page)/destination
                 Intent listView = new Intent(Main.this, ListViewActivity.class);

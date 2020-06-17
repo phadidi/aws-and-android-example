@@ -54,7 +54,6 @@ public class Login extends AppCompatActivity {
             final RequestQueue queue = NetworkManager.sharedManager(this).queue;
             // request type is POST
             final StringRequest loginRequest = new StringRequest(Request.Method.POST, url + "login", response -> {
-                //TODO should parse the json response to redirect to appropriate functions.
                 Log.d("login.success", response);
                 System.out.println(response);
                 // initialize the activity(page)/destination

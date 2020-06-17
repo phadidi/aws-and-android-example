@@ -141,7 +141,7 @@ public class MovieListServlet extends HttpServlet {
 
             if (searchStar != null) {
                 query += "HAVING starNamesAndIds like \"%" + searchStar + "%\"\n";
-                //TODO: implement this and other aspects of Fuzzy Search
+                // NOTE: Fuzzy Search could be implemented here down the line
                 //OR SIMILAR TO('" + searchStar + "', starNamesAndIds, 2)
             }
 

@@ -1,6 +1,7 @@
 package main.java;
 
 //import javax.annotation.Resource;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 
 public class Employee {
     private final String email;
-//    @Resource(name = "jdbc/moviedb")
+    //    @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
     private String password;
     private String fullName;

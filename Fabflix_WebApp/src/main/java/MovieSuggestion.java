@@ -23,16 +23,12 @@ import java.util.ArrayList;
 public class MovieSuggestion extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public String getServletInfo() {
-        return "Movie Suggestion Servlet handles autocomplete searches on the Main Page";
+    public MovieSuggestion() {
+        super();
     }
 
     //@Resource(name = "jdbc/moviedb")
     //private DataSource dataSource;
-
-    public MovieSuggestion() {
-        super();
-    }
 
     private static JsonObject generateJsonObject(String movieID, String movieTitle) {
         JsonObject jsonObject = new JsonObject();
@@ -44,6 +40,10 @@ public class MovieSuggestion extends HttpServlet {
 
         jsonObject.add("data", additionalDataJsonObject);
         return jsonObject;
+    }
+
+    public String getServletInfo() {
+        return "Movie Suggestion Servlet handles autocomplete searches on the Main Page";
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

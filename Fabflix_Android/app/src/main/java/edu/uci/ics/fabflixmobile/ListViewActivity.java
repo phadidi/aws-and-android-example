@@ -44,7 +44,7 @@ public class ListViewActivity extends Activity {
 
         page = getIntent().getIntExtra("page", 1);
 
-        if(page != 1){
+        if (page != 1) {
             previous.setOnClickListener(view -> previous());
         }
 
@@ -61,7 +61,7 @@ public class ListViewActivity extends Activity {
             try {
                 JSONArray jsonArray = new JSONArray(response);
 
-                if(jsonArray.length() == 20){
+                if (jsonArray.length() == 20) {
                     next.setOnClickListener(view -> next());
                 }
 
@@ -97,8 +97,7 @@ public class ListViewActivity extends Activity {
                     }
                 });
                 Log.d("Json parsed", response);
-            }
-            catch(final JSONException e){
+            } catch (final JSONException e) {
                 Log.e("Json parsing error", e.toString());
             }
         },
@@ -112,18 +111,19 @@ public class ListViewActivity extends Activity {
         //queue.add(listRequest);
     }
 
-    public void next(){
+    public void next() {
         Intent nextView = new Intent(ListViewActivity.this, ListViewActivity.class);
         nextView.putExtra("query", query);
-        page+=1;
+        page += 1;
         nextView.putExtra("page", page);
 
         startActivity(nextView);
     }
-    public void previous(){
+
+    public void previous() {
         Intent previousView = new Intent(ListViewActivity.this, ListViewActivity.class);
         previousView.putExtra("query", query);
-        page-=1;
+        page -= 1;
         previousView.putExtra("page", page);
 
         startActivity(previousView);

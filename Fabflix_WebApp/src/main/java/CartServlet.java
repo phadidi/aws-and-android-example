@@ -24,15 +24,14 @@ import java.util.Map;
  */
 @WebServlet(name = "CartServlet", urlPatterns = "/api/cart")
 public class CartServlet extends HttpServlet {
-    // Create a dataSource which registered in web.xml
-    //@Resource(name = "jdbc/moviedb")
-    //private DataSource dataSource;
-    private String newQuantity;
-
     /**
      * handles GET requests to store session information
      */
     private static final long serialVersionUID = 1L;
+    // Create a dataSource which registered in web.xml
+    //@Resource(name = "jdbc/moviedb")
+    //private DataSource dataSource;
+    private String newQuantity;
 
     public String getServletInfo() {
         return "Cart Servlet handles a customer's shopping cart, including the ability to change item quantities";
